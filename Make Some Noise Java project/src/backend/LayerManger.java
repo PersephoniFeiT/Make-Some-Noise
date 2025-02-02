@@ -4,5 +4,5 @@ package backend;
  * (potentially other leyer types in the future) 
  * so they can be rendered*/
 public class LayerManger {
-    
+
 }
