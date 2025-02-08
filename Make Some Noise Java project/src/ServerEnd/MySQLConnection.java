@@ -14,17 +14,29 @@ public class MySQLConnection {
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Connected to MySQL successfully!");
 
-            String sql = "SELECT * FROM accounts";
+            String sql = "INSERT INTO accounts (name, email) VALUES (?, ?)";
+
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, "value");
+            pstmt.setString(1, "myName");
+            pstmt.setString(2, "myEmail5");
+            int rowsAffected = pstmt.executeUpdate();
+            System.out.println("number of rows affected" + rowsAffected);
 
-            ResultSet rs = pstmt.executeQuery();
-
+            sql = "SELECT * FROM accounts";
+            pstmt = conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery("SELECT * FROM accounts");
+            System.out.println("rs: " + rs);
             while (rs.next()) {
-                System.out.println("Column1: " + rs.getString("column1"));
+                System.out.println(rs.getString("name"));
             }
 
+            sql = "DELETE FROM accounts WHERE name = 'myName'";
+            pstmt = conn.prepareStatement(sql);
+            rowsAffected = pstmt.executeUpdate();
+            System.out.println("number of rows affected:" + rowsAffected);
+
             // Close connection
+            pstmt.close();
             conn.close();
         } catch (SQLException e) {
             System.out.println("Connection failed: " + e.getMessage());
