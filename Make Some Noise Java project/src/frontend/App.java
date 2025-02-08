@@ -1,4 +1,4 @@
-package frontend;
+package FrontEnd;
 
 public class App {
     public static void main(String[] args) throws Exception {

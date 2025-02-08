@@ -1,4 +1,4 @@
-package backend;
+package src.BackEnd;
 
 /* Class responsible for multiplying noise layers for fractal adding
  * (potentially other leyer types in the future) 
