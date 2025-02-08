@@ -1,4 +1,4 @@
-package src.BackEnd;
+package BackEnd;
 
 
 /* Class responsible for rendering layer data into graphical data
