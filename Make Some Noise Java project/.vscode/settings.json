@@ -4,8 +4,10 @@
         "src"
     ],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/**/*",
-        "lib"
-    ]
+    "java.project.referencedLibraries": {
+            "include": [
+            "lib/**/*.jar"
+        ]
+    }
+
 }
