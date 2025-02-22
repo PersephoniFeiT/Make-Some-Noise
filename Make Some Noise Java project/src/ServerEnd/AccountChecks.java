@@ -70,6 +70,6 @@ public class AccountChecks {
 
         SQLConnection.delete("accounts", "ID = '" + ID +"'");
     }
-    
+
 
 }
