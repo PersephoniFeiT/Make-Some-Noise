@@ -10,12 +10,6 @@ import java.util.List;
 /** Back-end class that interfaces with the script to connect to the SQL server. */
 
 public class AccountChecks {
-    // MySQL Connection URL
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/makeSomeNoiseDatabase";
-    private static final String USER = "appUser";
-    private static final String PASSWORD = "make some noise";
-    
-    private AccountChecks(String username, String password){}
 
     private static void assertFormat(String[] values){
         for (String item : values){
