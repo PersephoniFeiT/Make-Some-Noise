@@ -6,5 +6,5 @@ package BackEnd;
  * user control and processed as a mathematical model for real-time efficiency
 */
 public class NoiseGenerator {
-
+    
 }
