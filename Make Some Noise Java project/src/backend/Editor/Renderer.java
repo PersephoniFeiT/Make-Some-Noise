@@ -1,4 +1,4 @@
-package BackEnd;
+package BackEnd.Editor;
 
 
 /* Class responsible for rendering layer data into graphical data
