@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/* Accounts table layout:
+ID, username, password, email, list of project ids */
+
 /** Back-end class that interfaces with the script to connect to the SQL server. */
 
 public class AccountChecks {

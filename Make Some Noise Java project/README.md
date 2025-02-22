@@ -13,6 +13,22 @@ Meanwhile, the compiled output files will be generated in the `bin` folder by de
 
 > If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
 
+## Database Setup
+Please ensure you have MySQL downloaded. Run the server on localhost, and ensure you have the following tables:
+
+`accounts:`
+
+| ID  | username | password | email | projectList |
+|-----|----------|----------|-------|-------------|
+| ... | ...      | ...      | ...   | ...         |
+
+`projects:`
+
+| ID | title | username | dateCreated | status | projectInfoStruct  | thumbnail | tags |
+|----|-------|----------|-------------|--------|--------------------|-----------|------|
+|    |       |          |             |        |                    |           |      |
+
+
 ## Dependency Management
 
 The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).

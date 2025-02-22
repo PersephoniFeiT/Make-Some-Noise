@@ -5,6 +5,9 @@ import Exceptions.Accounts.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/* Project table layout:
+ID, Title, username, date created, status, struct with project info, thumbnail, list of tags */
+
 /** Back-end class that interfaces with the script to connect to the SQL server. */
 
 public class ProjectChecks {
