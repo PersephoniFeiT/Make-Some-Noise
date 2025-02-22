@@ -1,19 +1,18 @@
-package Exceptions;
+package Exceptions.Accounts;
 
-import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
-public class ExceptionHandler {
+public class AccountsExceptionHandler {
 
-    public static final Logger logger = Logger.getLogger(ExceptionHandler.class.getName());
+    public static final Logger logger = Logger.getLogger(AccountsExceptionHandler.class.getName());
 
     public static void handleException(Exception e) {
-        if (e instanceof DatabaseConnectionException) ExceptionHandler.handleDatabaseConnectionException(e);
-        else if (e instanceof DuplicateAccountException) ExceptionHandler.handleDuplicateAccountException(e);
-        else if (e instanceof IncorrectPasswordException) ExceptionHandler.handleIncorrectPasswordException(e);
-        else if (e instanceof InvalidInputException) ExceptionHandler.handleInvalidInputException(e);
-        else if (e instanceof NoSuchAccountException) ExceptionHandler.handleNoSuchAccountException(e);
-        else ExceptionHandler.handleUnknownException(e);
+        if (e instanceof DatabaseConnectionException) AccountsExceptionHandler.handleDatabaseConnectionException(e);
+        else if (e instanceof DuplicateAccountException) AccountsExceptionHandler.handleDuplicateAccountException(e);
+        else if (e instanceof IncorrectPasswordException) AccountsExceptionHandler.handleIncorrectPasswordException(e);
+        else if (e instanceof InvalidInputException) AccountsExceptionHandler.handleInvalidInputException(e);
+        else if (e instanceof NoSuchAccountException) AccountsExceptionHandler.handleNoSuchAccountException(e);
+        else AccountsExceptionHandler.handleUnknownException(e);
     }
 
     private static void handleDatabaseConnectionException(Exception e) {

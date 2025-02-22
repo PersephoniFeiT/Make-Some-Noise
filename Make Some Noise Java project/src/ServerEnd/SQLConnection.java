@@ -1,9 +1,7 @@
 package ServerEnd;
 
-import Exceptions.DatabaseConnectionException;
+import Exceptions.Accounts.DatabaseConnectionException;
 
-import javax.sql.RowSet;
-import javax.xml.transform.Result;
 import java.sql.*;
 
 public class SQLConnection {

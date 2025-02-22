@@ -1,9 +1,11 @@
 package ServerEnd;
 
-import Exceptions.*;
+import Exceptions.Accounts.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Back-end class that interfaces with the script to connect to the SQL server. */
 
@@ -44,7 +46,7 @@ public class AccountChecks {
         }
 
         try {
-            ResultSet rs = SQLConnection.select("accounts", "'username' = " + username);
+            ResultSet rs = SQLConnection.select("accounts", "username = '" + username+"'");
             while (rs.next()) {
                 //assuming 1st col is ID, 2nd is username, 3rd is pwd
                 if (rs.getString(3).equals(password)) return rs.getString(1);
@@ -66,11 +68,8 @@ public class AccountChecks {
             throw new InvalidInputException("Invalid input.");
         }
 
-        SQLConnection.delete("accounts", "'ID' = " + ID);
+        SQLConnection.delete("accounts", "ID = '" + ID +"'");
     }
-
-    public static void getPublicProjectsInAccount(String ID){}
-
-    public static void getPrivateProjectsInAccount(String ID){}
+    
 
 }

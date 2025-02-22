@@ -1,4 +1,4 @@
-package Exceptions;
+package Exceptions.Accounts;
 
 public class InvalidInputException extends Exception {
         public InvalidInputException(String message) {

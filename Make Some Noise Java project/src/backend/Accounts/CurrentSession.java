@@ -1,8 +1,7 @@
 package BackEnd.Accounts;
 
-import Exceptions.*;
+import Exceptions.Accounts.AccountsExceptionHandler;
 import ServerEnd.AccountChecks;
-import ServerEnd.SQLConnection;
 
 public class CurrentSession {
     private String signedIn;
@@ -16,7 +15,7 @@ public class CurrentSession {
             AccountChecks.createNewAccount(username, password, email);
             this.SignIn(username, password);
         } catch (Exception e) {
-            ExceptionHandler.handleException(e);
+            AccountsExceptionHandler.handleException(e);
         }
     }
 
@@ -25,7 +24,7 @@ public class CurrentSession {
         try {
             ID = AccountChecks.signIn(username, password);
         } catch (Exception e) {
-            ExceptionHandler.handleException(e);
+            AccountsExceptionHandler.handleException(e);
         }
         this.signedIn = ID;
     }
@@ -35,7 +34,7 @@ public class CurrentSession {
             AccountChecks.signOut(this.signedIn);
             this.signedIn = null;
         } catch (Exception e) {
-            ExceptionHandler.handleException(e);
+            AccountsExceptionHandler.handleException(e);
         }
     }
 
@@ -44,7 +43,7 @@ public class CurrentSession {
             AccountChecks.deleteAccount(this.signedIn);
             this.SignOut();
         } catch (Exception e){
-            ExceptionHandler.handleException(e);
+            AccountsExceptionHandler.handleException(e);
         }
     }
 }
