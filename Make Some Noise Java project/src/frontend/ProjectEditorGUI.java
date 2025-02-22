@@ -17,21 +17,16 @@ public class MakeSomeNoiseGUI {
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Create a NoisePanel to display the generated noise pattern
-        int width = 10;
-        int height = 10;
-        byte ff = (byte) 0xff;
-        byte[] r = { ff, 0, 0, ff, 0 };
-        byte[] g = { 0, ff, 0, ff, 0 };
-        byte[] b = { 0, 0, ff, ff, 0 };
-        NoisePanel np = new NoisePanel(new IndexColorModel(3, 5, r, g, b), width, height);
-        np.setBounds(10, 10, 600, 400);
+        int width = 647;
+        int height = 400;
+        NoisePanel np = new NoisePanel(width, height);
+        np.setBounds(10, 10, width, height);
         np.setBorder(new LineBorder(Color.BLACK));
 
         // Create JButton that will render the Noise pattern on the NoisePanel np
         JButton renderButton = new JButton("Show Noise"); 
         renderButton.setBounds(100, 500, 130, 40);                  // x axis, y axis, width, height  
         renderButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent evt) {
                 np.setNoiseRaster(null);
