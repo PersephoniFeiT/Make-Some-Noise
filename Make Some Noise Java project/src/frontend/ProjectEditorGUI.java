@@ -1,9 +1,7 @@
-package frontend;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.event.*;
-import java.awt.image.IndexColorModel;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.InetAddress;

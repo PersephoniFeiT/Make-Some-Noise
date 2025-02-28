@@ -1,8 +1,12 @@
-package frontend;
-
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import java.swing.JPanel;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import java.awt.Graphics;
+import java.util.ArrayList;
+import java.awt.event.*;
+
 
 public class LayerPanelList extends JScrollPane {
 
