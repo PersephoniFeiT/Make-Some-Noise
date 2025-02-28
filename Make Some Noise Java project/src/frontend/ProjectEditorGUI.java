@@ -1,18 +1,21 @@
+package frontend;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-
 import java.awt.event.*;
 import java.awt.image.IndexColorModel;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.awt.BorderLayout;
 
-public class MakeSomeNoiseGUI {  
-    public static void main(String[] args) {  
+public class ProjectEditorGUI {  
+    
+    public ProjectEditorGUI() {  
         // create instance of JFrame
         JFrame f = new JFrame();
-        f.setLayout(null);                                          // using no layout managers
+        f.setLayout(new BorderLayout());                                          // using no layout managers
         f.setSize(1000, 600);                                       // width and height
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,7 +61,11 @@ public class MakeSomeNoiseGUI {
                 }
             }
         });
+
+        LayerPanelList layers = new LayerPanelList();
+        f.add(layers, BorderLayout.EAST);
         
+
         // add elements in JFrame
         f.add(renderButton);
         f.add(pingButton);
@@ -67,4 +74,8 @@ public class MakeSomeNoiseGUI {
         
         f.setVisible(true); 
     }  
+
+    public static void main(String args[]){
+        new ProjectEditorGUI();
+    }
 }  
