@@ -33,7 +33,7 @@ public class AccountChecks {
         // check if duplicate account with email & username
 
         // insert into table
-        SQLConnection.insert("accounts", new String[]{username, password, email, "{}"});
+        SQLConnection.insert("accounts", new String[]{username, password, email, "{\"projects\": []}"});
     }
 
     public static String signIn(String username, String password) throws DatabaseConnectionException, NoSuchAccountException, IncorrectPasswordException, InvalidInputException {

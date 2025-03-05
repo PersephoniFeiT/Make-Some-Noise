@@ -14,21 +14,23 @@ public class SQLConnection {
     private static final String PASSWORD = "make some noise";
 
     public static void insert(String tableName, String[] values) throws DatabaseConnectionException {
-        StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " VALUES (");
+        // Build the SQL query with correct syntax
+        StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + "(username, password, email, projectList) VALUES (");
         for (int i = 0; i < values.length; i++) {
             sql.append("?");
             if (i < values.length - 1) sql.append(", ");
         }
-        sql.append(")");
+        sql.append(")");  // Close the VALUES()
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
 
             for (int i = 0; i < values.length; i++) {
-                pstmt.setString(i + 1, "'"+values[i]+"'");
+                pstmt.setString(i + 1, values[i]);  // Correct way to set parameters
             }
 
             pstmt.executeUpdate();
+            System.out.println("User inserted successfully.");
         } catch (SQLException e) {
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }

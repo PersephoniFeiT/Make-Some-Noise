@@ -27,6 +27,7 @@ public class CurrentSession {
             AccountsExceptionHandler.handleException(e);
         }
         this.signedIn = ID;
+        System.out.println("You have successfully signed in as: " + username);
     }
 
     public void SignOut(){
