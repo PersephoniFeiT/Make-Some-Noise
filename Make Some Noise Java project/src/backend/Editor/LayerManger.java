@@ -13,6 +13,6 @@ public class LayerManger {
     }
     
     public double[][] multiplyLayers(){
-        return new PrototypeNoiseLayer().getValues();
+        return null;
     }
 }

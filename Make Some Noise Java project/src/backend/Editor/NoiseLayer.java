@@ -5,7 +5,10 @@ public interface NoiseLayer {
     public int getSeed();
     public double getFreq();
     public double getAmp();
-    public double getGain();
     public double getFloor();
     public double getCeiling();
+    public void setFreq(double newFreq);
+    public void setAmp(double newAmp);
+    public void setFloor(double newFloor);
+    public void setCeiling(double newCeiling);
 }
