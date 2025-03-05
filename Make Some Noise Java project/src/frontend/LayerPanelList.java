@@ -32,7 +32,6 @@ public class LayerPanelList extends JScrollPane {
 			gain 		= new JTextField(nl.getGain().toString(), columnNumber);
 			floor 		= new JTextField(nl.getFloor().toString(), columnNumber);
 			ceiling 	= new JTextField(nl.getCeiling().toString(), columnNumber);
-
 			
 		}
 
