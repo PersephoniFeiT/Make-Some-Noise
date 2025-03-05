@@ -1,4 +1,4 @@
-package frontend;
+/* package frontend;
 import backend.Editor.NoiseLayer;
 
 import javax.swing.JButton;
@@ -29,12 +29,12 @@ public class LayerPanelList extends JScrollPane {
 
 			layerName 	= new JTextField("New Layer");
 
-			seed 		= new JTextField(nl.getSeed().toString(), columnNumber);
-			frequency 	= new JTextField(nl.getFreq().toString(), columnNumber);
-			amplitude 	= new JTextField(nl.getAmp().toString(), columnNumber);
-			gain 		= new JTextField(nl.getGain().toString(), columnNumber);
-			floor 		= new JTextField(nl.getFloor().toString(), columnNumber);
-			ceiling 	= new JTextField(nl.getCeiling().toString(), columnNumber);
+			seed 		= new JTextField(Integer.valueOf(nl.getSeed()).toString(), columnNumber);
+			frequency 	= new JTextField(Double.valueOf(nl.getFreq()).toString(), columnNumber);
+			amplitude 	= new JTextField(Double.valueOf(nl.getAmp()).toString(), columnNumber);
+			gain 		= new JTextField(Double.valueOf(nl.getGain()).toString(), columnNumber);
+			floor 		= new JTextField(Double.valueOf(nl.getFloor()).toString(), columnNumber);
+			ceiling 	= new JTextField(Double.valueOf(nl.getCeiling()).toString(), columnNumber);
 			
 		}
 
@@ -76,4 +76,4 @@ public class LayerPanelList extends JScrollPane {
 		});
 		add(addLayerButton);
 	}
-}
+} */
