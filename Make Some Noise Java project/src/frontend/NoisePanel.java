@@ -1,41 +1,19 @@
-package frontend;
+package FrontEnd;
 
 import javax.swing.*;
 import java.awt.image.*;
-import java.awt.Graphics;
 
 public class NoisePanel extends JPanel{
 
-	private BufferedImage bitmap;
+	private BufferedImage noiseImage;
 
-	public NoisePanel(int w, int h) {
-		bitmap = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-		// Initialize bitmap to a gradient
-		int color = 0x00000000;
-		for (int y = 0; y < h; y++) {
-			color += 0x00FFFFFF/h;
-			for (int x = 0; x < w; x++) {
-				color += 0xFF000000/w;
-				bitmap.setRGB(x, y, color);
-			}
-		}
+	public NoisePanel(IndexColorModel cm, int w, int h) {
+		noiseImage = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_BINARY, cm);
 	}
 
 	public void setNoiseRaster(WritableRaster raster) {
-		bitmap.setData(raster);
+		noiseImage.setData(raster);
 	}
 
-	public void setPixel(int x, int y, int color) {
-		bitmap.setRGB(x, y, color);
-		repaint();
-	}
 
-	@Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        
-        // Draw the bitmap on the JPanel
-        g.drawImage(bitmap, 0, 0, null);
-    }
 }

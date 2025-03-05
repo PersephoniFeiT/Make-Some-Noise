@@ -1,9 +1,15 @@
 package backend.Editor;
 
-
-public class PerlinNoiseLayer implements NoiseLayer{
+public class PrototypeNoiseLayer implements NoiseLayer{
     public double[][] getValues(){
-        return null;
+        double[][] mat = {  {1,0,0,0,0,0,0},
+                            {1,1,0,0,0,0,0},
+                            {1,1,1,0,0,0,0},
+                            {1,1,1,1,0,0,0},
+                            {1,1,1,1,1,0,0},
+                            {1,1,1,1,1,1,0},
+                            {1,1,1,1,1,1,1}};
+        return mat;
     }
 
     @Override
