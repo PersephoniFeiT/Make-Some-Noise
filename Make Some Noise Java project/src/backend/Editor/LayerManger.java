@@ -1,4 +1,4 @@
-package BackEnd.Editor;
+package backend.Editor;
 import java.util.*;
 
 /* Class responsible for multiplying noise layers for fractal adding
@@ -6,7 +6,7 @@ import java.util.*;
  * so they can be rendered*/
 public class LayerManger {
     
-    private ArrayList<NoiseLayer> layerList;
+    private ArrayList<backend.Editor.NoiseLayer> layerList;
     
     protected LayerManger(){
         layerList = new ArrayList<>();

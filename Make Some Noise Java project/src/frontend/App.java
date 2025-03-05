@@ -1,6 +1,6 @@
 package FrontEnd;
 
-import BackEnd.Accounts.CurrentSession;
+import backend.Accounts.CurrentSession;
 
 public class App {
     public static void main(String[] args) throws Exception {

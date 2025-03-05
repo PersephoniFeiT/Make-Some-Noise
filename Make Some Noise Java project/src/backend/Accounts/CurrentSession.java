@@ -1,4 +1,4 @@
-package BackEnd.Accounts;
+package backend.Accounts;
 
 import Exceptions.Accounts.AccountsExceptionHandler;
 import ServerEnd.AccountChecks;

@@ -1,3 +1,5 @@
+package FrontEnd;
+
 import javax.swing.*;
 import java.awt.image.*;
 

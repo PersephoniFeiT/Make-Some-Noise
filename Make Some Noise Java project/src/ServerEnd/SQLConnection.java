@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class SQLConnection {
     // MySQL Connection URL
-    private static final String URL = "jdbc:mysql://127.0.0.1:3306/makeSomeNoiseDatabase";
+    private static final String URL = "jdbc:mysql://127.0.0.1:3306/makeSomeNoise";
     private static final String USER = "appUser";
     private static final String PASSWORD = "make some noise";
 
