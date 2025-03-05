@@ -21,13 +21,13 @@ public class CreateAccountWindow extends JFrame {
 	public CreateAccountWindow(CurrentSession currentSession) {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));                           // using BorderLayout layout managers
 		setSize(300, 400);                                       // width and height
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		add(Box.createVerticalStrut(50));
 
 		// Add labels and input fields
 		JLabel signInLabel = new JLabel("Create account:");
-        add(signInLabel);
+		add(signInLabel);
 
 		add(Box.createVerticalStrut(20));
 
@@ -64,8 +64,8 @@ public class CreateAccountWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				currentSession.CreateNewAccount(userNameField.getText(), passwordField.getPassword().toString(), emailField.getText());
-				setVisible(false); 
-				dispose(); 
+				setVisible(false);
+				dispose();
 			}
 		});
 		add(submitButton);
@@ -81,8 +81,8 @@ public class CreateAccountWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				new SignInWindow(currentSession);
-				setVisible(false); 
-				dispose(); 
+				setVisible(false);
+				dispose();
 			}
 		});
 		add(createAccountButton);
