@@ -1,4 +1,4 @@
-package FrontEnd;
+package frontend;
 
 import backend.Accounts.CurrentSession;
 

@@ -1,3 +1,6 @@
+package frontend;
+import backend.Editor.NoiseLayer;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPanel;
