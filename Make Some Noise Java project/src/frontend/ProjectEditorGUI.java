@@ -1,15 +1,16 @@
+package frontend;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.event.*;
 import java.awt.Color;
 import java.awt.BorderLayout;
-
+import backend.Accounts.CurrentSession;
 
 public class ProjectEditorGUI extends JFrame {  
     
-    public ProjectEditorGUI() {  
-        setLayout(new BorderLayout());                             // using BorderLayout layout managers
+    public ProjectEditorGUI(CurrentSession currentSession) {  
+        setLayout(new BorderLayout());                            // using BorderLayout layout managers
         setSize(1000, 600);                                       // width and height
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -22,7 +23,7 @@ public class ProjectEditorGUI extends JFrame {
 
         // Create JButton that will render the Noise pattern on the NoisePanel np
         JButton renderButton = new JButton("Show Noise"); 
-        renderButton.setBounds(100, 500, 130, 40);                  // x axis, y axis, width, height  
+        renderButton.setBounds(20, 410, 130, 40);                  // x axis, y axis, width, height  
         renderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -32,11 +33,11 @@ public class ProjectEditorGUI extends JFrame {
 
         // Create JButton for sign-in
         JButton signInButton = new JButton("Sign In");
-        signInButton.setBounds(500, 50, 100, 25);
+        signInButton.setBounds(800, 20, 100, 25);
         signInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                
+                new SignInWindow(currentSession);
             }
         });
         add(signInButton);
@@ -53,7 +54,7 @@ public class ProjectEditorGUI extends JFrame {
         setVisible(true); 
     }  
 
-    public static void main(String args[]){
-        new ProjectEditorGUI();
-    }
+    // public static void main(String args[]){
+    //     new ProjectEditorGUI();
+    // }
 }  
