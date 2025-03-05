@@ -1,4 +1,4 @@
-package BackEnd.Editor;
+package backend.Editor;
 
 public class PrototypeNoiseLayer implements NoiseLayer{
     public double[][] getValues(){
@@ -54,9 +54,4 @@ public class PrototypeNoiseLayer implements NoiseLayer{
         throw new UnsupportedOperationException("Unimplemented method 'getCeiling'");
     }
 
-    @Override
-    public void regenerate() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'regenerate'");
-    }
 }

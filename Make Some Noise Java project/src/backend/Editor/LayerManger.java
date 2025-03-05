@@ -1,4 +1,4 @@
-package BackEnd.Editor;
+package backend.Editor;
 import java.util.*;
 
 /* Class responsible for multiplying noise layers for fractal adding

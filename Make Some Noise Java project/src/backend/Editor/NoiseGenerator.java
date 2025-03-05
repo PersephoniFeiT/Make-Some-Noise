@@ -1,4 +1,4 @@
-package BackEnd.Editor;
+package backend.Editor;
 
 /* Class responsible for generating real-time procedural noise layers.
  * Noise algorithm needs to be highly deterministic of paramaters so

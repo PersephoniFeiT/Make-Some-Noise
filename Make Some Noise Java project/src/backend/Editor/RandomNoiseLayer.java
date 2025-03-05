@@ -1,15 +1,25 @@
 package backend.Editor;
+import java.util.Random;
+public class RandomNoiseLayer implements NoiseLayer{
+    int seed;
+    Random rng;
+    double floor;
+    double ceiling;
+    double amplitude;
+    double frequency;
 
-
-public class PerlinNoiseLayer implements NoiseLayer{
-    public double[][] getValues(){
-        return null;
+    public RandomNoiseLayer(int seed, double floor, double ceiling, double amplitude, double frequency){
+        this.seed = seed;
+        this.rng = new Random(seed);
+        this.floor = (floor <= 0)? 0 : (floor > ceiling)? ceiling : floor;
+        this.ceiling = (ceiling >= 1)? 1 : (ceiling < floor)? floor : ceiling;
+        this.amplitude = (amplitude >= 1)? 1 : (amplitude <= 0)? 0 : amplitude;
+        this.frequency = frequency;
     }
 
     @Override
     public double evaluate(int x, int y) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'evaluate'");
+        return 0;
     }
 
     @Override
@@ -47,4 +57,5 @@ public class PerlinNoiseLayer implements NoiseLayer{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getCeiling'");
     }
+    
 }

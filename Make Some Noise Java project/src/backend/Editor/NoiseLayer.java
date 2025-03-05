@@ -1,6 +1,4 @@
-package BackEnd.Editor;
-
-import org.apache.commons.math4.*;
+package backend.Editor;
 
 public interface NoiseLayer {
     public double evaluate(int x, int y);
