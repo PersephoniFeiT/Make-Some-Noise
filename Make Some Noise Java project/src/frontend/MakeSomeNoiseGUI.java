@@ -1,4 +1,4 @@
-package frontend;
+/* package frontend;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -74,4 +74,4 @@ public class MakeSomeNoiseGUI {
         
         f.setVisible(true); 
     }  
-}  
+}  */
