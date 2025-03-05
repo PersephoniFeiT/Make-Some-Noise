@@ -3,6 +3,8 @@ package frontend;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 
+import java.util.Arrays;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,7 +65,11 @@ public class CreateAccountWindow extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				currentSession.CreateNewAccount(userNameField.getText(), passwordField.getPassword().toString(), emailField.getText());
+				char[] passwordChars = passwordField.getPassword();
+				String password = new String(passwordChars);
+				// Securely wipe the password
+				Arrays.fill(passwordChars, '\0');
+				currentSession.CreateNewAccount(userNameField.getText(), password, emailField.getText());
 				setVisible(false);
 				dispose();
 			}

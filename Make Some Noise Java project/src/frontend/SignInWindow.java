@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -56,7 +57,11 @@ public class SignInWindow extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				currentSession.SignIn(userNameField.getText(), passwordField.getPassword().toString());
+				char[] passwordChars = passwordField.getPassword();
+				String password = new String(passwordChars);
+				// Securely wipe the password
+				Arrays.fill(passwordChars, '\0');
+				currentSession.SignIn(userNameField.getText(), password);
 				setVisible(false);
 				dispose();
 			}

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /* Accounts table layout:
 ID, username, password, email, list of project ids */
@@ -32,7 +33,7 @@ public class AccountChecks {
         // check if duplicate account with email & username
 
         // insert into table
-        SQLConnection.insert("accounts", new String[]{username, password, email});
+        SQLConnection.insert("accounts", new String[]{username, password, email, "{}"});
     }
 
     public static String signIn(String username, String password) throws DatabaseConnectionException, NoSuchAccountException, IncorrectPasswordException, InvalidInputException {
@@ -43,14 +44,16 @@ public class AccountChecks {
         }
 
         try {
-            ResultSet rs = SQLConnection.select("accounts", "username = '" + username+"'");
-            while (rs.next()) {
-                //assuming 1st col is ID, 2nd is username, 3rd is pwd
-                if (rs.getString(3).equals(password)) return rs.getString(1);
+            List<Map<String, Object>> rs = SQLConnection.select("accounts", "*","username = '" + username+"'");
+            if (rs.isEmpty()) throw new NoSuchAccountException("Username does not exist.");
+            for (Map<String, Object> user : rs) {
+                if (user.get("password").equals(password))
+                    return user.get("ID").toString();
             }
             throw new IncorrectPasswordException("Your username or password is incorrect.");
-        } catch (SQLException e){
-            throw new NoSuchAccountException("Username does not exist.");
+
+        } catch (DatabaseConnectionException e){
+            throw new DatabaseConnectionException(e.getMessage());
         }
     }
 
