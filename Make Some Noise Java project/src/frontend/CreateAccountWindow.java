@@ -3,7 +3,6 @@ package frontend;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 
-// import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,20 +16,20 @@ import javax.swing.WindowConstants;
 
 import backend.Accounts.CurrentSession;
 
-public class SignInWindow extends JFrame {
+public class CreateAccountWindow extends JFrame {
 
-	public SignInWindow(CurrentSession currentSession) {
-		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));  	       // using BoxLayout layout managers
-		setSize(300, 400);        				                               // width and height
+	public CreateAccountWindow(CurrentSession currentSession) {
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));                           // using BorderLayout layout managers
+		setSize(300, 400);                                       // width and height
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		add(Box.createVerticalStrut(50));
 
 		// Add labels and input fields
-		JLabel signInLabel = new JLabel("Sign In:");
+		JLabel signInLabel = new JLabel("Create account:");
         add(signInLabel);
 
-		add(Box.createVerticalStrut(40));
+		add(Box.createVerticalStrut(20));
 
 		JLabel userNameFieldLabel = new JLabel("Username:");
 		add(userNameFieldLabel);
@@ -39,7 +38,16 @@ public class SignInWindow extends JFrame {
 		userNameField.setMaximumSize(new Dimension(350, 75));
 		add(userNameField);
 
-		add(Box.createVerticalStrut(40));
+		add(Box.createVerticalStrut(20));
+
+		JLabel emailFieldLabel = new JLabel("Email:");
+		add(emailFieldLabel);
+
+		JTextField emailField = new JTextField();
+		emailField.setMaximumSize(new Dimension(350, 75));
+		add(emailField);
+
+		add(Box.createVerticalStrut(20));
 
 		JLabel passwordFieldLabel = new JLabel("Password:");
 		add(passwordFieldLabel);
@@ -52,11 +60,10 @@ public class SignInWindow extends JFrame {
 
 		// add button for server account checks
 		JButton submitButton = new JButton("Submit");
-		// submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				currentSession.SignIn(userNameField.getText(), passwordField.getPassword().toString());
+				currentSession.CreateNewAccount(userNameField.getText(), passwordField.getPassword().toString(), emailField.getText());
 				setVisible(false); 
 				dispose(); 
 			}
@@ -65,20 +72,17 @@ public class SignInWindow extends JFrame {
 
 		add(Box.createVerticalGlue());
 
-		// add "create new account" button and label
-		JLabel createAccountLabel = new JLabel("Don't have an account?");
-		// createAccountLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		// add "sign into existing account" button and label
+		JLabel createAccountLabel = new JLabel("Already have an account?");
 		add(createAccountLabel);
 
-		JButton createAccountButton = new JButton("Create account");
-		// createAccountButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		JButton createAccountButton = new JButton("Sign in");
 		createAccountButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				new CreateAccountWindow(currentSession);
+				new SignInWindow(currentSession);
 				setVisible(false); 
 				dispose(); 
-				
 			}
 		});
 		add(createAccountButton);
