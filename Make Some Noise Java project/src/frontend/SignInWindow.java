@@ -22,13 +22,13 @@ public class SignInWindow extends JFrame {
 	public SignInWindow(CurrentSession currentSession) {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));  	       // using BoxLayout layout managers
 		setSize(300, 400);        				                               // width and height
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		add(Box.createVerticalStrut(50));
 
 		// Add labels and input fields
 		JLabel signInLabel = new JLabel("Sign In:");
-        add(signInLabel);
+		add(signInLabel);
 
 		add(Box.createVerticalStrut(40));
 
@@ -57,8 +57,8 @@ public class SignInWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				currentSession.SignIn(userNameField.getText(), passwordField.getPassword().toString());
-				setVisible(false); 
-				dispose(); 
+				setVisible(false);
+				dispose();
 			}
 		});
 		add(submitButton);
@@ -76,9 +76,9 @@ public class SignInWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				new CreateAccountWindow(currentSession);
-				setVisible(false); 
-				dispose(); 
-				
+				setVisible(false);
+				dispose();
+
 			}
 		});
 		add(createAccountButton);
