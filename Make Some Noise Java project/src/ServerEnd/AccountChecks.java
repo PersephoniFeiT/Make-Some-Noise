@@ -58,13 +58,27 @@ public class AccountChecks {
         // whatever keeps track of the current sign-in
     }
 
+    /** Account:View
+     * If a user is logged in, they may choose to view their account. They will be able to see their projects
+     * saved on the server and the associated title, image preview, and tags. They will also be able to see their
+     * biographical field. */
+
+    /**  Account:Edit:User
+     * If a user is viewing their own account, they may choose to edit their account. They may edit their
+     * biographical field, delete any of their own patterns from the server as described in Server:DeletePattern,
+     * or modify any of their own patterns as described in Server:EditPattern.  */
+
+    /** Account:Edit:Admin
+     * If an administrator is viewing an account as described in Server:ViewUser, they may choose to edit that
+     * account as if they were the owner of that account, as described in Account:Edit:User. */
+
+    /** Account:Delete */
     public static void deleteAccount(String ID) throws DatabaseConnectionException, InvalidInputException {
         try {
             AccountChecks.assertFormat(new String[]{ID});
         } catch (AssertionError e){
             throw new InvalidInputException("Invalid input.");
         }
-
         SQLConnection.delete("accounts", "ID = '" + ID +"'");
     }
 
