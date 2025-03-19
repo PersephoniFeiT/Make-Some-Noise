@@ -1,4 +1,4 @@
-package backend.Editor;
+package BackEnd.Editor;
 
 
 public class PerlinNoiseLayer implements NoiseLayer {

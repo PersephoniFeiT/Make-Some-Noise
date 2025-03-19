@@ -1,4 +1,4 @@
-package backend.Accounts;
+package BackEnd.Accounts;
 
 import Exceptions.Accounts.ExceptionHandler;
 import ServerEnd.BasicDatabaseActions;

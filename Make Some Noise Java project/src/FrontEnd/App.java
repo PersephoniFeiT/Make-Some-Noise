@@ -1,7 +1,7 @@
-package frontend;
+package FrontEnd;
 
-import backend.Accounts.CurrentSession;
-import frontend.ProjectEditorGUI;
+import BackEnd.Accounts.CurrentSession;
+import FrontEnd.ProjectEditorGUI;
 
 public class App {
     public static void main(String[] args) throws Exception {

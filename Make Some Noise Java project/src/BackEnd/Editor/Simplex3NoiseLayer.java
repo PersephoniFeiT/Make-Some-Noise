@@ -1,4 +1,4 @@
-package backend.Editor;
+package BackEnd.Editor;
 
 public class Simplex3NoiseLayer implements NoiseLayer{
     double seed;

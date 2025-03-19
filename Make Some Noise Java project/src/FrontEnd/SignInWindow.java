@@ -1,4 +1,4 @@
-package frontend;
+package FrontEnd;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
-import backend.Accounts.CurrentSession;
+import BackEnd.Accounts.CurrentSession;
 
 public class SignInWindow extends JFrame {
 

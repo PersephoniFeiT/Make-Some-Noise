@@ -1,4 +1,4 @@
-package backend.Editor;
+package BackEnd.Editor;
 import java.util.Random;
 public class RandomNoiseLayer implements NoiseLayer{
     int seed;

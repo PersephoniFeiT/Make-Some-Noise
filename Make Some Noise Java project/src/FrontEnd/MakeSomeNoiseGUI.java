@@ -25,7 +25,7 @@ public class MakeSomeNoiseGUI {
         byte[] r = { ff, 0, 0, ff, 0 };
         byte[] g = { 0, ff, 0, ff, 0 };
         byte[] b = { 0, 0, ff, ff, 0 };
-        frontend.NoisePanel np = new NoisePanel(new IndexColorModel(3, 5, r, g, b), width, height);
+        FrontEnd.NoisePanel np = new NoisePanel(new IndexColorModel(3, 5, r, g, b), width, height);
         np.setBounds(10, 10, 600, 400);
         np.setBorder(new LineBorder(Color.BLACK));
 
