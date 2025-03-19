@@ -6,7 +6,7 @@ import java.util.*;
  * so they can be rendered*/
 public class LayerManger {
     
-    private ArrayList<backend.Editor.NoiseLayer> layerList;
+    private ArrayList<BackEnd.Editor.NoiseLayer> layerList;
     
     protected LayerManger(){
         layerList = new ArrayList<>();
