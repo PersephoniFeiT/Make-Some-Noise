@@ -1,7 +1,7 @@
 package BackEnd.Editor;
 
 
-public class PerlinNoiseLayer implements NoiseLayer{
+public class PerlinNoiseLayer implements NoiseLayer {
     public double[][] getValues(){
         return null;
     }

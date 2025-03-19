@@ -1,6 +1,7 @@
 package ServerEnd;
 
 import Exceptions.Accounts.*;
+import BackEnd.Editor.Project;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -150,13 +151,13 @@ public class BasicDatabaseActions {
 
     /** Open project: Get project info */
     public static Project getProjectData(int ID) throws SQLException, DatabaseConnectionException{
-            ResultSet rs = SQLConnection.select("projects", "projectInfoStruct", "ID = " + ID);
-            String projectData = rs.getString("projectInfoStruct");
+        ResultSet rs = SQLConnection.select("projects", "projectInfoStruct", "ID = " + ID);
+        String projectData = rs.getString("projectInfoStruct");
 
         /// TODO
         /// translate from JSON to java
         /// Use Project
-        return new Project(new int[0][0]);
+        return new Project(ID, new int[0][0]);
 
     }
 
