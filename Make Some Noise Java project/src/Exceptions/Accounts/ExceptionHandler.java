@@ -13,6 +13,7 @@ public class ExceptionHandler {
         else if (e instanceof IncorrectPasswordException) ExceptionHandler.handleIncorrectPasswordException(e);
         else if (e instanceof InvalidInputException) ExceptionHandler.handleInvalidInputException(e);
         else if (e instanceof NoSuchAccountException) ExceptionHandler.handleNoSuchAccountException(e);
+        else if (e instanceof NotSignedInException) ExceptionHandler.handleNotSignedInException(e);
         else if (e instanceof SQLException) ExceptionHandler.handleDatabaseConnectionException(e);
         else ExceptionHandler.handleUnknownException(e);
     }
@@ -27,8 +28,13 @@ public class ExceptionHandler {
     private static void handleIncorrectPasswordException(Exception e) {
         logger.severe(e.getMessage());
     }
+
     private static void handleNoSuchAccountException(Exception e) {
         logger.severe("No such account exists: " + e.getMessage());
+    }
+
+    private static void handleNotSignedInException(Exception e) {
+        logger.severe("User is not logged in." + e.getMessage());
     }
 
     private static void handleInvalidInputException(Exception e) {

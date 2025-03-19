@@ -1,7 +1,7 @@
 package ServerEnd;
 
 import Exceptions.Accounts.*;
-import BackEnd.Editor.Project;
+import BackEnd.Accounts.Project;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,14 +55,10 @@ public class BasicDatabaseActions {
      * If a user is logged in, they may choose to view their account. They will be able to see their projects
      * saved on the server and the associated title, image preview, and tags. They will also be able to see their
      * biographical field. */
-    public static String getUsername(int ID) throws SQLException, DatabaseConnectionException{
-        ResultSet rs = SQLConnection.select("accounts", "username", "ID = " + ID);
-        return rs.getString("username");
-    }
-
-    public static String getEmail(int ID) throws SQLException, DatabaseConnectionException{
-        ResultSet rs = SQLConnection.select("accounts", "email", "ID = " + ID);
-        return rs.getString("email");
+    public static String getAccountInfoType(int ID, String type) throws SQLException, DatabaseConnectionException, InvalidInputException {
+        BasicDatabaseActions.assertFormat(new String[]{type});
+        ResultSet rs = SQLConnection.select("accounts", type, "ID = " + ID);
+        return rs.getString(type);
     }
 
     public static void createNewAccount(String username, String password, String email) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
@@ -126,62 +122,24 @@ public class BasicDatabaseActions {
 
     //Title, username, date created, status, struct with project info, thumbnail, list of tags
     /** Open project: Get project info */
-    public static String getProjectTitle(int ID) throws SQLException, DatabaseConnectionException{
-            ResultSet rs = SQLConnection.select("projects", "title", "ID = " + ID);
-            return rs.getString("title");
+    public static String getProjectInfoType(int ID, String type) throws InvalidInputException, SQLException, DatabaseConnectionException{
+        BasicDatabaseActions.assertFormat(new String[]{type});
+        ResultSet rs = SQLConnection.select("projects", type, "ID = " + ID);
+        return rs.getString(type);
     }
 
-    /** Open project: Get project info */
-    public static String getProjectUser(int ID) throws SQLException, DatabaseConnectionException{
-            ResultSet rs = SQLConnection.select("projects", "username", "ID = " + ID);
-            return rs.getString("username");
-    }
-
-    /** Open project: Get project info */
-    public static String getProjectDateCreated(int ID) throws SQLException, DatabaseConnectionException{
-            ResultSet rs = SQLConnection.select("projects", "dateCreated", "ID = " + ID);
-            return rs.getString("dateCreated");
-    }
-
-    /** Open project: Get project info */
-    public static String getProjectStatus(int ID) throws SQLException, DatabaseConnectionException{
-            ResultSet rs = SQLConnection.select("projects", "status", "ID = " + ID);
-            return rs.getString("status");
-    }
-
-    /** Open project: Get project info */
-    public static Project getProjectData(int ID) throws SQLException, DatabaseConnectionException{
-        ResultSet rs = SQLConnection.select("projects", "projectInfoStruct", "ID = " + ID);
-        String projectData = rs.getString("projectInfoStruct");
-
-        /// TODO
-        /// translate from JSON to java
-        /// Use Project
-        return new Project(ID, new int[0][0]);
-
-    }
-
-    /** Open project: Get project info */
-    public static List<String> getProjectTags(int ID) throws SQLException, DatabaseConnectionException{
-            ResultSet rs = SQLConnection.select("projects", "tags", "ID = " + ID);
-            String taglistString = rs.getString("tags");
-
-            String[] tagList = taglistString.split(", ");
-            return Arrays.asList(tagList);
-
-    }
-
-
-    public static void createNewProject(String title, int accountID) throws SQLException, DatabaseConnectionException, InvalidInputException {
-        BasicDatabaseActions.assertFormat(new String[]{title});
+    public static void createNewProject(int accountID, String JSON) throws SQLException, DatabaseConnectionException, InvalidInputException {
+        BasicDatabaseActions.assertFormat(new String[]{JSON});
 
         //make a new project, get the ID
-        int ID = SQLConnection.insert("projects", new String[] {title});
-
-        String defaultProject = "{"+ID+": {" +
-                "layer1: {}" +
-                "}}";
-        // insert into table
+        int ID = SQLConnection.insert("projects", new String[] {"",
+                BasicDatabaseActions.getAccountInfoType(accountID, "username"),
+                "date created",
+                "private",
+                JSON,
+                "thumbnail",
+                ""
+        });
 
         // Step 2: Fetch the existing projects list from the 'accounts' table
         ResultSet existingProjectsRs = SQLConnection.select("accounts", "projects", "ID = " + accountID);
@@ -201,6 +159,7 @@ public class BasicDatabaseActions {
         // update new project list
         SQLConnection.update("accounts", accountID, "projects", updatedProjects);
     }
+
 
     public static void deleteProject(int ID) throws DatabaseConnectionException {
         SQLConnection.delete("projects", "ID = '" + ID +"'");
@@ -245,23 +204,9 @@ public class BasicDatabaseActions {
      * If a user is logged in and connected to the internet, they may search the server for posts. They will be
      * prompted to enter search terms. The application will show the user a list of public posts with tags and
      * titles that match the search terms. */
-    public static List<Integer> searchByTitle(String title) throws SQLException, InvalidInputException, DatabaseConnectionException{
-        BasicDatabaseActions.assertFormat(new String[]{title});
-        ResultSet rs = SQLConnection.select("projects", "ID", "title = " + title);
-        List<Integer> projectIDs = new ArrayList<>();
-        while (rs.next()){
-            projectIDs.add(rs.getInt("ID"));
-        }
-        return projectIDs;
-    }
-
-    /** Sharing:UserSearch
-     * If a user is logged in and connected to the internet, they may search the server for users. They will be
-     * prompted to enter a search term. The application will show the user a list of users with usernames matching
-     * the search term. */
-    public static List<Integer> searchByUser(String username) throws SQLException, InvalidInputException, DatabaseConnectionException{
-        BasicDatabaseActions.assertFormat(new String[]{username});
-        ResultSet rs = SQLConnection.select("projects", "ID", "username = " + username);
+    public static List<Integer> searchBy(String toSearchBy, String value) throws SQLException, InvalidInputException, DatabaseConnectionException{
+        BasicDatabaseActions.assertFormat(new String[]{value});
+        ResultSet rs = SQLConnection.select("projects", "ID", toSearchBy+ " = " + value);
         List<Integer> projectIDs = new ArrayList<>();
         while (rs.next()){
             projectIDs.add(rs.getInt("ID"));
