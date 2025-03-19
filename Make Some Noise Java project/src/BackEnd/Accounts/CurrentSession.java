@@ -111,7 +111,7 @@ public class CurrentSession {
     //////////////////////////////////////////////////////////////////
 
     public Project CreateNewProject() {
-        Project p = new Project();
+        Project p = new Project("");
         try {
             BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
             return p;
