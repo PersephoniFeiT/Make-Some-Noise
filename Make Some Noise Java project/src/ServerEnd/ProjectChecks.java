@@ -45,5 +45,11 @@ public class ProjectChecks {
         SQLConnection.delete("projects", "ID = '" + ID +"'");
     }
 
+    /** Open project: Get project info */
+
+    /** Modify project */
+
+    /** Save project */
+
 
 }
