@@ -1,6 +1,6 @@
 package backend.Accounts;
 
-import Exceptions.Accounts.AccountsExceptionHandler;
+import Exceptions.Accounts.ExceptionHandler;
 import ServerEnd.BasicDatabaseActions;
 
 public class CurrentSession {
@@ -15,7 +15,7 @@ public class CurrentSession {
             BasicDatabaseActions.createNewAccount(username, password, email);
             this.SignIn(username, password);
         } catch (Exception e) {
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
     }
 
@@ -24,7 +24,7 @@ public class CurrentSession {
         try {
             ID = BasicDatabaseActions.signIn(username, password);
         } catch (Exception e) {
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
         this.signedIn = ID;
     }
@@ -34,7 +34,7 @@ public class CurrentSession {
             BasicDatabaseActions.signOut(this.signedIn);
             this.signedIn = null;
         } catch (Exception e) {
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
     }
 
@@ -43,7 +43,7 @@ public class CurrentSession {
             BasicDatabaseActions.deleteAccount(this.signedIn);
             this.SignOut();
         } catch (Exception e){
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
     }
 }

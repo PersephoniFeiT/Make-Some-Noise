@@ -17,77 +17,67 @@ public class SQLConnection {
         }
         sql.append(")");
 
-        try {
-            Integer ID = SQLConnection.queryUpdate(sql.toString());
-            if (ID == null)
-                throw new DatabaseConnectionException("Database connection error: Could not insert.");
-            else return ID.intValue();
-        } catch (SQLException e){
-            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
-        }
+        Integer ID = SQLConnection.queryUpdate(sql.toString());
+        if (ID == null)
+            throw new DatabaseConnectionException("Database connection error: Could not insert.");
+        else return ID.intValue();
     }
 
     public static void update(String tableName, int ID, String columnName, String value) throws DatabaseConnectionException {
         String sql = "UPDATE " +tableName+ " SET " + columnName + " = " + value + " WHERE ID = " + ID;
-        try {
-            SQLConnection.queryUpdate(sql);
-        } catch (SQLException e){
-            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
-        }
+        SQLConnection.queryUpdate(sql);
     }
 
     public static void delete(String tableName, String condition) throws DatabaseConnectionException{
         String sql = "DELETE FROM "+ tableName + " WHERE " + condition;
-
-        try {
-            SQLConnection.queryUpdate(sql);
-        } catch (SQLException e){
-            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
-        }
+        SQLConnection.queryUpdate(sql);
     }
 
     public static ResultSet select(String tableName, String column, String where) throws DatabaseConnectionException {
         String sql = "SELECT " + column + " FROM "+ tableName + " WHERE " + where;
+         return SQLConnection.queryExecute(sql);
+    }
 
+    private static synchronized ResultSet queryExecute(String sql) throws DatabaseConnectionException{
         try {
-            return SQLConnection.queryExecute(sql);
+            // Establish connection
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Connected to MySQL successfully!");
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            ResultSet rs = pstmt.executeQuery(sql);
+
+            // Close connection
+            pstmt.close();
+            conn.close();
+            return rs;
         } catch (SQLException e){
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }
     }
 
-    private static synchronized ResultSet queryExecute(String sql) throws SQLException{
-        // Establish connection
-        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        System.out.println("Connected to MySQL successfully!");
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+    private static synchronized Integer queryUpdate(String sql) throws DatabaseConnectionException {
+        try {
+            // Establish connection
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Connected to MySQL successfully!");
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-        ResultSet rs = pstmt.executeQuery(sql);
+            int rowsAffected = pstmt.executeUpdate();
 
-        // Close connection
-        pstmt.close();
-        conn.close();
-        return rs;
-    }
+            // Close connection
+            pstmt.close();
+            conn.close();
 
-    private static synchronized Integer queryUpdate(String sql) throws SQLException{
-        // Establish connection
-        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        System.out.println("Connected to MySQL successfully!");
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-
-        int rowsAffected = pstmt.executeUpdate();
-
-        // Close connection
-        pstmt.close();
-        conn.close();
-
-        if (rowsAffected > 0) {
-            // Retrieve the generated ID
-            ResultSet rs = pstmt.getGeneratedKeys();
-            if (rs.next()) return rs.getInt(1);
+            if (rowsAffected > 0) {
+                // Retrieve the generated ID
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) return rs.getInt(1);
+            }
+            return null;
+        } catch (SQLException e){
+            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }
-        return null;
     }
 
     public static void main(String[] args) {
