@@ -61,14 +61,15 @@ public class BasicDatabaseActions {
         return rs.getString(type);
     }
 
-    public static void createNewAccount(String username, String password, String email) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
+    public static int createNewAccount(String username, String password, String email) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{username, password, email});
 
         if (BasicDatabaseActions.checkForDuplicateAccounts(username))
             throw new DuplicateAccountException("Account with username: " + username + " already exists.");
 
         // insert into table
-        SQLConnection.insert("accounts", new String[]{username, password, email});
+        int ID = SQLConnection.insert("accounts", new String[]{username, password, email});
+        return ID;
     }
 
     public static int signIn(String username, String password) throws DatabaseConnectionException, NoSuchAccountException, IncorrectPasswordException, InvalidInputException {
@@ -128,7 +129,7 @@ public class BasicDatabaseActions {
         return rs.getString(type);
     }
 
-    public static void createNewProject(int accountID, String JSON) throws SQLException, DatabaseConnectionException, InvalidInputException {
+    public static int createNewProject(int accountID, String JSON) throws SQLException, DatabaseConnectionException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{JSON});
 
         //make a new project, get the ID
@@ -158,6 +159,7 @@ public class BasicDatabaseActions {
         }
         // update new project list
         SQLConnection.update("accounts", accountID, "projects", updatedProjects);
+        return ID;
     }
 
 

@@ -26,6 +26,7 @@ public class CurrentSession {
         else throw new NotSignedInException("");
     }
 
+    //////////////////////
 
     public void CreateNewAccount(String username, String password, String email) {
         try {
@@ -127,9 +128,25 @@ public class CurrentSession {
         try {
             this.getSignedIn();
             BasicDatabaseActions.saveProject(p.getID(), p.toJSONString());
+        } catch (NotSignedInException e){
+            SaveProject(signInLoadProject(p));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
+    }
+
+    private Project signInLoadProject(Project p){
+        try {
+            ///TODO prompt a sign-in, then file current project in database
+            int signinID = 0;
+            p.username = BasicDatabaseActions.getAccountInfoType(signinID, "username");
+            p.status = "private";
+            int projectID = BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
+            return Project.fromJSONtoProject(BasicDatabaseActions.getAccountInfoType(signinID, "projectInfoStruct"));
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+        return p;
     }
 
     /** Open project: Get project info */
@@ -146,4 +163,5 @@ public class CurrentSession {
     }
 
 
+    ///TODO check if not saved
 }
