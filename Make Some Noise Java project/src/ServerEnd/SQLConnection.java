@@ -10,7 +10,7 @@ public class SQLConnection {
     private static final String USER = "appUser";
     private static final String PASSWORD = "make some noise";
 
-    public static void insert(String tableName, String[] values) throws DatabaseConnectionException {
+    public static int insert(String tableName, String[] values) throws DatabaseConnectionException {
         StringBuilder sql = new StringBuilder("INSERT INTO " + tableName +  " VALUES (");
         for (String v : values){
             sql.append(v);
@@ -18,7 +18,19 @@ public class SQLConnection {
         sql.append(")");
 
         try {
-            SQLConnection.queryUpdate(sql.toString());
+            Integer ID = SQLConnection.queryUpdate(sql.toString());
+            if (ID == null)
+                throw new DatabaseConnectionException("Database connection error: Could not insert.");
+            else return ID.intValue();
+        } catch (SQLException e){
+            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
+        }
+    }
+
+    public static void update(String tableName, int ID, String columnName, String value) throws DatabaseConnectionException {
+        String sql = "UPDATE " +tableName+ " SET " + columnName + " = " + value + " WHERE ID = " + ID;
+        try {
+            SQLConnection.queryUpdate(sql);
         } catch (SQLException e){
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }
@@ -34,8 +46,8 @@ public class SQLConnection {
         }
     }
 
-    public static ResultSet select(String tableName, String condition) throws DatabaseConnectionException {
-        String sql = "SELECT " + condition + " FROM "+ tableName;
+    public static ResultSet select(String tableName, String column, String where) throws DatabaseConnectionException {
+        String sql = "SELECT " + column + " FROM "+ tableName + " WHERE " + where;
 
         try {
             return SQLConnection.queryExecute(sql);
@@ -58,7 +70,7 @@ public class SQLConnection {
         return rs;
     }
 
-    private static synchronized void queryUpdate(String sql) throws SQLException{
+    private static synchronized Integer queryUpdate(String sql) throws SQLException{
         // Establish connection
         Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
         System.out.println("Connected to MySQL successfully!");
@@ -69,6 +81,13 @@ public class SQLConnection {
         // Close connection
         pstmt.close();
         conn.close();
+
+        if (rowsAffected > 0) {
+            // Retrieve the generated ID
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) return rs.getInt(1);
+        }
+        return null;
     }
 
     public static void main(String[] args) {
