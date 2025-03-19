@@ -35,12 +35,14 @@ public class Project {
     }
 
     public static Project fromJSONtoProject(String JSON){
+        ///TODO translate JSON
         return new Project("");
     }
 
     public Integer getID(){return this.ID;}
 
     public String toJSONString(){
+        ///TODO translate to JSON
         return "";
     }
 }
