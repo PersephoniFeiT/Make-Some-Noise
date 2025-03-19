@@ -2912,7 +2912,7 @@ Version 6.0.6
 	  the old class will not be instantiated for communications link-related
 	  errors under Java 6.
 
-	- Added support for JDBC-4.0's client information. The backend storage
+	- Added support for JDBC-4.0's client information. The BackEnd storage
 	  of information provided via Connection.setClientInfo() and retrieved
 	  by Connection.getClientInfo() is pluggable by any class that implements
 	  the com.mysql.jdbc.JDBC4ClientInfoProvider interface and has a no-args

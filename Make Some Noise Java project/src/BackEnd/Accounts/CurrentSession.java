@@ -1,10 +1,10 @@
 package backend.Accounts;
 
-import Exceptions.Accounts.AccountsExceptionHandler;
-import ServerEnd.AccountChecks;
+import Exceptions.Accounts.ExceptionHandler;
+import ServerEnd.BasicDatabaseActions;
 
 public class CurrentSession {
-    private String signedIn;
+    private Integer signedIn;
 
     public CurrentSession(){
         signedIn = null;
@@ -12,19 +12,19 @@ public class CurrentSession {
 
     public void CreateNewAccount(String username, String password, String email) {
         try {
-            AccountChecks.createNewAccount(username, password, email);
+            BasicDatabaseActions.createNewAccount(username, password, email);
             this.SignIn(username, password);
         } catch (Exception e) {
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
     }
 
     public void SignIn(String username, String password){
-        String ID = null;
+        Integer ID = null;
         try {
-            ID = AccountChecks.signIn(username, password);
+            ID = BasicDatabaseActions.signIn(username, password);
         } catch (Exception e) {
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
         this.signedIn = ID;
         System.out.println("You have successfully signed in as: " + username);
@@ -32,19 +32,19 @@ public class CurrentSession {
 
     public void SignOut(){
         try {
-            AccountChecks.signOut(this.signedIn);
+            BasicDatabaseActions.signOut(this.signedIn);
             this.signedIn = null;
         } catch (Exception e) {
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
     }
 
     public void DeleteAccount(){
         try {
-            AccountChecks.deleteAccount(this.signedIn);
+            BasicDatabaseActions.deleteAccount(this.signedIn);
             this.SignOut();
         } catch (Exception e){
-            AccountsExceptionHandler.handleException(e);
+            ExceptionHandler.handleException(e);
         }
     }
 }

@@ -13,83 +13,73 @@ public class SQLConnection {
     private static final String USER = "appUser";
     private static final String PASSWORD = "make some noise";
 
-    public static void insert(String tableName, String[] values) throws DatabaseConnectionException {
-        // Build the SQL query with correct syntax
-        StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + "(username, password, email, projectList) VALUES (");
-        for (int i = 0; i < values.length; i++) {
-            sql.append("?");
-            if (i < values.length - 1) sql.append(", ");
+    public static int insert(String tableName, String[] values) throws DatabaseConnectionException {
+        StringBuilder sql = new StringBuilder("INSERT INTO " + tableName +  " VALUES (");
+        for (String v : values){
+            sql.append(v);
         }
         sql.append(")");  // Close the VALUES()
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
-
-            for (int i = 0; i < values.length; i++) {
-                pstmt.setString(i + 1, values[i]);  // Correct way to set parameters
-            }
-
-            pstmt.executeUpdate();
-            System.out.println("User inserted successfully.");
-        } catch (SQLException e) {
-            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
-        }
+        Integer ID = SQLConnection.queryUpdate(sql.toString());
+        if (ID == null)
+            throw new DatabaseConnectionException("Database connection error: Could not insert.");
+        else return ID.intValue();
     }
 
-    public static void delete(String tableName, String condition) throws DatabaseConnectionException {
-        String sql = "DELETE FROM " + tableName + " WHERE " + condition;
-
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
-        }
+    public static void update(String tableName, int ID, String columnName, String value) throws DatabaseConnectionException {
+        String sql = "UPDATE " +tableName+ " SET " + columnName + " = " + value + " WHERE ID = " + ID;
+        SQLConnection.queryUpdate(sql);
     }
 
-    public static List<Map<String, Object>> select(String tableName, String columns, String condition)
-            throws DatabaseConnectionException {
-        String sql = "SELECT " + columns + " FROM " + tableName;
-        if (condition != null && !condition.isEmpty()) {
-            sql += " WHERE " + condition;
-        }
+    public static void delete(String tableName, String condition) throws DatabaseConnectionException{
+        String sql = "DELETE FROM "+ tableName + " WHERE " + condition;
+        SQLConnection.queryUpdate(sql);
+    }
 
+    public static ResultSet select(String tableName, String column, String where) throws DatabaseConnectionException {
+        String sql = "SELECT " + column + " FROM "+ tableName + " WHERE " + where;
+         return SQLConnection.queryExecute(sql);
+    }
+
+    private static synchronized ResultSet queryExecute(String sql) throws DatabaseConnectionException{
         try {
-            return queryExecute(sql);
-        } catch (SQLException e) {
+            // Establish connection
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Connected to MySQL successfully!");
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            ResultSet rs = pstmt.executeQuery(sql);
+
+            // Close connection
+            pstmt.close();
+            conn.close();
+            return rs;
+        } catch (SQLException e){
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }
     }
 
-    private static synchronized List<Map<String, Object>> queryExecute(String sql) throws SQLException {
-        List<Map<String, Object>> results = new ArrayList<>();
+    private static synchronized Integer queryUpdate(String sql) throws DatabaseConnectionException {
+        try {
+            // Establish connection
+            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Connected to MySQL successfully!");
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+            int rowsAffected = pstmt.executeUpdate();
 
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
+            // Close connection
+            pstmt.close();
+            conn.close();
 
-            while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnName = metaData.getColumnName(i);
-                    Object columnValue = rs.getObject(i);
-                    row.put(columnName, columnValue);
-                }
-                results.add(row);
+            if (rowsAffected > 0) {
+                // Retrieve the generated ID
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) return rs.getInt(1);
             }
-        }  // Auto-closes resources
-            return results;
-    }
-
-    private static synchronized void queryUpdate(String sql) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.executeUpdate();
+            return null;
+        } catch (SQLException e){
+            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }
     }
 
