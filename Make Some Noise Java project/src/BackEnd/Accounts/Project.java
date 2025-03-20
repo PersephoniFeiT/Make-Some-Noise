@@ -1,14 +1,10 @@
 package BackEnd.Accounts;
-
 import BackEnd.Editor.*;
-
 import BackEnd.Editor.PerlinNoiseLayer;
-
 import Exceptions.Accounts.ExceptionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
