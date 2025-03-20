@@ -57,5 +57,31 @@ public class RandomNoiseLayer implements NoiseLayer{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getCeiling'");
     }
-    
+
+    @Override
+    public void setFreq(double newFreq) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setFreq'");
+    }
+
+    @Override
+    public void setAmp(double newAmp) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setAmp'");
+    }
+
+    @Override
+    public void setFloor(double newFloor) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setFloor'");
+    }
+
+    @Override
+    public void setCeiling(double newCeiling) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setCeiling'");
+    }
+
+    @Override
+    public void setGain(double newGain) {;}
 }

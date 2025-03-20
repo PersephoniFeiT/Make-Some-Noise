@@ -1,5 +1,7 @@
 package ServerEnd;
 
+import BackEnd.Editor.NoiseLayer;
+import BackEnd.Editor.PerlinNoiseLayer;
 import Exceptions.Accounts.DatabaseConnectionException;
 
 import java.sql.*;
@@ -84,35 +86,7 @@ public class SQLConnection {
     }
 
     public static void main(String[] args) {
-        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD)) {
-            System.out.println("Connected to MySQL successfully!");
-
-            String sql = "INSERT INTO accounts (username, password, email, projectList) VALUES (?, 'test', ?, '{}')";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, "myName");
-                pstmt.setString(2, "myEmail5");
-                int rowsAffected = pstmt.executeUpdate();
-                System.out.println("Rows inserted: " + rowsAffected);
-            }
-            System.out.println("INSERTED");
-
-            sql = "SELECT * FROM accounts";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql);
-                 ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    System.out.println(rs.getString("username"));
-                }
-            }
-            System.out.println("SELECTED");
-
-            sql = "DELETE FROM accounts WHERE username = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, "myName");
-                int rowsAffected = pstmt.executeUpdate();
-                System.out.println("Rows deleted: " + rowsAffected);
-            }
-        } catch (SQLException e) {
-            System.out.println("Connection failed: " + e.getMessage());
-        }
+        NoiseLayer n = new PerlinNoiseLayer();
+        System.out.println(n.getClass());
     }
 }

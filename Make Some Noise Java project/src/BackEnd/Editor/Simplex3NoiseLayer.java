@@ -47,6 +47,9 @@ public class Simplex3NoiseLayer implements NoiseLayer{
     }
 
     @Override
+    public double getGain() {return -1;}
+
+    @Override
     public void setFreq(double newFreq) {
         this.frequency = newFreq;
     }
@@ -65,4 +68,7 @@ public class Simplex3NoiseLayer implements NoiseLayer{
     public void setCeiling(double newCeiling) {
         this.ceiling = (newCeiling >= 1)? 1 : (newCeiling <= getFloor())? floor : ceiling;
     }
+
+    @Override
+    public void setGain(double newGain) {;}
 }

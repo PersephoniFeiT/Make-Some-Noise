@@ -95,6 +95,7 @@ public class Project {
                 double amp = layerNode.get("amp").asDouble();
                 double floor = layerNode.get("floor").asDouble();
                 double ceiling = layerNode.get("ceiling").asDouble();
+                double gain = layerNode.get("gain").asDouble();
 
                 String type = layerNode.get("type").asText();
                 if (type.equals("PerlinNoiseLayer")) layer = new PerlinNoiseLayer();
@@ -131,12 +132,13 @@ public class Project {
         int i = 1;
         for (NoiseLayer l : this.layers){
             s.append("layer").append(i).append(": {");
-            s.append("type: ").append(l.getClass()).append(",");
+            s.append("type: ").append(l.getClass().getSimpleName()).append(",");
             s.append("seed: ").append(l.getSeed()).append(",");
             s.append("freq: ").append(l.getFreq()).append(",");
             s.append("amp: ").append(l.getAmp()).append(",");
             s.append("floor: ").append(l.getFloor()).append(",");
             s.append("ceiling: ").append(l.getCeiling()).append(",");
+            s.append("gain: ").append(l.getGain());
             s.append("}");
             i++;
             if (i<this.layers.size()) s.append(",");

@@ -64,4 +64,10 @@ public class Simplex2NoiseLayer implements NoiseLayer{
         this.ceiling = (newCeiling >= 1)? 1 : (newCeiling <= getFloor())? floor : ceiling;
     }
 
+    @Override
+    public double getGain() {return -1;}
+
+    @Override
+    public void setGain(double newGain) {;}
+
 }
