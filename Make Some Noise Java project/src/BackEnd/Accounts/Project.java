@@ -4,6 +4,7 @@ import BackEnd.Editor.*;
 
 import BackEnd.Editor.PerlinNoiseLayer;
 
+import Exceptions.Accounts.ExceptionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -42,9 +43,9 @@ public class Project {
         this.dateCreated = LocalDate.now();
     }
 
-    public static Project fromJSONtoProject(String JSON){
-        ///TODO translate JSON
+    public Integer getID(){return this.ID;}
 
+    public static Project fromJSONtoProject(String JSON){
         try {
             // mapper to map string names to object fields
             ObjectMapper objectMapper = new ObjectMapper();
@@ -58,7 +59,7 @@ public class Project {
             //otherwise the Project ID is the first string
             String idString = fieldNames.next();
 
-            Integer projectId;
+            int projectId;
             if (idString.equals("null")) return new Project("");
             else projectId = Integer.parseInt(idString);
 
@@ -89,36 +90,31 @@ public class Project {
                 // Assuming NoiseLayer has a constructor or a fromJson method
                 NoiseLayer layer;
 
-                String type = layerNode.get("seed").asText();
+                int seed = layerNode.get("seed").asInt();
+                double freq = layerNode.get("freq").asDouble();
+                double amp = layerNode.get("amp").asDouble();
+                double floor = layerNode.get("floor").asDouble();
+                double ceiling = layerNode.get("ceiling").asDouble();
+
+                String type = layerNode.get("type").asText();
                 if (type.equals("PerlinNoiseLayer")) layer = new PerlinNoiseLayer();
-                else if (type.equals("RandomNoiseLayer")) layer = new RandomNoiseLayer();
-                else if (type.equals("Simplex2NoiseLayer")) layer = new Simplex2NoiseLayer();
-                else if (type.equals("Simplex3NoiseLayer")) layer = new Simplex3NoiseLayer();
-                else if (type.equals("SimplexNoise")) layer = new SimplexNoise();
+                else if (type.equals("RandomNoiseLayer")) layer = new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
+                else if (type.equals("Simplex2NoiseLayer")) layer = new Simplex2NoiseLayer(freq, amp, floor, ceiling);
+                else if (type.equals("Simplex3NoiseLayer")) layer = new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
+                else if (type.equals("SimplexNoise")) layer = null;//new SimplexNoise();
+                else layer = new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
 
-
-
-                = new NoiseLayer(
-                        layerNode.get("seed").asLong(),
-                        layerNode.get("freq").asDouble(),
-                        layerNode.get("amp").asDouble(),
-                        layerNode.get("floor").asDouble(),
-                        layerNode.get("ceiling").asDouble()
-                );
                 project.layers.add(layer);
                 layerIndex++;
             }
 
             return project;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (Exception e){
+            ExceptionHandler.handleException(e);
         }
-
+        // if we've gotten through all of this and there was a problem, return blank project.
         return new Project("");
     }
-
-    public Integer getID(){return this.ID;}
 
     public String toJSONString(){
         StringBuilder s = new StringBuilder();
