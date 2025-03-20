@@ -1,15 +1,10 @@
 package BackEnd.Accounts;
 
-import Exceptions.Accounts.DatabaseConnectionException;
 import Exceptions.Accounts.ExceptionHandler;
 import Exceptions.Accounts.InvalidInputException;
 import Exceptions.Accounts.NotSignedInException;
 import ServerEnd.BasicDatabaseActions;
-import ServerEnd.SQLConnection;
 
-import java.io.InvalidClassException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -124,33 +119,31 @@ public class CurrentSession {
         return p;
     }
 
-    public void SaveProject(Project p){
+    public void SaveProject(Project p) {
         try {
             this.getSignedIn();
             BasicDatabaseActions.saveProject(p.getID(), p.toJSONString());
         } catch (NotSignedInException e){
-            SaveProject(signInLoadProject(p));
+            ///TODO prompt a sign-in, then file current project in database
+            ///sign in here
+
+            SaveProject(signInToNewProject(p));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
     }
 
-    private Project signInLoadProject(Project p){
+    private Project signInToNewProject(Project p){
         try {
-            ///TODO prompt a sign-in, then file current project in database
-            int signinID = 0;
-            p.username = BasicDatabaseActions.getAccountInfoType(signinID, "username");
-            p.status = "private";
+            p.username = BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "username");
             int projectID = BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
-            return Project.fromJSONtoProject(BasicDatabaseActions.getAccountInfoType(signinID, "projectInfoStruct"));
+            return Project.fromJSONtoProject(BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "projectInfoStruct"));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
         return p;
     }
 
-    /** Open project: Get project info */
-    ///TODO figure out how to deal with projects
     public List<String> getProjectTags(int ID) {
         try {
             String taglistString = BasicDatabaseActions.getProjectInfoType(0, "tags");
@@ -162,6 +155,12 @@ public class CurrentSession {
         return new ArrayList<>();
     }
 
-
-    ///TODO check if not saved
+    public boolean isSaved(Project p){
+        try {
+            return BasicDatabaseActions.compareToCurrentSave(p.getID(), p.toJSONString());
+        } catch (Exception e){
+            ExceptionHandler.handleException(e);
+        }
+        return false;
+    }
 }
