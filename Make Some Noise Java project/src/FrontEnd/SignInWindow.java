@@ -17,6 +17,10 @@ import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
 import BackEnd.Accounts.CurrentSession;
+import Exceptions.Accounts.ExceptionHandler;
+import Exceptions.Accounts.IncorrectPasswordException;
+import Exceptions.Accounts.InvalidInputException;
+import Exceptions.Accounts.NoSuchAccountException;
 
 public class SignInWindow extends JFrame {
 
@@ -61,7 +65,14 @@ public class SignInWindow extends JFrame {
 				String password = new String(passwordChars);
 				// Securely wipe the password
 				Arrays.fill(passwordChars, '\0');
-				currentSession.SignIn(userNameField.getText(), password);
+				try {
+					currentSession.SignIn(userNameField.getText(), password);
+				} catch (IncorrectPasswordException e) {
+				} catch (NoSuchAccountException e) {
+				} catch (InvalidInputException e) {
+				} catch (Exception e) {
+					ExceptionHandler.handleException(e);
+				}
 				setVisible(false);
 				dispose();
 			}

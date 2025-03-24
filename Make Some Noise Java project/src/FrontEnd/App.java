@@ -1,4 +1,4 @@
-package FrontEnd;
+/* package FrontEnd;
 
 import BackEnd.Accounts.CurrentSession;
 import FrontEnd.MakeSomeNoiseWindow;
@@ -11,3 +11,4 @@ public class App {
         new MakeSomeNoiseWindow(currentSession);
     }
 }
+*/

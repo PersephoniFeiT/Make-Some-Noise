@@ -1,8 +1,6 @@
 package BackEnd.Accounts;
 
-import Exceptions.Accounts.ExceptionHandler;
-import Exceptions.Accounts.InvalidInputException;
-import Exceptions.Accounts.NotSignedInException;
+import Exceptions.Accounts.*;
 import ServerEnd.BasicDatabaseActions;
 
 import java.util.*;
@@ -32,10 +30,18 @@ public class CurrentSession {
         }
     }
 
-    public void SignIn(String username, String password){
+    public void SignIn(String username, String password) throws IncorrectPasswordException, NoSuchAccountException, InvalidInputException {
         Integer ID = null;
         try {
             ID = BasicDatabaseActions.signIn(username, password);
+        } catch (IncorrectPasswordException e) {
+            throw new IncorrectPasswordException(e.getMessage());
+        }
+        catch (NoSuchAccountException e) {
+            throw new NoSuchAccountException(e.getMessage());
+        }
+        catch (InvalidInputException e) {
+            throw new InvalidInputException(e.getMessage());
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }

@@ -89,4 +89,11 @@ public class MakeSomeNoiseWindow extends JFrame {
     public void createSignInWindow() {
         new SignInWindow(currentSession);
     }
+
+
+    public static void main(String[] args) throws Exception {
+        CurrentSession cs = new CurrentSession();
+        new MakeSomeNoiseWindow(cs);
+
+    }
 }
