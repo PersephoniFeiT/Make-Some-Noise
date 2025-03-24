@@ -1,7 +1,7 @@
 package FrontEnd;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
-public class AccountPanel extends JFrame {
+public class AccountPanel extends JPanel {
 	
 }
