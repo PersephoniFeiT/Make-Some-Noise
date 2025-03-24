@@ -19,6 +19,7 @@ public class Project {
     public String status;
     public String thumbnail;
     public final List<String> tags = new ArrayList<>();
+    ///TODO LayerManager here?
     public final List<NoiseLayer> layers = new ArrayList<>();
 
     public Project(int ID, String title, String username, LocalDate dateCreated){
@@ -41,6 +42,8 @@ public class Project {
 
     public Integer getID(){return this.ID;}
 
+
+    ///TODO edit with LayerManager
     public static Project fromJSONtoProject(String JSON){
         try {
             // mapper to map string names to object fields

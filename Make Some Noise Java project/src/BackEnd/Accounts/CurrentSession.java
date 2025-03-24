@@ -144,6 +144,9 @@ public class CurrentSession {
         return p;
     }
 
+    ///TODO open new project
+
+
     public List<String> getProjectTags(int ID) {
         try {
             String taglistString = BasicDatabaseActions.getProjectInfoType(0, "tags");
