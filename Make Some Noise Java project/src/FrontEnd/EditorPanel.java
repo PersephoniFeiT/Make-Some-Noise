@@ -1,35 +1,45 @@
 package FrontEnd;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
-import java.awt.event.*;
-import java.awt.Color;
 import java.awt.BorderLayout;
-import BackEnd.Accounts.CurrentSession;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.event.*;
 
-public class ProjectEditorGUI extends JFrame {
+class EditorPanel extends JFrame {
 
-    public ProjectEditorGUI(CurrentSession currentSession) {
-        setLayout(new BorderLayout());                            // using BorderLayout layout managers
+	private MakeSomeNoiseWindow parentWindow;
+
+	private NoisePanel noisePanel;
+	private JButton signInButton;
+	private JButton renderButton;
+
+	public EditorPanel(MakeSomeNoiseWindow parentWindow) {
+		setLayout(new BorderLayout());                            // using BorderLayout layout managers
         setSize(1000, 600);                                       // width and height
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         // Create a NoisePanel to display the generated noise pattern
         int width = 647;
         int height = 400;
-        NoisePanel np = new NoisePanel(width, height);
-        np.setBounds(10, 10, width, height);
-        np.setBorder(new LineBorder(Color.BLACK));
+        noisePanel = new NoisePanel(width, height);
+        noisePanel.setBounds(10, 10, width, height);
+        noisePanel.setBorder(new LineBorder(Color.BLACK));
+		add(noisePanel);
 
         // Create JButton that will render the Noise pattern on the NoisePanel np
-        JButton renderButton = new JButton("Show Noise");
+        renderButton = new JButton("Show Noise");
         renderButton.setBounds(20, 410, 130, 40);                  // x axis, y axis, width, height
         renderButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                np.setNoiseRaster(null);
-            }
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				renderNoiseButtonPushed();
+			}
         });
+		add(renderButton);
 
         // Create JButton for sign-in
         JButton signInButton = new JButton("Sign In");
@@ -37,7 +47,7 @@ public class ProjectEditorGUI extends JFrame {
         signInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                new SignInWindow(currentSession);
+                signInButtonPushed();
             }
         });
         add(signInButton);
@@ -46,15 +56,13 @@ public class ProjectEditorGUI extends JFrame {
         // LayerPanelList layers = new LayerPanelList();
         // add(layers, BorderLayout.EAST);
 
+	}
 
-        // add elements in JFrame
-        add(renderButton);
-        add(np);
+	public void renderNoiseButtonPushed() {
+		noisePanel.setNoiseRaster(null);
+	}
 
-        setVisible(true);
-    }
-
-    // public static void main(String args[]){
-    //     new ProjectEditorGUI();
-    // }
+	public void signInButtonPushed() {
+		parentWindow.createSignInWindow();
+	}
 }
