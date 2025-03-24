@@ -35,12 +35,12 @@ public class LayerPanelList extends JPanel {
 
 			layerName 	= new JTextField("New Layer");
 
-			seed 		= new JTextField(nl.getSeed().toString(), columnNumber);
-			frequency 	= new JTextField(nl.getFreq().toString(), columnNumber);
-			amplitude 	= new JTextField(nl.getAmp().toString(), columnNumber);
-			gain 		= new JTextField(nl.getGain().toString(), columnNumber);
-			floor 		= new JTextField(nl.getFloor().toString(), columnNumber);
-			ceiling 	= new JTextField(nl.getCeiling().toString(), columnNumber);
+			seed 		= new JTextField(""+nl.getSeed(), columnNumber);
+			frequency 	= new JTextField(""+nl.getFreq(), columnNumber);
+			amplitude 	= new JTextField(""+nl.getAmp(), columnNumber);
+			gain 		= new JTextField(""+nl.getGain(), columnNumber);
+			floor 		= new JTextField(""+nl.getFloor(), columnNumber);
+			ceiling 	= new JTextField(""+nl.getCeiling(), columnNumber);
 			
 			add(layerName);
 			add(seed);
