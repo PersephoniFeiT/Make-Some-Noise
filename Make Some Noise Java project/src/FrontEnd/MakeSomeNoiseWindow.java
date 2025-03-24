@@ -2,6 +2,7 @@ package FrontEnd;
 
 import javax.swing.*;
 import BackEnd.Accounts.CurrentSession;
+import java.awt.BorderLayout;
 
 public class MakeSomeNoiseWindow extends JFrame {
 
@@ -11,10 +12,16 @@ public class MakeSomeNoiseWindow extends JFrame {
     private AccountPanel accountPanel = null;
     private SearchPanel searchPanel = null;
 
-    private JFrame currentPanel = null;
+    private JPanel currentPanel = null;
 
     public MakeSomeNoiseWindow(CurrentSession currentSession) {
+        setLayout(new BorderLayout());                            // using BorderLayout layout managers
+        setSize(1000, 600);                                       // width and height
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         this.currentSession = currentSession;
+
+        goToEditorPanel();
 
         setVisible(true);
     }
@@ -32,7 +39,9 @@ public class MakeSomeNoiseWindow extends JFrame {
             addEditorPanel();
         }
 
-        remove(currentPanel);
+        if (currentPanel != null) {
+            remove(currentPanel);
+        }
         currentPanel = editorPanel;
         add(currentPanel);
     }
@@ -50,7 +59,9 @@ public class MakeSomeNoiseWindow extends JFrame {
             addAccountPanel();
         }
 
-        remove(currentPanel);
+        if (currentPanel != null) {
+            remove(currentPanel);
+        }
         currentPanel = accountPanel;
         add(currentPanel);
     }
@@ -68,7 +79,9 @@ public class MakeSomeNoiseWindow extends JFrame {
             addSearchPanel();
         }
 
-        remove(currentPanel);
+        if (currentPanel != null) {
+           remove(currentPanel);
+        }
         currentPanel = searchPanel;
         add(currentPanel);
     }

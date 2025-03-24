@@ -1,8 +1,5 @@
-package FrontEnd;
-
 import javax.swing.*;
 import java.awt.image.*;
-import java.awt.Graphics;
 
 public class NoisePanel extends JPanel{
 
@@ -32,7 +29,7 @@ public class NoisePanel extends JPanel{
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected void paintComponent(java.awt.Graphics g) {
 		super.paintComponent(g);
 
 		// Draw the bitmap on the JPanel
