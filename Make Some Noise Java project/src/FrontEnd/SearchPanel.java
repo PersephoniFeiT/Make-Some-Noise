@@ -1,8 +1,8 @@
 package FrontEnd;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
-public class SearchPanel extends JFrame {
+public class SearchPanel extends JPanel {
 
 	
 }
