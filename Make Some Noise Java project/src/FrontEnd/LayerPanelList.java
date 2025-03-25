@@ -8,51 +8,138 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.util.ArrayList;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.*;
-
 
 public class LayerPanelList extends JPanel {
 
 	private class LayerPanel extends JPanel {
 
 		private JTextField layerName;
-
+		
 		private JTextField seed;
-		private JTextField frequency;
-		private JTextField amplitude;
+		private JTextField freq;
+		private JTextField amp;
 		private JTextField gain;
 		private JTextField floor;
 		private JTextField ceiling;
 
+		private NoiseLayer noiseLayer;
+		
 		public LayerPanel(NoiseLayer nl) {
 			setLayout(new FlowLayout());
 			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
+			noiseLayer = nl;
+
+			// Populate the LayerPanel with a title and attribute fields
+			layerName = new JTextField("New Layer", 6);
+
 			int columnNumber = 4;
+			seed =	new JTextField(""+nl.getSeed(), columnNumber);
+			freq =	new JTextField(""+nl.getFreq(), columnNumber);
+			amp =	new JTextField(""+nl.getAmp(), columnNumber);
+			gain =	new JTextField(""+nl.getGain(), columnNumber);
+			floor =	new JTextField(""+nl.getFloor(), columnNumber);
+			ceiling =	new JTextField(""+nl.getCeiling(), columnNumber);
 
-			layerName 	= new JTextField("New Layer");
+			// Add listeners to each field so their NoiseLayer objects can be updated with them
+			seed.addCaretListener(new CaretListener() {
+				@Override
+				public void caretUpdate(CaretEvent e) {
+					updateLayer();
+				}
+			});
 
-			seed 		= new JTextField(""+nl.getSeed(), columnNumber);
-			frequency 	= new JTextField(""+nl.getFreq(), columnNumber);
-			amplitude 	= new JTextField(""+nl.getAmp(), columnNumber);
-			gain 		= new JTextField(""+nl.getGain(), columnNumber);
-			floor 		= new JTextField(""+nl.getFloor(), columnNumber);
-			ceiling 	= new JTextField(""+nl.getCeiling(), columnNumber);
+			freq.addCaretListener(new CaretListener() {
+				@Override
+				public void caretUpdate(CaretEvent e) {
+					updateLayer();
+				}
+			});
+
+			amp.addCaretListener(new CaretListener() {
+				@Override
+				public void caretUpdate(CaretEvent e) {
+					updateLayer();
+				}
+			});
+
+			gain.addCaretListener(new CaretListener() {
+				@Override
+				public void caretUpdate(CaretEvent e) {
+					updateLayer();
+				}
+			});
+
+			floor.addCaretListener(new CaretListener() {
+				@Override
+				public void caretUpdate(CaretEvent e) {
+					updateLayer();
+				}
+			});
+
+			ceiling.addCaretListener(new CaretListener() {
+				@Override
+				public void caretUpdate(CaretEvent e) {
+					updateLayer();
+				}
+			});
 			
 			add(layerName);
 			add(seed);
-			add(frequency);
-			add(amplitude);
+			add(freq);
+			add(amp);
 			add(gain);
 			add(floor);
 			add(ceiling);
 
 			setMaximumSize(new Dimension(1000, 50));
+		}
+	
+		private void updateLayer() {
+
+			try {
+				freq.setBackground(Color.white);
+				noiseLayer.setFreq(Double.parseDouble(freq.getText()));
+			} catch (NumberFormatException e) {
+				freq.setBackground(Color.pink);
+			}
+
+			try {
+				amp.setBackground(Color.white);
+				noiseLayer.setAmp(Double.parseDouble(amp.getText()));
+			} catch (NumberFormatException e) {
+				amp.setBackground(Color.pink);
+			}
+
+			try {
+				gain.setBackground(Color.white);
+				noiseLayer.setGain(Double.parseDouble(gain.getText()));
+			} catch (NumberFormatException e) {
+				gain.setBackground(Color.pink);
+			}
+
+			try {
+				floor.setBackground(Color.white);
+				noiseLayer.setFloor(Double.parseDouble(floor.getText()));
+			} catch (NumberFormatException e) {
+				floor.setBackground(Color.pink);
+			}
+
+			try {
+				ceiling.setBackground(Color.white);
+				noiseLayer.setCeiling(Double.parseDouble(ceiling.getText()));
+			} catch (NumberFormatException e) {
+				ceiling.setBackground(Color.pink);
+			}
 		}
 	}
 
@@ -62,11 +149,9 @@ public class LayerPanelList extends JPanel {
 			setLayout(new FlowLayout());
 
 			listLabel = new JLabel("Layers");
-			listLabel.setBounds(40, 0, 30, 100);
 			add(listLabel);
 		
 			addLayerButton = new JButton("+");
-			addLayerButton.setBounds(0, 0, 50, 50);
 			addLayerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
