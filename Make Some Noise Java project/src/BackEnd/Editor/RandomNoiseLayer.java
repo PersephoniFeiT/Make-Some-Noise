@@ -24,62 +24,52 @@ public class RandomNoiseLayer implements NoiseLayer{
 
     @Override
     public int getSeed() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSeed'");
+        return seed;
     }
 
     @Override
     public double getFreq() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFreq'");
+        return frequency;
     }
 
     @Override
     public double getAmp() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAmp'");
+        return amplitude;
     }
 
     @Override
     public double getGain() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getGain'");
+        return -1;
     }
 
     @Override
     public double getFloor() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFloor'");
+        return floor;
     }
 
     @Override
     public double getCeiling() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCeiling'");
+        return ceiling;
     }
 
     @Override
     public void setFreq(double newFreq) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setFreq'");
+        this.frequency = newFreq;
     }
 
     @Override
     public void setAmp(double newAmp) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setAmp'");
+       this.amplitude = newAmp;
     }
 
     @Override
     public void setFloor(double newFloor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setFloor'");
+        this.floor = newFloor;
     }
 
     @Override
     public void setCeiling(double newCeiling) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setCeiling'");
+        this.ceiling = newCeiling;
     }
 
     @Override
