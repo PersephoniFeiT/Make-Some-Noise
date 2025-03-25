@@ -11,14 +11,14 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JLabel;
-import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 
-public class LayerPanelList extends JPanel {
+public class LayerPanelList extends JScrollPane {
 
 	private class LayerPanel extends JPanel {
 
@@ -143,46 +143,48 @@ public class LayerPanelList extends JPanel {
 		}
 	}
 
-	private class Header extends JPanel {
+	private class ContentPanel extends JPanel {
 
-		public Header() {
-			setLayout(new FlowLayout());
+		private class Header extends JPanel {
 
-			listLabel = new JLabel("Layers");
-			add(listLabel);
-		
-			addLayerButton = new JButton("+");
-			addLayerButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				addLayer();
+			public Header() {
+				setLayout(new FlowLayout());
+	
+				add(new JLabel("Layers"));
+			
+				JButton addLayerButton = new JButton("+");
+				addLayerButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent evt) {
+						addLayer();
+					}
+				});
+				add(addLayerButton);
 			}
-		});
-		add(addLayerButton);
+		}
+		
+		public ContentPanel() {
+			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+			add(new Header());
+		}
+
+		public void addLayer() {
+			Simplex2NoiseLayer newLayer = new Simplex2NoiseLayer(0.0, 0.0, 0.0, 0.0);
+			LayerPanel lp = new LayerPanel(newLayer);
+			contents.add(lp);
+			revalidate();
+			repaint();
+			// layerManager.add(newLayer);
 		}
 	}
 
-	private ArrayList<LayerPanel> layerPanels;
 	private LayerManger layerManager = new LayerManger();
-	private JLabel listLabel;
-	private JButton addLayerButton;
+	private ContentPanel contents;
 
 	public LayerPanelList() {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		layerPanels = new ArrayList<LayerPanel>();
-
-		add(new Header());
-	}
-
-	public void addLayer() {
-		Simplex2NoiseLayer newLayer = new Simplex2NoiseLayer(0.0, 0.0, 0.0, 0.0);
-		LayerPanel lp = new LayerPanel(newLayer);
-		layerPanels.add(lp);
-		add(lp);
-		revalidate();
-		repaint();
-		// layerManager.add(newLayer);
+		contents = new ContentPanel();
+		setViewportView(contents);
 	}
 
 	public LayerManger getManager() {
