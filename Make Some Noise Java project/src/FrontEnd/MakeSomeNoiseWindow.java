@@ -87,6 +87,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         }
         currentPanel = editorPanel;
         add(currentPanel);
+        repaint();
     }
 
     public boolean hasAccountPanel() {
@@ -107,6 +108,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         }
         currentPanel = accountPanel;
         add(currentPanel);
+        repaint();
     }
 
     public boolean hasSearchPanel() {
@@ -127,6 +129,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         }
         currentPanel = searchPanel;
         add(currentPanel);
+        repaint();
     }
 
     public void createSignInWindow() {
