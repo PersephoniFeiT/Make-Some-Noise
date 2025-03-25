@@ -2,7 +2,6 @@ package FrontEnd;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;

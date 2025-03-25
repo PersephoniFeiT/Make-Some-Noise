@@ -8,7 +8,7 @@ public class LayerManger {
     
     private ArrayList<BackEnd.Editor.NoiseLayer> layerList;
     
-    protected LayerManger(){
+    public LayerManger(){
         layerList = new ArrayList<>();
     }
     

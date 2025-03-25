@@ -2,7 +2,7 @@ package FrontEnd;
 
 import BackEnd.Editor.Simplex2NoiseLayer;
 import BackEnd.Editor.NoiseLayer;
-
+import BackEnd.Editor.LayerManger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -10,7 +10,6 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-// import java.awt.Graphics;
 import java.util.ArrayList;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -79,7 +78,7 @@ public class LayerPanelList extends JPanel {
 	}
 
 	private ArrayList<LayerPanel> layerPanels;
-	// private BackEnd.Editor.LayerManager layerManager = new LayerManager();
+	private LayerManger layerManager = new LayerManger();
 	private JLabel listLabel;
 	private JButton addLayerButton;
 
@@ -99,5 +98,9 @@ public class LayerPanelList extends JPanel {
 		revalidate();
 		repaint();
 		// layerManager.add(newLayer);
+	}
+
+	public LayerManger getManager() {
+		return layerManager;
 	}
 } 
