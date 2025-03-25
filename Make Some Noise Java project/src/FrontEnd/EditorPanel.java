@@ -13,7 +13,7 @@ class EditorPanel extends JPanel {
 	private MakeSomeNoiseWindow parentWindow;
 
 	private NoisePanel noisePanel;
-	private JButton signInButton;
+	// private JButton signInButton;
 	private JButton renderButton;
     private LayerPanelList layers;
 
@@ -39,20 +39,8 @@ class EditorPanel extends JPanel {
 				renderNoiseButtonPushed();
 			}
         });
-        renderButton.setPreferredSize(new Dimension(130, 40));
+        renderButton.setMaximumSize(new Dimension(130, 40));
 		add(renderButton, BorderLayout.WEST);
-
-        // Create JButton for sign-in
-        signInButton = new JButton("Sign In");
-        // signInButton.setBounds(800, 20, 100, 25);
-        signInButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                signInButtonPushed();
-            }
-        });
-        signInButton.setPreferredSize(new Dimension(100, 25));
-        add(signInButton, BorderLayout.NORTH);
 
         // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
         LayerPanelList layers = new LayerPanelList();
@@ -62,9 +50,5 @@ class EditorPanel extends JPanel {
 
 	public void renderNoiseButtonPushed() {
 		noisePanel.setNoiseRaster(null);
-	}
-
-	public void signInButtonPushed() {
-		parentWindow.createSignInWindow();
 	}
 }

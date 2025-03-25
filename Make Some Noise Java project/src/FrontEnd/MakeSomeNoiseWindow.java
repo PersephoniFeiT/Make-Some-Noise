@@ -3,6 +3,8 @@ package FrontEnd;
 import javax.swing.*;
 import BackEnd.Accounts.CurrentSession;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MakeSomeNoiseWindow extends JFrame {
 
@@ -14,6 +16,8 @@ public class MakeSomeNoiseWindow extends JFrame {
 
     private JPanel currentPanel = null;
 
+    private JMenuBar menuBar;
+
     public MakeSomeNoiseWindow(CurrentSession currentSession) {
         setLayout(new BorderLayout());                            // using BorderLayout layout managers
         setSize(1000, 600);                                       // width and height
@@ -22,6 +26,45 @@ public class MakeSomeNoiseWindow extends JFrame {
         this.currentSession = currentSession;
 
         goToEditorPanel();
+
+        // Initialize menu bar
+        menuBar = new JMenuBar();
+
+        JMenu accountsMenu = new JMenu("Account");
+
+        JMenuItem menuItem = new JMenuItem("Sign In");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                createSignInWindow();
+            }
+        });
+        accountsMenu.add(menuItem);
+
+        menuItem = new JMenuItem("View Account");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goToAccountPanel();
+            }
+        });
+        accountsMenu.add(menuItem);
+
+        menuBar.add(accountsMenu);
+
+        JMenu fileMenu = new JMenu("File");
+        menuItem = new JMenuItem("Go to open file");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goToEditorPanel();
+            }
+        });
+        fileMenu.add(menuItem);
+
+        menuBar.add(fileMenu);
+
+        setJMenuBar(menuBar);
 
         setVisible(true);
     }
