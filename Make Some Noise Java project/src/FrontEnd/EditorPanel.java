@@ -2,7 +2,6 @@ package FrontEnd;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,10 +10,7 @@ import java.awt.event.*;
 
 class EditorPanel extends JPanel {
 
-	private MakeSomeNoiseWindow parentWindow;
-
 	private NoisePanel noisePanel;
-	private JButton signInButton;
 	private JButton renderButton;
     private LayerPanelList layers;
 
@@ -40,32 +36,29 @@ class EditorPanel extends JPanel {
 				renderNoiseButtonPushed();
 			}
         });
-        renderButton.setPreferredSize(new Dimension(130, 40));
+        renderButton.setMaximumSize(new Dimension(130, 40));
 		add(renderButton, BorderLayout.WEST);
 
-        // Create JButton for sign-in
-        signInButton = new JButton("Sign In");
-        // signInButton.setBounds(800, 20, 100, 25);
-        signInButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                signInButtonPushed();
-            }
-        });
-        signInButton.setPreferredSize(new Dimension(100, 25));
-        add(signInButton, BorderLayout.NORTH);
-
         // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
-        LayerPanelList layers = new LayerPanelList();
+        layers = new LayerPanelList();
         layers.setPreferredSize(new Dimension(450, 100));
         add(layers, BorderLayout.EAST);
 	}
 
 	public void renderNoiseButtonPushed() {
-		noisePanel.setNoiseRaster(null);
-	}
+        int width = 647;
+        int height = 400;
+        double[][] values = layers.getManager().multiplyLayers(width, height);
 
-	public void signInButtonPushed() {
-		parentWindow.createSignInWindow();
+        for (int x=0; x < width; x++) {
+            for (int y=0; y < height; y++) {
+                // System.out.print(values[x][y]);
+                noisePanel.setPixel(x, y, Color.HSBtoRGB((float)values[x][y], 0.5f, 1.0f));
+            }
+            // System.out.print("\n");
+        }
+
+        System.out.println(layers.getManager().toString());
+
 	}
 }

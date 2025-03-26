@@ -14,7 +14,7 @@ public class CurrentSession {
         signedIn = null;
     }
 
-    private Integer getSignedIn() throws NotSignedInException {
+    public Integer getSignedIn() throws NotSignedInException {
         if (this.signedIn != null) return signedIn;
         else throw new NotSignedInException("");
     }

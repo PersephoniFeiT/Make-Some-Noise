@@ -8,7 +8,7 @@ public class LayerManager {
     
     private static ArrayList<BackEnd.Editor.NoiseLayer> layerList;
     
-    protected LayerManager(){
+    public LayerManager(){
         layerList = new ArrayList<>();
     }
     public LayerManager(ArrayList<NoiseLayer> noiseLayers){
@@ -53,5 +53,15 @@ public class LayerManager {
             }
         });
         return raster;
+    }
+
+    @Override
+    public String toString() {
+        String retString = "";
+        for(int i=0; i < layerList.size(); i++) {
+            retString = retString + "\n amp:" + layerList.get(i).getAmp() + " ceil:" + layerList.get(i).getCeiling() + " floor:" + layerList.get(i).getFloor();
+        }
+
+        return retString;
     }
 }
