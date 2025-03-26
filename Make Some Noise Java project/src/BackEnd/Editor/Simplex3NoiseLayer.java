@@ -1,7 +1,7 @@
 package BackEnd.Editor;
 
 public class Simplex3NoiseLayer implements NoiseLayer{
-    double seed;
+    int seed;
     double floor;
     double ceiling;
     double amplitude;
@@ -23,7 +23,7 @@ public class Simplex3NoiseLayer implements NoiseLayer{
 
     @Override
     public int getSeed() {
-        return -1;
+        return seed;
     }
 
     @Override
