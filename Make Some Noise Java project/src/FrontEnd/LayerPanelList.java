@@ -1,6 +1,8 @@
 package FrontEnd;
 
 import BackEnd.Editor.Simplex2NoiseLayer;
+import BackEnd.Editor.Simplex3NoiseLayer;
+import BackEnd.Editor.SimplexNoise;
 import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
 import BackEnd.Editor.RandomNoiseLayer;
@@ -64,7 +66,7 @@ public class LayerPanelList extends JScrollPane {
 			// Populate the LayerPanel with a title and attribute fields
 			layerName = new JTextField("New Layer", 6);
 
-			String[] layerOptions = {"Simplex2 Noise", "Perlin Noise", "Random Noise"};
+			String[] layerOptions = {"Simplex2 Noise", "Perlin Noise", "Random Noise", "Simplex3 Noise"};
 			layerType = new JComboBox<String>(layerOptions);
 			layerType.addActionListener(new ActionListener() {
 				@Override
@@ -88,12 +90,20 @@ public class LayerPanelList extends JScrollPane {
 							Double.parseDouble(amp.text.getText()),
 							Double.parseDouble(freq.text.getText())
 						);
+					} else if (choice.equals("Simplex3 Noise")) {
+						noiseLayer = new Simplex3NoiseLayer(
+							Integer.parseInt(seed.text.getText()),
+							Double.parseDouble(floor.text.getText()),
+							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(amp.text.getText()),
+							Double.parseDouble(freq.text.getText())
+						);
 					}
 					manager.addLayer(noiseLayer);
 				}
 			});
 
-			int columnNumber = 4;
+			int columnNumber = 3;
 			seed =	new LabeledTextField("Seed", ""+nl.getSeed(), columnNumber);
 			freq =	new LabeledTextField("Freq", ""+nl.getFreq(), columnNumber);
 			amp =	new LabeledTextField("Amp", ""+nl.getAmp(), columnNumber);
@@ -153,7 +163,7 @@ public class LayerPanelList extends JScrollPane {
 			add(floor);
 			add(ceiling);
 
-			setMaximumSize(new Dimension(1000, 50));
+			setMaximumSize(new Dimension(10000, 200));
 		}
 	
 		private void updateLayer() {

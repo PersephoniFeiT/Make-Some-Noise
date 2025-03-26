@@ -2,6 +2,7 @@ package FrontEnd;
 
 import javax.swing.*;
 import BackEnd.Accounts.CurrentSession;
+import BackEnd.Accounts.Project;
 import Exceptions.Accounts.NotSignedInException;
 
 import java.awt.BorderLayout;
@@ -22,7 +23,7 @@ public class MakeSomeNoiseWindow extends JFrame {
 
     public MakeSomeNoiseWindow(CurrentSession currentSession) {
         setLayout(new BorderLayout());                            // using BorderLayout layout managers
-        setSize(1000, 600);                                       // width and height
+        setSize(1300, 800);                                       // width and height
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         this.currentSession = currentSession;
@@ -64,7 +65,29 @@ public class MakeSomeNoiseWindow extends JFrame {
         });
         fileMenu.add(menuItem);
 
+        menuItem = new JMenuItem("Save");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // currentSession.save(new Project());
+            }
+        });
+        fileMenu.add(menuItem);
+
         menuBar.add(fileMenu);
+
+        JMenu searchMenu = new JMenu("Find"); 
+
+        menuItem = new JMenuItem("Pattern Search");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goToSearchPanel();
+            }
+        });
+        searchMenu.add(menuItem);
+
+        menuBar.add(searchMenu);
 
         setJMenuBar(menuBar);
 
@@ -89,6 +112,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         }
         currentPanel = editorPanel;
         add(currentPanel);
+        revalidate();
         repaint();
     }
 
@@ -115,6 +139,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         }
         currentPanel = accountPanel;
         add(currentPanel);
+        revalidate();
         repaint();
     }
 
@@ -136,6 +161,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         }
         currentPanel = searchPanel;
         add(currentPanel);
+        revalidate();
         repaint();
     }
 
