@@ -19,7 +19,9 @@ public class RandomNoiseLayer implements NoiseLayer{
 
     @Override
     public double evaluate(int x, int y) {
-        return 0;
+        double val = rng.nextDouble();
+        val = ((val < floor )? floor : (val < ceiling)? ceiling : val) * amplitude + (1 - amplitude);
+        return val;
     }
 
     @Override
@@ -55,22 +57,27 @@ public class RandomNoiseLayer implements NoiseLayer{
     @Override
     public void setFreq(double newFreq) {
         this.frequency = newFreq;
+        rng = new Random(seed);
     }
 
     @Override
     public void setAmp(double newAmp) {
        this.amplitude = newAmp;
+       rng = new Random(seed);
     }
 
     @Override
     public void setFloor(double newFloor) {
         this.floor = newFloor;
+        rng = new Random(seed);
     }
 
     @Override
     public void setCeiling(double newCeiling) {
         this.ceiling = newCeiling;
+        rng = new Random(seed);
     }
+
 
     @Override
     public void setGain(double newGain) {;}

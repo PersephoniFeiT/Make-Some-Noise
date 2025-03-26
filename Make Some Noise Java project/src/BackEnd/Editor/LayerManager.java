@@ -4,18 +4,39 @@ import java.util.*;
 /* Class responsible for multiplying noise layers for fractal adding
  * (potentially other leyer types in the future) 
  * so they can be rendered*/
-public class LayerManger {
+public class LayerManager {
     
-    private ArrayList<BackEnd.Editor.NoiseLayer> layerList;
+    private static ArrayList<BackEnd.Editor.NoiseLayer> layerList;
     
-    protected LayerManger(){
+    protected LayerManager(){
         layerList = new ArrayList<>();
     }
-    public void addLayer(NoiseLayer layer){
+    public LayerManager(ArrayList<NoiseLayer> noiseLayers){
+        layerList = noiseLayers;
+    }
+
+    public static void removeLayer(int index){
+        layerList.remove(index);
+    }
+
+    public static NoiseLayer getLayer(int index){
+        return layerList.get(index);
+    }
+
+    public static void addLayer(NoiseLayer layer){
         layerList.add(layer);
     }
 
-    public double[][] multiplyLayers(int width, int height){
+    public static void clearLayers(){
+        layerList = new ArrayList<>();
+    }
+
+    public static void updateLayer(int index, NoiseLayer updatedLayer){
+        layerList.remove(index);
+        layerList.add(index, updatedLayer);
+    }
+
+    public static double[][] multiplyLayers(int width, int height){
         double[][] raster = new double[width][height];
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
