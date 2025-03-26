@@ -11,8 +11,13 @@ public class LayerManger {
     public LayerManger(){
         layerList = new ArrayList<>();
     }
+
     public void addLayer(NoiseLayer layer){
         layerList.add(layer);
+    }
+
+    public void removeLayer(NoiseLayer layer) {
+        layerList.remove(layer);
     }
 
     public double[][] multiplyLayers(int width, int height){
@@ -32,5 +37,15 @@ public class LayerManger {
             }
         });
         return raster;
+    }
+
+    @Override
+    public String toString() {
+        String retString = "";
+        for(int i=0; i < layerList.size(); i++) {
+            retString = retString + "\n amp:" + layerList.get(i).getAmp() + " ceil:" + layerList.get(i).getCeiling() + " floor:" + layerList.get(i).getFloor();
+        }
+
+        return retString;
     }
 }

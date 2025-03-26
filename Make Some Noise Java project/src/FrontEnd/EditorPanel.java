@@ -11,7 +11,6 @@ import java.awt.event.*;
 class EditorPanel extends JPanel {
 
 	private NoisePanel noisePanel;
-	// private JButton signInButton;
 	private JButton renderButton;
     private LayerPanelList layers;
 
@@ -47,6 +46,19 @@ class EditorPanel extends JPanel {
 	}
 
 	public void renderNoiseButtonPushed() {
-		noisePanel.setNoiseRaster(null);
+        int width = 647;
+        int height = 400;
+        double[][] values = layers.getManager().multiplyLayers(width, height);
+
+        for (int x=0; x < width; x++) {
+            for (int y=0; y < height; y++) {
+                // System.out.print(values[x][y]);
+                noisePanel.setPixel(x, y, Color.HSBtoRGB((float)values[x][y], 0.5f, 1.0f));
+            }
+            // System.out.print("\n");
+        }
+
+        System.out.println(layers.getManager().toString());
+
 	}
 }

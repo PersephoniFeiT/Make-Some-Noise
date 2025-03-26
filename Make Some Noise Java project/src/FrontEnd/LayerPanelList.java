@@ -2,10 +2,13 @@ package FrontEnd;
 
 import BackEnd.Editor.Simplex2NoiseLayer;
 import BackEnd.Editor.NoiseLayer;
+import BackEnd.Editor.PerlinNoiseLayer;
+import BackEnd.Editor.RandomNoiseLayer;
 import BackEnd.Editor.LayerManger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.CaretEvent;
@@ -22,71 +25,119 @@ public class LayerPanelList extends JScrollPane {
 
 	private class LayerPanel extends JPanel {
 
+		private class LabeledTextField extends JPanel {
+			private JLabel label;
+			private JTextField text;
+
+			public LabeledTextField(String l, String t, int col) {
+				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+				label = new JLabel(l);
+				text = new JTextField(t, col);
+
+				add(label);
+				add(text);
+			}
+		}
+
 		private JTextField layerName;
+
+		private JComboBox<String> layerType;
 		
-		private JTextField seed;
-		private JTextField freq;
-		private JTextField amp;
-		private JTextField gain;
-		private JTextField floor;
-		private JTextField ceiling;
+		private LabeledTextField seed;
+		private LabeledTextField freq;
+		private LabeledTextField amp;
+		private LabeledTextField gain;
+		private LabeledTextField floor;
+		private LabeledTextField ceiling;
 
 		private NoiseLayer noiseLayer;
+		private LayerManger manager;
 		
-		public LayerPanel(NoiseLayer nl) {
+		public LayerPanel(NoiseLayer nl, LayerManger inManager) {
 			setLayout(new FlowLayout());
 			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
+			this.manager = inManager;
 			noiseLayer = nl;
 
 			// Populate the LayerPanel with a title and attribute fields
 			layerName = new JTextField("New Layer", 6);
 
+			String[] layerOptions = {"Simplex2 Noise", "Perlin Noise", "Random Noise"};
+			layerType = new JComboBox<String>(layerOptions);
+			layerType.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					manager.removeLayer(noiseLayer);
+					Object choice = layerType.getSelectedItem();
+					if (choice.equals("Simplex2 Noise")) {
+						noiseLayer = new Simplex2NoiseLayer(
+							Double.parseDouble(floor.text.getText()),
+							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(amp.text.getText()),
+							Double.parseDouble(freq.text.getText())
+						);
+					} else if (choice.equals("Perlin Noise")) {
+						manager.addLayer(new PerlinNoiseLayer());
+					} else if (choice.equals("Random Noise")) {
+						noiseLayer = new RandomNoiseLayer(
+							Integer.parseInt(seed.text.getText()),
+							Double.parseDouble(floor.text.getText()),
+							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(amp.text.getText()),
+							Double.parseDouble(freq.text.getText())
+						);
+					}
+					manager.addLayer(noiseLayer);
+				}
+			});
+
 			int columnNumber = 4;
-			seed =	new JTextField(""+nl.getSeed(), columnNumber);
-			freq =	new JTextField(""+nl.getFreq(), columnNumber);
-			amp =	new JTextField(""+nl.getAmp(), columnNumber);
-			gain =	new JTextField(""+nl.getGain(), columnNumber);
-			floor =	new JTextField(""+nl.getFloor(), columnNumber);
-			ceiling =	new JTextField(""+nl.getCeiling(), columnNumber);
+			seed =	new LabeledTextField("Seed", ""+nl.getSeed(), columnNumber);
+			freq =	new LabeledTextField("Freq", ""+nl.getFreq(), columnNumber);
+			amp =	new LabeledTextField("Amp", ""+nl.getAmp(), columnNumber);
+			gain =	new LabeledTextField("Gain", ""+nl.getGain(), columnNumber);
+			floor =	new LabeledTextField("Floor", ""+nl.getFloor(), columnNumber);
+			ceiling =	new LabeledTextField("Ceil", ""+nl.getCeiling(), columnNumber);
 
 			// Add listeners to each field so their NoiseLayer objects can be updated with them
-			seed.addCaretListener(new CaretListener() {
+			seed.text.addCaretListener(new CaretListener() {
 				@Override
 				public void caretUpdate(CaretEvent e) {
 					updateLayer();
 				}
 			});
 
-			freq.addCaretListener(new CaretListener() {
+			freq.text.addCaretListener(new CaretListener() {
 				@Override
 				public void caretUpdate(CaretEvent e) {
 					updateLayer();
 				}
 			});
 
-			amp.addCaretListener(new CaretListener() {
+			amp.text.addCaretListener(new CaretListener() {
 				@Override
 				public void caretUpdate(CaretEvent e) {
 					updateLayer();
 				}
 			});
 
-			gain.addCaretListener(new CaretListener() {
+			gain.text.addCaretListener(new CaretListener() {
 				@Override
 				public void caretUpdate(CaretEvent e) {
 					updateLayer();
 				}
 			});
 
-			floor.addCaretListener(new CaretListener() {
+			floor.text.addCaretListener(new CaretListener() {
 				@Override
 				public void caretUpdate(CaretEvent e) {
 					updateLayer();
 				}
 			});
 
-			ceiling.addCaretListener(new CaretListener() {
+			ceiling.text.addCaretListener(new CaretListener() {
 				@Override
 				public void caretUpdate(CaretEvent e) {
 					updateLayer();
@@ -94,6 +145,7 @@ public class LayerPanelList extends JScrollPane {
 			});
 			
 			add(layerName);
+			add(layerType);
 			add(seed);
 			add(freq);
 			add(amp);
@@ -108,35 +160,35 @@ public class LayerPanelList extends JScrollPane {
 
 			try {
 				freq.setBackground(Color.white);
-				noiseLayer.setFreq(Double.parseDouble(freq.getText()));
+				noiseLayer.setFreq(Double.parseDouble(freq.text.getText()));
 			} catch (NumberFormatException e) {
 				freq.setBackground(Color.pink);
 			}
 
 			try {
 				amp.setBackground(Color.white);
-				noiseLayer.setAmp(Double.parseDouble(amp.getText()));
+				noiseLayer.setAmp(Double.parseDouble(amp.text.getText()));
 			} catch (NumberFormatException e) {
 				amp.setBackground(Color.pink);
 			}
 
 			try {
 				gain.setBackground(Color.white);
-				noiseLayer.setGain(Double.parseDouble(gain.getText()));
+				noiseLayer.setGain(Double.parseDouble(gain.text.getText()));
 			} catch (NumberFormatException e) {
 				gain.setBackground(Color.pink);
 			}
 
 			try {
 				floor.setBackground(Color.white);
-				noiseLayer.setFloor(Double.parseDouble(floor.getText()));
+				noiseLayer.setFloor(Double.parseDouble(floor.text.getText()));
 			} catch (NumberFormatException e) {
 				floor.setBackground(Color.pink);
 			}
 
 			try {
 				ceiling.setBackground(Color.white);
-				noiseLayer.setCeiling(Double.parseDouble(ceiling.getText()));
+				noiseLayer.setCeiling(Double.parseDouble(ceiling.text.getText()));
 			} catch (NumberFormatException e) {
 				ceiling.setBackground(Color.pink);
 			}
@@ -163,6 +215,8 @@ public class LayerPanelList extends JScrollPane {
 			}
 		}
 		
+		private LayerManger layerManager = new LayerManger();
+
 		public ContentPanel() {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -171,15 +225,18 @@ public class LayerPanelList extends JScrollPane {
 
 		public void addLayer() {
 			Simplex2NoiseLayer newLayer = new Simplex2NoiseLayer(0.0, 0.0, 0.0, 0.0);
-			LayerPanel lp = new LayerPanel(newLayer);
+			LayerPanel lp = new LayerPanel(newLayer, layerManager);
+			layerManager.addLayer(newLayer);
 			contents.add(lp);
 			revalidate();
 			repaint();
-			// layerManager.add(newLayer);
+		}
+
+		public LayerManger getManager() {
+			return layerManager;
 		}
 	}
 
-	private LayerManger layerManager = new LayerManger();
 	private ContentPanel contents;
 
 	public LayerPanelList() {
@@ -188,6 +245,6 @@ public class LayerPanelList extends JScrollPane {
 	}
 
 	public LayerManger getManager() {
-		return layerManager;
+		return contents.getManager();
 	}
 } 
