@@ -2,6 +2,8 @@ package FrontEnd;
 
 import javax.swing.*;
 import BackEnd.Accounts.CurrentSession;
+import Exceptions.Accounts.NotSignedInException;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -95,7 +97,12 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void addAccountPanel() {
-        accountPanel = new AccountPanel();
+        try {
+            currentSession.getSignedIn();
+            accountPanel = new AccountPanel(currentSession.GetAccountInfo());
+        } catch (NotSignedInException e) {
+            accountPanel = new AccountPanel();
+        }
     }
 
     public void goToAccountPanel() {

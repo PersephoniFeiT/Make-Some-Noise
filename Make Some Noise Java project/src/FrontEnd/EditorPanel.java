@@ -10,8 +10,6 @@ import java.awt.event.*;
 
 class EditorPanel extends JPanel {
 
-	private MakeSomeNoiseWindow parentWindow;
-
 	private NoisePanel noisePanel;
 	// private JButton signInButton;
 	private JButton renderButton;
@@ -43,7 +41,7 @@ class EditorPanel extends JPanel {
 		add(renderButton, BorderLayout.WEST);
 
         // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
-        LayerPanelList layers = new LayerPanelList();
+        layers = new LayerPanelList();
         layers.setPreferredSize(new Dimension(450, 100));
         add(layers, BorderLayout.EAST);
 	}
