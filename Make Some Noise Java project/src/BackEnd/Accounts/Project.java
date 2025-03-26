@@ -42,20 +42,24 @@ public class Project {
 
     public Integer getID(){return this.ID;}
 
-    public static void removeLayer(int index){
+    public void removeLayer(int index){
         this.layers.remove(index);
     }
 
-    public static NoiseLayer getLayer(int index){
-        return layerList.get(index);
+    public ArrayList<NoiseLayer> getLayerList(){
+        return new ArrayList<>(this.layers);
     }
 
-    public static void addLayer(NoiseLayer layer){
-        layerList.add(layer);
+    public NoiseLayer getLayer(int index){
+        return this.layers.get(index);
     }
 
-    public static void clearLayers(){
-        layerList = new ArrayList<>();
+    public void addLayer(NoiseLayer layer){
+        this.layers.add(layer);
+    }
+
+    public void clearLayers(){
+        this.layers.clear();
     }
 
     ///TODO edit with LayerManager
