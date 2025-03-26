@@ -20,7 +20,7 @@ public class Project {
     public String thumbnail;
     public final List<String> tags = new ArrayList<>();
     ///TODO LayerManager here?
-    public final List<NoiseLayer> layers = new ArrayList<>();
+    private final List<NoiseLayer> layers = new ArrayList<>();
 
     public Project(int ID, String title, String username, LocalDate dateCreated){
         this.ID = ID;
@@ -42,6 +42,21 @@ public class Project {
 
     public Integer getID(){return this.ID;}
 
+    public static void removeLayer(int index){
+        this.layers.remove(index);
+    }
+
+    public static NoiseLayer getLayer(int index){
+        return layerList.get(index);
+    }
+
+    public static void addLayer(NoiseLayer layer){
+        layerList.add(layer);
+    }
+
+    public static void clearLayers(){
+        layerList = new ArrayList<>();
+    }
 
     ///TODO edit with LayerManager
     public static Project fromJSONtoProject(String JSON){

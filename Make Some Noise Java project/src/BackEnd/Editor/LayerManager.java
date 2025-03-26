@@ -5,45 +5,16 @@ import java.util.*;
  * (potentially other leyer types in the future) 
  * so they can be rendered*/
 public class LayerManager {
-    
-    private static ArrayList<BackEnd.Editor.NoiseLayer> layerList;
-    
-    public LayerManager(){
-        layerList = new ArrayList<>();
-    }
-    public LayerManager(ArrayList<NoiseLayer> noiseLayers){
-        layerList = noiseLayers;
-    }
 
-    public static void removeLayer(int index){
-        layerList.remove(index);
-    }
 
-    public static NoiseLayer getLayer(int index){
-        return layerList.get(index);
-    }
-
-    public static void addLayer(NoiseLayer layer){
-        layerList.add(layer);
-    }
-
-    public static void clearLayers(){
-        layerList = new ArrayList<>();
-    }
-
-    public static void updateLayer(int index, NoiseLayer updatedLayer){
-        layerList.remove(index);
-        layerList.add(index, updatedLayer);
-    }
-
-    public static double[][] multiplyLayers(int width, int height){
+    public static double[][] multiplyLayers(int width, int height, ArrayList<NoiseLayer> layerList){
         double[][] raster = new double[width][height];
         for(int x = 0; x < width; x++){
             for(int y = 0; y < height; y++){
                 raster[x][y] = 1;
             }
         }
-        layerList.stream().forEach(l -> {
+        layerList.forEach(l -> {
             for(int x = 0; x < width; x++){
                 for(int y = 0; y < height; y++){
                     int virtualx = (int) ((int) x/l.getFreq());
@@ -53,15 +24,5 @@ public class LayerManager {
             }
         });
         return raster;
-    }
-
-    @Override
-    public String toString() {
-        String retString = "";
-        for(int i=0; i < layerList.size(); i++) {
-            retString = retString + "\n amp:" + layerList.get(i).getAmp() + " ceil:" + layerList.get(i).getCeiling() + " floor:" + layerList.get(i).getFloor();
-        }
-
-        return retString;
     }
 }
