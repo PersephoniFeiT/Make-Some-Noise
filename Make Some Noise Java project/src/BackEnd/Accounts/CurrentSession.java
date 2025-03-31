@@ -131,7 +131,7 @@ public class CurrentSession {
             BasicDatabaseActions.saveProject(p.getID(), p.toJSONString());
         } catch (NotSignedInException e){
             ///TODO prompt a sign-in, then file current project in database
-        
+
             ///sign in here
 
             SaveProject(signInToNewProject(p));
