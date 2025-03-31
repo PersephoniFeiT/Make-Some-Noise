@@ -131,6 +131,7 @@ public class CurrentSession {
             BasicDatabaseActions.saveProject(p.getID(), p.toJSONString());
         } catch (NotSignedInException e){
             ///TODO prompt a sign-in, then file current project in database
+        
             ///sign in here
 
             SaveProject(signInToNewProject(p));
@@ -162,6 +163,39 @@ public class CurrentSession {
             ExceptionHandler.handleException(e);
         }
         return new ArrayList<>();
+    }
+
+    public void ChangeTitle(int ID, String title){
+        try {
+            BasicDatabaseActions.modifyProject(ID, "title", title);
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+    }
+
+
+    public void ChangeStatus(int ID, boolean status){
+        try {
+            BasicDatabaseActions.modifyProject(ID, "status", String.valueOf((status) ? 1 : 0));
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+    }
+
+    public void ChangeTags(int ID, List<String> tags){
+        try {
+            BasicDatabaseActions.modifyProject(ID, "tags", tags.toString());
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+    }
+
+    public void ChangeThumbnail(int ID, String tn){
+        try {
+            BasicDatabaseActions.modifyProject(ID, "thumbnail", tn);
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
     }
 
     public boolean isSaved(Project p){
