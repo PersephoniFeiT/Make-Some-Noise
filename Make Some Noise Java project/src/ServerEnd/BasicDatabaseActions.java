@@ -162,6 +162,19 @@ public class BasicDatabaseActions {
         return ID;
     }
 
+    /**  Project:Edit
+     * Title, username, status, thumbnail, list of tags */
+    public static void modifyProject(int ID, String fieldToEdit, String value) throws InvalidInputException, DatabaseConnectionException {
+        BasicDatabaseActions.assertFormat(new String[]{fieldToEdit, value});
+        try {
+            assert(fieldToEdit.equals("status")
+                    || fieldToEdit.equals("thumbnail")
+                    || fieldToEdit.equals("tags"));
+        } catch (AssertionError e){
+            throw new InvalidInputException("Invalid input.");
+        }
+        SQLConnection.update("account", ID, fieldToEdit, value);
+    }
 
     public static void deleteProject(int ID) throws DatabaseConnectionException {
         SQLConnection.delete("projects", "ID = '" + ID +"'");
