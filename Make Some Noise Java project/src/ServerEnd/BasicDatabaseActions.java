@@ -221,7 +221,8 @@ public class BasicDatabaseActions {
      * titles that match the search terms. */
     public static List<Integer> searchBy(String toSearchBy, String value) throws SQLException, InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{value});
-        ResultSet rs = SQLConnection.select("projects", "ID", toSearchBy+ " = " + value);
+        ResultSet rs = SQLConnection.select("projects", "ID", toSearchBy+ " = " + value
+                + "AND status = 1");
         List<Integer> projectIDs = new ArrayList<>();
         while (rs.next()){
             projectIDs.add(rs.getInt("ID"));
@@ -229,8 +230,22 @@ public class BasicDatabaseActions {
         return projectIDs;
     }
 
-    /** Sharing:unpublish */
-    public static void unpublishProject(int projectID) throws DatabaseConnectionException{
-        SQLConnection.update("projects", projectID,"status","private");
+    public static List<Integer> searchByTag(String toSearchBy, String value) throws SQLException, InvalidInputException, DatabaseConnectionException{
+        BasicDatabaseActions.assertFormat(new String[]{value});
+
+        // Adjust pattern to match whole values in the list
+        String searchPattern = "%[" + value + ",%]%" +   // Case: Middle of list
+                "%[" + value + "]%" +     // Case: Single item
+                "%, " + value + "]%" +    // Case: End of list
+                "%[" + value + ",%";      // Case: Beginning of list
+
+        ResultSet rs = SQLConnection.select("projects", "ID", toSearchBy+
+                " LIKE " + searchPattern
+                + " AND status = 1");
+        List<Integer> projectIDs = new ArrayList<>();
+        while (rs.next()){
+            projectIDs.add(rs.getInt("ID"));
+        }
+        return projectIDs;
     }
 }
