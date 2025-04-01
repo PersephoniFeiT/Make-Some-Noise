@@ -33,6 +33,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         // Initialize menu bar
         menuBar = new JMenuBar();
 
+        // Create and populate drop-down menu for account functions
         JMenu accountsMenu = new JMenu("Account");
 
         JMenuItem menuItem = new JMenuItem("Sign In");
@@ -55,6 +56,7 @@ public class MakeSomeNoiseWindow extends JFrame {
 
         menuBar.add(accountsMenu);
 
+        // Create and populate drop-down menu for file/project manipulation functions
         JMenu fileMenu = new JMenu("File");
         menuItem = new JMenuItem("Go to open file");
         menuItem.addActionListener(new ActionListener() {
@@ -74,8 +76,37 @@ public class MakeSomeNoiseWindow extends JFrame {
         });
         fileMenu.add(menuItem);
 
+        menuItem = new JMenuItem("New");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // currentSession.CreateNewProject();
+            }
+        });
+        fileMenu.add(menuItem);
+
+        menuItem = new JMenuItem("Save Locally");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // convert to JSON and save to file
+            }
+        });
+        fileMenu.add(menuItem);
+
+        menuItem = new JMenuItem("Open from Disk");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // open file explorer and find JSON on this PC
+                // open JSON file as the current project
+            }
+        });
+        fileMenu.add(menuItem);
+
         menuBar.add(fileMenu);
 
+        // Create and populate drop-down menu for searching project functions
         JMenu searchMenu = new JMenu("Find"); 
 
         menuItem = new JMenuItem("Pattern Search");
@@ -99,7 +130,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void addEditorPanel() {
-        editorPanel = new EditorPanel(this);
+        editorPanel = new EditorPanel(this, new Project("New Project"));
     }
 
     public void goToEditorPanel() {
@@ -123,14 +154,23 @@ public class MakeSomeNoiseWindow extends JFrame {
     public void addAccountPanel() {
         try {
             currentSession.getSignedIn();
-            accountPanel = new AccountPanel(currentSession.GetAccountInfo());
+            accountPanel = new AccountPanel(currentSession.getSignedIn(), currentSession.GetAccountInfo());
         } catch (NotSignedInException e) {
-            accountPanel = new AccountPanel();
+            accountPanel = new AccountPanel(null);
         }
     }
 
     public void goToAccountPanel() {
         if (!this.hasAccountPanel()) {
+            addAccountPanel();
+        }
+
+        // Check if the user has changed accounts; if they have then update the AccountPanel
+        try {
+            if (!currentSession.getSignedIn().equals(accountPanel.getAccountId())) {
+                addAccountPanel();
+            }
+        } catch (NotSignedInException e) {
             addAccountPanel();
         }
 
