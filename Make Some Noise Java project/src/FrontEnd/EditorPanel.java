@@ -8,15 +8,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.*;
 
+import BackEnd.Accounts.Project;
+
 class EditorPanel extends JPanel {
 
 	private NoisePanel noisePanel;
 	private JButton renderButton;
     private LayerPanelList layers;
+    
+    private Project project;
 
-	public EditorPanel(MakeSomeNoiseWindow parentWindow) {
+	public EditorPanel(MakeSomeNoiseWindow parentWindow, Project p) {
         setLayout(new BorderLayout());                            // using BorderLayout layout managers
         setSize(1000, 600);                                       // width and height
+
+        project = p;
 
         // Create a NoisePanel to display the generated noise pattern
         int width = 647;
@@ -40,7 +46,7 @@ class EditorPanel extends JPanel {
 		add(renderButton, BorderLayout.WEST);
 
         // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
-        layers = new LayerPanelList();
+        layers = new LayerPanelList(project);
         layers.setPreferredSize(new Dimension(450, 100));
         add(layers, BorderLayout.EAST);
 	}
@@ -48,7 +54,7 @@ class EditorPanel extends JPanel {
 	public void renderNoiseButtonPushed() {
         int width = 647;
         int height = 400;
-        double[][] values = layers.getManager().multiplyLayers(width, height);
+        double[][] values = BackEnd.Editor.LayerManager.multiplyLayers(width, height, project.getLayerList());
 
         for (int x=0; x < width; x++) {
             for (int y=0; y < height; y++) {
@@ -58,7 +64,7 @@ class EditorPanel extends JPanel {
             // System.out.print("\n");
         }
 
-        System.out.println(layers.getManager().toString());
+        // System.out.println(project);
 
 	}
 }

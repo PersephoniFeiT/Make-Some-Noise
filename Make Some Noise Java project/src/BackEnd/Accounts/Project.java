@@ -45,6 +45,10 @@ public class Project {
         this.layers.remove(index);
     }
 
+    public void removeLayer(NoiseLayer nl) {
+        this.layers.remove(nl);
+    }
+
     public ArrayList<NoiseLayer> getLayerList(){
         return new ArrayList<>(this.layers);
     }
