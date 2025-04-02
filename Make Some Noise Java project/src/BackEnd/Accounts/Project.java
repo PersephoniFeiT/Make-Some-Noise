@@ -140,31 +140,31 @@ public class Project {
 
     public String toJSONString(){
         StringBuilder s = new StringBuilder();
-        s.append("{").append(this.getID()).append(": {");
+        s.append("{\"").append(this.getID()).append("\": {");
 
-        s.append("title: '").append(this.title).append("',");
-        s.append("username: '").append(this.username).append("',");
-        s.append("dateCreated: '").append(this.dateCreated.toString()).append("',");
-        s.append("status: ").append((this.status) ? 1 : 0).append(",");
-        s.append("thumbnail: '").append(this.thumbnail).append("',");
-        s.append("tags: ").append(this.tags.toString());
+        s.append("\"title\": \"").append(this.title).append("\",");
+        s.append("\"username\": \"").append(this.username).append("\",");
+        s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
+        s.append("\"status\": ").append((this.status) ? 1 : 0).append(",");
+        s.append("\"thumbnail\": \"").append(this.thumbnail).append("\",");
+        s.append("\"tags\": \"").append(this.tags.toString()).append("\"");
         if (!this.layers.isEmpty()) s.append(",");
 
         int i = 1;
         for (NoiseLayer l : this.layers){
-            s.append("layer").append(i).append(": {");
-            s.append("type: ").append(l.getClass().getSimpleName()).append(",");
-            s.append("seed: ").append(l.getSeed()).append(",");
-            s.append("freq: ").append(l.getFreq()).append(",");
-            s.append("amp: ").append(l.getAmp()).append(",");
-            s.append("floor: ").append(l.getFloor()).append(",");
-            s.append("ceiling: ").append(l.getCeiling()).append(",");
-            s.append("gain: ").append(l.getGain());
+            s.append("\"layer").append(i).append("\": {");
+            s.append("\"type\": \"").append(l.getClass().getSimpleName()).append("\",");
+            s.append("\"seed\": ").append(l.getSeed()).append(",");
+            s.append("\"freq\": ").append(l.getFreq()).append(",");
+            s.append("\"amp\": ").append(l.getAmp()).append(",");
+            s.append("\"floor\": ").append(l.getFloor()).append(",");
+            s.append("\"ceiling\": ").append(l.getCeiling()).append(",");
+            s.append("\"gain\": ").append(l.getGain());
             s.append("}");
             i++;
             if (i<this.layers.size()) s.append(",");
         }
-        s.append("}");
+        s.append("}}");
         return s.toString();
     }
 }

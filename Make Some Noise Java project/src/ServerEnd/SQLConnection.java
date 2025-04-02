@@ -17,8 +17,11 @@ public class SQLConnection {
 
     public static int insert(String tableName, String[] values) throws DatabaseConnectionException {
         StringBuilder sql = new StringBuilder("INSERT INTO " + tableName +  " VALUES (");
-        for (String v : values){
-            sql.append(v);
+        for (int i = 0; i < values.length; i++) {
+            sql.append("'").append(values[i]).append("'");
+            if (i < values.length - 1) {
+                sql.append(", ");
+            }
         }
         sql.append(")");  // Close the VALUES()
 
@@ -29,7 +32,7 @@ public class SQLConnection {
     }
 
     public static void update(String tableName, int ID, String columnName, String value) throws DatabaseConnectionException {
-        String sql = "UPDATE " +tableName+ " SET " + columnName + " = " + value + " WHERE ID = " + ID;
+        String sql = "UPDATE " +tableName+ " SET " + columnName + " = '" + value + "' WHERE ID = " + ID;
         SQLConnection.queryUpdate(sql);
     }
 
@@ -50,7 +53,7 @@ public class SQLConnection {
             System.out.println("Connected to MySQL successfully!");
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            ResultSet rs = pstmt.executeQuery(sql);
+            ResultSet rs = pstmt.executeQuery();
 
             // Close connection
             pstmt.close();
@@ -70,15 +73,15 @@ public class SQLConnection {
 
             int rowsAffected = pstmt.executeUpdate();
 
-            // Close connection
-            pstmt.close();
-            conn.close();
-
             if (rowsAffected > 0) {
                 // Retrieve the generated ID
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) return rs.getInt(1);
             }
+
+            // Close connection
+            pstmt.close();
+            conn.close();
             return null;
         } catch (SQLException e){
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
