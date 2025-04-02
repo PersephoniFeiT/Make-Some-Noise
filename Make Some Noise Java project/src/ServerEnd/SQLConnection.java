@@ -4,6 +4,7 @@ import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
 import Exceptions.Accounts.DatabaseConnectionException;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.*;
 
@@ -63,7 +64,11 @@ public class SQLConnection {
             System.out.println("Connected to MySQL successfully!");
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            return pstmt.executeQuery();  // Do NOT close pstmt & conn here!
+            ResultSet rs = pstmt.executeQuery();
+
+            pstmt.close(); // Close PreparedStatement
+            conn.close();  // Close Connection
+            return rs;
 
         } catch (SQLException e) {
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
