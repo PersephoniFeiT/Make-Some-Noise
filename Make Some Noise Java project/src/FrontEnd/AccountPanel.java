@@ -1,31 +1,21 @@
 package FrontEnd;
 
 import java.util.HashMap;
-
 import javax.swing.*;
+
+import BackEnd.Accounts.CurrentSession;
 
 public class AccountPanel extends JPanel {
 
 	private Integer accountId;
 	private AccountHeader header;
 	private ProjectThumbnailList projectList;
-	
-	public AccountPanel(Integer ID) {
+
+	public AccountPanel(Integer ID, HashMap<String, String> accountInfo, CurrentSession currentSession) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		accountId = ID;
-		header = new AccountHeader();
-		projectList = new ProjectThumbnailList();
-
-		add(header);
-		add(projectList);
-	}
-
-	public AccountPanel(Integer ID, HashMap<String, String> accountInfo) {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		accountId = ID;
-		header = new AccountHeader(accountInfo);
+		header = new AccountHeader(accountInfo, currentSession);
 		projectList = new ProjectThumbnailList();
 
 		// TODO: Make this work when I have a server connection
