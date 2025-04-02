@@ -80,7 +80,7 @@ public class Project {
             String idString = fieldNames.next();
 
             Integer projectId;
-            if (idString.equals("null")) projectId = null;
+            if (idString.isEmpty()) projectId = null;
             else projectId = Integer.parseInt(idString);
 
             //now go in a layer, starting from the project ID
@@ -146,14 +146,14 @@ public class Project {
 
 
         s.append("{");
-        if (this.getID() == null) s.append("null"); else s.append("\"").append(this.getID());
-        s.append("\": {");
+        if (this.getID() == null) s.append("\"\""); else s.append("\"").append(this.getID()).append("\"");
+        s.append(": {");
 
         s.append("\"title\": ");
-        if (this.title == null) s.append("null,"); else s.append(this.title).append("\",");
+        if (this.title == null) s.append("\"New Project\","); else s.append("\"").append(this.title).append("\",");
 
         s.append("\"username\": ");
-        if (this.username == null) s.append("null,"); else s.append(this.username).append("\",");
+        if (this.username == null) s.append("null,"); else s.append("\"").append(this.username).append("\",");
 
         s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
         s.append("\"status\": ").append((this.status) ? 1 : 0).append(",");
