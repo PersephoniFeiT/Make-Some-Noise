@@ -5,7 +5,6 @@ import BackEnd.Editor.Simplex3NoiseLayer;
 import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
 import BackEnd.Editor.RandomNoiseLayer;
-import BackEnd.Editor.LayerManager;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
