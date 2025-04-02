@@ -158,7 +158,7 @@ public class Project {
         s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
         s.append("\"status\": ").append((this.status) ? 1 : 0).append(",");
         s.append("\"thumbnail\": \"").append(this.thumbnail).append("\",");
-        s.append("\"tags\": \"").append(this.tags.toString()).append("\"");
+        s.append("\"tags\": ").append(this.tags.toString());
         if (!this.layers.isEmpty()) s.append(",");
 
         int i = 1;
