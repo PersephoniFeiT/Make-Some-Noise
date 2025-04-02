@@ -132,7 +132,6 @@ public class Project {
                 project.layers.add(layer);
                 layerIndex++;
             }
-
             return project;
         } catch (Exception e){
             ExceptionHandler.handleException(e);
