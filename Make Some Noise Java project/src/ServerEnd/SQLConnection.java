@@ -5,30 +5,41 @@ import BackEnd.Editor.PerlinNoiseLayer;
 import Exceptions.Accounts.DatabaseConnectionException;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SQLConnection {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/makesomenoise";
     private static final String USER = "appUser";
     private static final String PASSWORD = "make some noise";
 
-    public static int insert(String tableName, String[] values) throws DatabaseConnectionException {
-        StringBuilder sql = new StringBuilder("INSERT INTO " + tableName +  " VALUES (");
-        for (int i = 0; i < values.length; i++) {
-            sql.append("'").append(values[i]).append("'");
-            if (i < values.length - 1) {
-                sql.append(", ");
-            }
+    public static int insert(String tableName, String[] columns, String[] values) throws DatabaseConnectionException {
+        if (columns.length != values.length) {
+            throw new IllegalArgumentException("Columns and values must have the same length.");
         }
-        sql.append(")");  // Close the VALUES()
 
-        Integer ID = SQLConnection.queryUpdate(sql.toString());
-        if (ID == null)
-            throw new DatabaseConnectionException("Database connection error: Could not insert.");
-        else return ID.intValue();
+        String columnNames = String.join(", ", columns);
+        String placeholders = String.join(", ", Collections.nCopies(values.length, "?"));
+
+        String sql = "INSERT INTO " + tableName + " (" + columnNames + ") VALUES (" + placeholders + ")";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            for (int i = 0; i < values.length; i++) {
+                pstmt.setString(i + 1, values[i]);
+            }
+
+            pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return -1;  // No ID generated
+
+        } catch (SQLException e) {
+            throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
+        }
     }
 
     public static void update(String tableName, int ID, String columnName, String value) throws DatabaseConnectionException {
@@ -46,44 +57,43 @@ public class SQLConnection {
          return SQLConnection.queryExecute(sql);
     }
 
-    private static synchronized ResultSet queryExecute(String sql) throws DatabaseConnectionException{
+    private static synchronized ResultSet queryExecute(String sql) throws DatabaseConnectionException {
         try {
-            // Establish connection
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Connected to MySQL successfully!");
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-            ResultSet rs = pstmt.executeQuery();
+            return pstmt.executeQuery();  // Do NOT close pstmt & conn here!
 
-            // Close connection
-            pstmt.close();
-            conn.close();
-            return rs;
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }
     }
 
     private static synchronized Integer queryUpdate(String sql) throws DatabaseConnectionException {
         try {
-            // Establish connection
             Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Connected to MySQL successfully!");
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+
+            // Specify RETURN_GENERATED_KEYS
+            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             int rowsAffected = pstmt.executeUpdate();
+            Integer generatedId = null;
 
             if (rowsAffected > 0) {
-                // Retrieve the generated ID
                 ResultSet rs = pstmt.getGeneratedKeys();
-                if (rs.next()) return rs.getInt(1);
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
+                }
+                rs.close();  // Close ResultSet
             }
 
-            // Close connection
-            pstmt.close();
-            conn.close();
-            return null;
-        } catch (SQLException e){
+            pstmt.close(); // Close PreparedStatement
+            conn.close();  // Close Connection
+
+            return generatedId;
+        } catch (SQLException e) {
             throw new DatabaseConnectionException("Database connection error: " + e.getMessage());
         }
     }

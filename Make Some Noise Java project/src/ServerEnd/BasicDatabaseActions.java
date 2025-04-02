@@ -68,7 +68,12 @@ public class BasicDatabaseActions {
             throw new DuplicateAccountException("Account with username: " + username + " already exists.");
 
         // insert into table
-        int ID = SQLConnection.insert("accounts", new String[]{username, password, email});
+        int ID = SQLConnection.insert("accounts",
+                new String[] {"username",
+                        "password",
+                        "email"
+                },
+                new String[]{username, password, email});
         return ID;
     }
 
@@ -133,13 +138,21 @@ public class BasicDatabaseActions {
         BasicDatabaseActions.assertFormat(new String[]{JSON});
 
         //make a new project, get the ID
-        int ID = SQLConnection.insert("projects", new String[] {"",
+        int ID = SQLConnection.insert("projects",
+        new String[] {"ID", "username",
+                "dateCreated",
+                "status",
+                "projectStructInfo",
+                "thumbnail",
+                "tags"
+        },
+                new String[] {"",
                 BasicDatabaseActions.getAccountInfoType(accountID, "username"),
                 "date created",
                 "private",
                 JSON,
                 "thumbnail",
-                ""
+                "[]"
         });
 
         // Step 2: Fetch the existing projects list from the 'accounts' table
