@@ -67,4 +67,8 @@ class EditorPanel extends JPanel {
         // System.out.println(project);
 
 	}
+
+    public Project getProject() {
+        return project;
+    }
 }
