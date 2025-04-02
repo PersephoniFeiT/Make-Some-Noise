@@ -21,7 +21,7 @@ public class Project {
     public final List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
 
-    public Project(int ID, String title, String username, LocalDate dateCreated){
+    public Project(Integer ID, String title, String username, LocalDate dateCreated){
         this.ID = ID;
         this.status = false;
         this.thumbnail = "";
@@ -79,16 +79,18 @@ public class Project {
             //otherwise the Project ID is the first string
             String idString = fieldNames.next();
 
-            int projectId;
-            if (idString.equals("null")) return new Project("");
+            Integer projectId;
+            if (idString.equals("null")) projectId = null;
             else projectId = Integer.parseInt(idString);
 
             //now go in a layer, starting from the project ID
             JsonNode projectNode = rootNode.get(idString);
 
             // Extract primitive fields
-            String title = projectNode.get("title").asText();
-            String username = projectNode.get("username").asText();
+            String title;
+            if (!projectNode.has("title")) title = null; else title = projectNode.get("title").asText();
+            String username;
+            if (!projectNode.has("username")) username = null; else username = projectNode.get("username").asText();
             LocalDate dateCreated = LocalDate.parse(projectNode.get("dateCreated").asText());
             int status = projectNode.get("status").asInt();
             String thumbnail = projectNode.get("thumbnail").asText();
@@ -97,8 +99,7 @@ public class Project {
 
             // Create a new project instance
             Project project = new Project(projectId, title, username, dateCreated);
-            if (status == 1) project.status = true;
-            else project.status = false;
+            project.status = status == 1;
             project.thumbnail = thumbnail;
             project.tags.addAll(tags);
 
@@ -119,12 +120,14 @@ public class Project {
                 double gain = layerNode.get("gain").asDouble();
 
                 String type = layerNode.get("type").asText();
-                if (type.equals("PerlinNoiseLayer")) layer = new PerlinNoiseLayer();
-                else if (type.equals("RandomNoiseLayer")) layer = new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
-                else if (type.equals("Simplex2NoiseLayer")) layer = new Simplex2NoiseLayer(freq, amp, floor, ceiling);
-                else if (type.equals("Simplex3NoiseLayer")) layer = new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
-                else if (type.equals("SimplexNoise")) layer = null;//new SimplexNoise();
-                else layer = new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
+                layer = switch (type) {
+                    case "PerlinNoiseLayer" -> new PerlinNoiseLayer();
+                    case "RandomNoiseLayer" -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
+                    case "Simplex2NoiseLayer" -> new Simplex2NoiseLayer(freq, amp, floor, ceiling);
+                    case "Simplex3NoiseLayer" -> new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
+                    case "SimplexNoise" -> null;//new SimplexNoise();
+                    default -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
+                };
 
                 project.layers.add(layer);
                 layerIndex++;
@@ -140,10 +143,18 @@ public class Project {
 
     public String toJSONString(){
         StringBuilder s = new StringBuilder();
-        s.append("{\"").append(this.getID()).append("\": {");
 
-        s.append("\"title\": \"").append(this.title).append("\",");
-        s.append("\"username\": \"").append(this.username).append("\",");
+
+        s.append("{");
+        if (this.getID() == null) s.append("null"); else s.append("\"").append(this.getID());
+        s.append("\": {");
+
+        s.append("\"title\": ");
+        if (this.title == null) s.append("null,"); else s.append(this.title).append("\",");
+
+        s.append("\"username\": ");
+        if (this.username == null) s.append("null,"); else s.append(this.username).append("\",");
+
         s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
         s.append("\"status\": ").append((this.status) ? 1 : 0).append(",");
         s.append("\"thumbnail\": \"").append(this.thumbnail).append("\",");
