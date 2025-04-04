@@ -20,7 +20,7 @@ public class RandomNoiseLayer implements NoiseLayer{
     @Override
     public double evaluate(int x, int y) {
         double val = rng.nextDouble();
-        val = ((val < floor )? floor : (val < ceiling)? ceiling : val) * amplitude + (1 - amplitude);
+        val = (((val < floor )? floor : (val > ceiling)? ceiling : val) * amplitude) + (1 - amplitude)/2;
         return val;
     }
 
