@@ -40,7 +40,7 @@ public class NoiseGenTest {
             double rval = rnoise.evaluate(i % 500, (1000 - i) % 250);
             double s2val = s2noise.evaluate(i % 500, (1000 - i) % 250);
             double s3val = s2noise.evaluate(i % 500, (1000 - i) % 250);
-            System.out.println(rval);
+            //System.out.println(rval);
             assertTrue(rval <= 0.75);
             assertTrue(s2val <= 0.75);
             assertTrue(s3val <= 0.75);
@@ -103,7 +103,7 @@ public class NoiseGenTest {
             if(s32val < s31val){
                 s3DecreaseScore++;
             }
-            System.out.println(s31val + "    " + s32val);
+            //System.out.println(s31val + "    " + s32val);
         }
 
         assertTrue(rUniquenessScore >= 750);
@@ -142,20 +142,10 @@ public class NoiseGenTest {
             assertTrue(s2Norm < s2OrVal + 0.00005);
             assertTrue(s2Norm > s2OrVal - 0.00005);
 
-            System.out.println(s3OrVal + "     " + s3val + "     " + s3Norm);
+            //System.out.println(s3OrVal + "     " + s3val + "     " + s3Norm);
             assertTrue(s3Norm < s3OrVal + 0.00005);
             assertTrue(s3Norm > s3OrVal - 0.00005);
         }
-
-        rOracle = new RandomNoiseLayer(0, 0, 1, 1, 1);
-        rAmpl = new RandomNoiseLayer(0, 0, 1, 1, 1/k);
-        s2Oracle = new Simplex2NoiseLayer(0, 1, 1, 1);
-        s2Ampl = new Simplex2NoiseLayer(0, 1, 1, 1/k);
-        s3Oracle = new Simplex3NoiseLayer(0, 0, 1, 1, 1/k);
-        s3Ampl = new Simplex3NoiseLayer(0, 0, 1, 1, 1/k);
-        
-        //TODO: rest of NL.3 cases
-
     }
 
     @Test
