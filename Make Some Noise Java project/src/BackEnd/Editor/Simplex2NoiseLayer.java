@@ -15,7 +15,7 @@ public class Simplex2NoiseLayer implements NoiseLayer{
 
     @Override
     public double evaluate(int x, int y) {
-        double val = (frequency * SimplexNoise.noise(x, y) + 1) / 2;
+        double val = (amplitude * SimplexNoise.noise(x, y) + 1) / 2;
         return (val > ceiling)? ceiling : (val < floor)? floor : val;
     }
 
@@ -56,12 +56,12 @@ public class Simplex2NoiseLayer implements NoiseLayer{
 
     @Override
     public void setFloor(double newFloor) {
-        this.floor = (newFloor >= getCeiling())? getCeiling() : (newFloor <= 0)? 0 : floor;
+        this.floor = (newFloor >= getCeiling())? getCeiling() : (newFloor <= 0)? 0 : newFloor;
     }
 
     @Override
     public void setCeiling(double newCeiling) {
-        this.ceiling = (newCeiling >= 1)? 1 : (newCeiling <= getFloor())? floor : ceiling;
+        this.ceiling = (newCeiling <= getFloor())? getFloor() : (newCeiling >= 1)? 1 : newCeiling;
     }
 
     @Override
