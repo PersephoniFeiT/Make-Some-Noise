@@ -17,7 +17,7 @@ public class Simplex3NoiseLayer implements NoiseLayer{
 
     @Override
     public double evaluate(int x, int y) {
-        double val = (frequency * SimplexNoise.noise(x, y, seed) + 1) / 2;
+        double val = (amplitude * SimplexNoise.noise(x, y, seed) + 1) / 2;
         return (val > ceiling)? ceiling : (val < floor)? floor : val;
     }
 

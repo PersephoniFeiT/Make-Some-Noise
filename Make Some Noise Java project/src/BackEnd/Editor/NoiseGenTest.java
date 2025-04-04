@@ -2,6 +2,7 @@ package BackEnd.Editor;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class NoiseGenTest {
@@ -76,7 +77,7 @@ public class NoiseGenTest {
         int s3IncreaseScore = 0;
         int s3DecreaseScore = 0;
 
-        for(int i = 0; i < 1000; i++){
+        for(int i = 0; i < 1000; i++){ //Statistically exhaustive NL.2.1 case. Nondeterministic so there is a very very small chance of failure, but as long as it passes most of the time this functional requirement is met.
             double r1val = rn1.evaluate(i % 500, (1000 - i % 500) % 250);
             double r2val = rn2.evaluate(i % 500, (1000 - i % 500) % 250);
             double s31val = s3n1.evaluate(i % 500, (1000 - i % 500) % 250);
@@ -112,5 +113,116 @@ public class NoiseGenTest {
         assertTrue(s3IncreaseScore >= 250);
         assertTrue(s3DecreaseScore >= 250);
     }
-    
+
+    @Test
+    public void NL3(){
+        double k = 4;
+        RandomNoiseLayer rOracle = new RandomNoiseLayer(0, 0, 1, 1, 1);
+        RandomNoiseLayer rAmpl = new RandomNoiseLayer(0, 0, 1, 1/k, 1);
+        Simplex2NoiseLayer s2Oracle = new Simplex2NoiseLayer(0, 1, 1, 0);
+        Simplex2NoiseLayer s2Ampl = new Simplex2NoiseLayer(0, 1, 1/k, 1);
+        Simplex3NoiseLayer s3Oracle = new Simplex3NoiseLayer(0, 0, 1, 1, 1);
+        Simplex3NoiseLayer s3Ampl = new Simplex3NoiseLayer(0, 0, 1, 1/k, 1);
+        for (int i = 0; i < 1000; i++){ //statistically exhaustive  NL.3.0 case
+            double rOrVal = rOracle.evaluate(i % 500, (1000 - i % 500) % 250);
+            double rval = rAmpl.evaluate(i % 500, (1000 - i % 500) % 250);
+            double rNorm = (rval - 0.5) * k + 0.5;
+
+            double s2OrVal = s2Oracle.evaluate(i % 500, (1000 - i % 500) % 250);
+            double s2val = s2Ampl.evaluate(i % 500, (1000 - i % 500) % 250);
+            double s2Norm = (s2val - 0.5) * k + 0.5;
+
+            double s3OrVal = s3Oracle.evaluate(i % 500, (1000 - i % 500) % 250);
+            double s3val = s3Ampl.evaluate(i % 500, (1000 - i % 500) % 250);
+            double s3Norm = (s3val - 0.5) * k + 0.5;
+
+            assertTrue(rNorm < rOrVal + 0.00005); //Using a stict margin of error for floating point errors.
+            assertTrue(rNorm > rOrVal - 0.00005);
+
+            assertTrue(s2Norm < s2OrVal + 0.00005);
+            assertTrue(s2Norm > s2OrVal - 0.00005);
+
+            System.out.println(s3OrVal + "     " + s3val + "     " + s3Norm);
+            assertTrue(s3Norm < s3OrVal + 0.00005);
+            assertTrue(s3Norm > s3OrVal - 0.00005);
+        }
+
+        rOracle = new RandomNoiseLayer(0, 0, 1, 1, 1);
+        rAmpl = new RandomNoiseLayer(0, 0, 1, 1, 1/k);
+        s2Oracle = new Simplex2NoiseLayer(0, 1, 1, 1);
+        s2Ampl = new Simplex2NoiseLayer(0, 1, 1, 1/k);
+        s3Oracle = new Simplex3NoiseLayer(0, 0, 1, 1, 1/k);
+        s3Ampl = new Simplex3NoiseLayer(0, 0, 1, 1, 1/k);
+        
+        //TODO: rest of NL.3 cases
+
+    }
+
+    @Test
+    public void NL4(){
+        int m = 3;
+        int n = 4;
+        ArrayList<NoiseLayer> layerList = new ArrayList<>();
+        layerList.add(new NoiseLayer(){ //anonymous noiselayer mock for evaluating to m
+            @Override
+            public double evaluate(int x, int y) {
+                return m;
+            }
+            @Override
+            public int getSeed() {return 1;}
+            @Override
+            public double getFreq() {return 1;}
+            @Override
+            public double getAmp() {return 1;}
+            public double getFloor() {return 1;}
+            @Override
+            public double getCeiling() {return 1;}
+            @Override
+            public double getGain() {return 1;}
+            @Override
+            public void setFreq(double newFreq) {}
+            @Override
+            public void setAmp(double newAmp) {}
+            @Override
+            public void setFloor(double newFloor) {}
+            @Override
+            public void setCeiling(double newCeiling) {}
+            @Override
+            public void setGain(double newGain) {}
+        });
+        layerList.add(new NoiseLayer(){ //anonymous noiselayer mock for evaluating to n
+            @Override
+            public double evaluate(int x, int y) {
+                return n;
+            }
+            @Override
+            public int getSeed() {return 1;}
+            @Override
+            public double getFreq() {return 1;}
+            @Override
+            public double getAmp() {return 1;}
+            public double getFloor() {return 1;}
+            @Override
+            public double getCeiling() {return 1;}
+            @Override
+            public double getGain() {return 1;}
+            @Override
+            public void setFreq(double newFreq) {}
+            @Override
+            public void setAmp(double newAmp) {}
+            @Override
+            public void setFloor(double newFloor) {}
+            @Override
+            public void setCeiling(double newCeiling) {}
+            @Override
+            public void setGain(double newGain) {}
+        });
+
+        double[][] vals = LayerManager.multiplyLayers(100, 100, layerList);
+        for(int i = 0; i < 100; i++){
+            for(int j = 0; j < 100; j++){
+                assertTrue(vals[i][j] == m*n);
+            }
+        }
+    }
 }
