@@ -35,7 +35,7 @@ public class BasicDatabaseActions {
 
     private static boolean checkForDuplicateAccounts(String value) throws SQLException, DatabaseConnectionException {
         // Check if duplicate account
-        ResultSet rs = SQLConnection.select("accounts", "username = " + value + ", COUNT(*) as count", "");
+        ResultSet rs = SQLConnection.select("accounts", "username = " + value + ", COUNT(*) as count", new String[]{}, new String[]{}, new String[]{});
         while (rs.next()) {
             int count = rs.getInt("count");
             if (count > 0) return true;
@@ -57,7 +57,7 @@ public class BasicDatabaseActions {
      * biographical field. */
     public static String getAccountInfoType(int ID, String type) throws SQLException, DatabaseConnectionException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{type});
-        ResultSet rs = SQLConnection.select("accounts", type, "ID = " + ID);
+        ResultSet rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new String[]{""+ID}, new String[]{});
         return rs.getString(type);
     }
 
@@ -80,7 +80,7 @@ public class BasicDatabaseActions {
     public static int signIn(String username, String password) throws DatabaseConnectionException, NoSuchAccountException, IncorrectPasswordException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{username, password});
 
-        try (ResultSet rs = SQLConnection.select("accounts", "username = '" + username+"'", "")){
+        try (ResultSet rs = SQLConnection.select("accounts", "*", new String[]{"username"}, new String[]{username}, new String[]{})){
             while (rs.next()) {
                 //assuming 1st col is ID, 2nd is username, 3rd is pwd
                 if (rs.getString(3).equals(password)) return rs.getInt(1);
@@ -115,7 +115,7 @@ public class BasicDatabaseActions {
 
     /** Account:Delete */
     public static void deleteAccount(int ID) throws DatabaseConnectionException {
-        SQLConnection.delete("accounts", "ID = '" + ID +"'");
+        SQLConnection.delete("accounts", "ID", ""+ID);
     }
 
     /* -------------------------------------------------------------------------------------- */
@@ -130,7 +130,7 @@ public class BasicDatabaseActions {
     /** Open project: Get project info */
     public static String getProjectInfoType(int ID, String type) throws InvalidInputException, SQLException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{type});
-        ResultSet rs = SQLConnection.select("projects", type, "ID = " + ID);
+        ResultSet rs = SQLConnection.select("projects", type, new String[]{"ID"},new String[]{""+ID}, new String[]{});
         return rs.getString(type);
     }
 
@@ -156,7 +156,7 @@ public class BasicDatabaseActions {
         });
 
         // Step 2: Fetch the existing projects list from the 'accounts' table
-        ResultSet existingProjectsRs = SQLConnection.select("accounts", "projects", "ID = " + accountID);
+        ResultSet existingProjectsRs = SQLConnection.select("accounts", "projects", new String[]{"ID"}, new String[]{""+accountID}, new String[]{});
 
         // Step 3: Prepare the updated projects list (including the new project ID)
         String updatedProjects = "";
@@ -190,7 +190,7 @@ public class BasicDatabaseActions {
     }
 
     public static void deleteProject(int ID) throws DatabaseConnectionException {
-        SQLConnection.delete("projects", "ID = '" + ID +"'");
+        SQLConnection.delete("projects", "ID", ""+ID);
     }
 
 
@@ -205,7 +205,7 @@ public class BasicDatabaseActions {
             GROUP BY ID, projectStruct;
             */
         ResultSet rs = SQLConnection.select("projects", "ID, projectInfoStruct, COUNT(*) as count",
-                "WHERE ID = "+ projectID +" AND projectStruct = " +currentData +" GROUP BY ID, projectInfoStruct");
+                new String[]{"ID", "projectStruct"}, new String[]{""+projectID, currentData}, new String[]{"ID", "projectInfoStruct"});
         while (rs.next()) {
             int count = rs.getInt("count");
             if (count > 0) return true;
@@ -234,7 +234,7 @@ public class BasicDatabaseActions {
      * titles that match the search terms. */
     public static List<Integer> searchBy(String toSearchBy, String value) throws SQLException, InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{value});
-        ResultSet rs = SQLConnection.select("projects", "ID", toSearchBy+ " = " + value);
+        ResultSet rs = SQLConnection.select("projects", "ID", new String[]{"toSearchBy"}, new String[]{value}, new String[]{});
         List<Integer> projectIDs = new ArrayList<>();
         while (rs.next()){
             projectIDs.add(rs.getInt("ID"));
