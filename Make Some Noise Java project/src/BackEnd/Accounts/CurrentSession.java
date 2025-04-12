@@ -101,13 +101,9 @@ public class CurrentSession {
     public HashMap<String, String> GetAccountInfo() {
         HashMap<String, String> accountInfo = new HashMap<>();
         try {
-            System.out.println("1");
             accountInfo.put("username", BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username"));
-            System.out.println("2");
             accountInfo.put("email", BasicDatabaseActions.getAccountInfoType(getSignedIn(), "email"));
-            System.out.println("3");
             accountInfo.put("projectList", BasicDatabaseActions.getAccountInfoType(getSignedIn(), "projectList"));
-            System.out.println("4");
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
