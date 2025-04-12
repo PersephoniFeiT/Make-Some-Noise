@@ -2,11 +2,9 @@ package FrontEnd;
 
 import BackEnd.Editor.Simplex2NoiseLayer;
 import BackEnd.Editor.Simplex3NoiseLayer;
-import BackEnd.Editor.SimplexNoise;
 import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
 import BackEnd.Editor.RandomNoiseLayer;
-import BackEnd.Editor.LayerManger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,6 +20,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.*;
+import BackEnd.Accounts.Project;;
 
 public class LayerPanelList extends JScrollPane {
 
@@ -54,24 +53,26 @@ public class LayerPanelList extends JScrollPane {
 		private LabeledTextField ceiling;
 
 		private NoiseLayer noiseLayer;
-		private LayerManger manager;
+		private Project project;
 		
-		public LayerPanel(NoiseLayer nl, LayerManger inManager) {
+		public LayerPanel(NoiseLayer nl, Project proj) {
 			setLayout(new FlowLayout());
 			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
-			this.manager = inManager;
+			project = proj;
 			noiseLayer = nl;
 
 			// Populate the LayerPanel with a title and attribute fields
 			layerName = new JTextField("New Layer", 6);
 
-			String[] layerOptions = {"Simplex2 Noise", "Perlin Noise", "Random Noise", "Simplex3 Noise"};
+			String[] layerOptions = {"Random Noise", "Perlin Noise", "Simplex2 Noise", "Simplex3 Noise"};
 			layerType = new JComboBox<String>(layerOptions);
 			layerType.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					manager.removeLayer(noiseLayer);
+				
+					project.removeLayer(noiseLayer);
+
 					Object choice = layerType.getSelectedItem();
 					if (choice.equals("Simplex2 Noise")) {
 						noiseLayer = new Simplex2NoiseLayer(
@@ -81,7 +82,7 @@ public class LayerPanelList extends JScrollPane {
 							Double.parseDouble(freq.text.getText())
 						);
 					} else if (choice.equals("Perlin Noise")) {
-						manager.addLayer(new PerlinNoiseLayer());
+						project.addLayer(new PerlinNoiseLayer());
 					} else if (choice.equals("Random Noise")) {
 						noiseLayer = new RandomNoiseLayer(
 							Integer.parseInt(seed.text.getText()),
@@ -99,9 +100,13 @@ public class LayerPanelList extends JScrollPane {
 							Double.parseDouble(freq.text.getText())
 						);
 					}
-					manager.addLayer(noiseLayer);
+					project.addLayer(noiseLayer);
 				}
 			});
+			JPanel layerNameAndType = new JPanel();
+			layerNameAndType.setLayout(new BoxLayout(layerNameAndType, BoxLayout.Y_AXIS));
+			layerNameAndType.add(layerName);
+			layerNameAndType.add(layerType);
 
 			int columnNumber = 3;
 			seed =	new LabeledTextField("Seed", ""+nl.getSeed(), columnNumber);
@@ -154,8 +159,7 @@ public class LayerPanelList extends JScrollPane {
 				}
 			});
 			
-			add(layerName);
-			add(layerType);
+			add(layerNameAndType);
 			add(seed);
 			add(freq);
 			add(amp);
@@ -225,36 +229,30 @@ public class LayerPanelList extends JScrollPane {
 			}
 		}
 		
-		private LayerManger layerManager = new LayerManger();
+		private Project project;
 
-		public ContentPanel() {
+		public ContentPanel(Project p) {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+			project = p;
 
 			add(new Header());
 		}
 
 		public void addLayer() {
-			Simplex2NoiseLayer newLayer = new Simplex2NoiseLayer(0.0, 0.0, 0.0, 0.0);
-			LayerPanel lp = new LayerPanel(newLayer, layerManager);
-			layerManager.addLayer(newLayer);
+			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 0.0, 1.0);
+			LayerPanel lp = new LayerPanel(newLayer, project);
+			project.addLayer(newLayer);
 			contents.add(lp);
 			revalidate();
 			repaint();
-		}
-
-		public LayerManger getManager() {
-			return layerManager;
 		}
 	}
 
 	private ContentPanel contents;
 
-	public LayerPanelList() {
-		contents = new ContentPanel();
+	public LayerPanelList(Project p) {
+		contents = new ContentPanel(p);
 		setViewportView(contents);
-	}
-
-	public LayerManger getManager() {
-		return contents.getManager();
 	}
 } 

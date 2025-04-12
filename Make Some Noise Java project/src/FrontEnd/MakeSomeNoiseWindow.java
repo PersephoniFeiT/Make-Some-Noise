@@ -1,6 +1,11 @@
 package FrontEnd;
 
 import javax.swing.*;
+// import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
 import Exceptions.Accounts.NotSignedInException;
@@ -33,6 +38,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         // Initialize menu bar
         menuBar = new JMenuBar();
 
+        // Create and populate drop-down menu for account functions
         JMenu accountsMenu = new JMenu("Account");
 
         JMenuItem menuItem = new JMenuItem("Sign In");
@@ -55,6 +61,7 @@ public class MakeSomeNoiseWindow extends JFrame {
 
         menuBar.add(accountsMenu);
 
+        // Create and populate drop-down menu for file/project manipulation functions
         JMenu fileMenu = new JMenu("File");
         menuItem = new JMenuItem("Go to open file");
         menuItem.addActionListener(new ActionListener() {
@@ -69,13 +76,46 @@ public class MakeSomeNoiseWindow extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // currentSession.save(new Project());
+                currentSession.SaveProject(editorPanel.getProject());
+            }
+        });
+        fileMenu.add(menuItem);
+
+        menuItem = new JMenuItem("New");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addEditorPanel();
+                goToEditorPanel();
+            }
+        });
+        fileMenu.add(menuItem);
+
+        menuItem = new JMenuItem("Save As Locally");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+
+                saveProject();
+                
+            }
+        });
+        fileMenu.add(menuItem);
+
+        menuItem = new JMenuItem("Open from Disk");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                openFile();
+
             }
         });
         fileMenu.add(menuItem);
 
         menuBar.add(fileMenu);
 
+        // Create and populate drop-down menu for searching project functions
         JMenu searchMenu = new JMenu("Find"); 
 
         menuItem = new JMenuItem("Pattern Search");
@@ -94,12 +134,68 @@ public class MakeSomeNoiseWindow extends JFrame {
         setVisible(true);
     }
 
+    public void saveProject() {
+        Project p = editorPanel.getProject();
+                
+        String fileContent = p.toJSONString();
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
+                    try { 
+                        FileWriter file = new FileWriter(fileChooser.getSelectedFile());
+                        p.title = fileChooser.getSelectedFile().getName();
+                        file.write(fileContent);
+                        file.close();
+                    } catch (IOException ex) {
+                        System.out.println("ERROR: Failed to write to file");
+                    }
+                }
+            }
+        });
+        fileChooser.showSaveDialog(this);
+    }
+
+    public void openFile() {
+        JFileChooser fileChooser = new JFileChooser();
+
+        fileChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
+                    try { 
+                        Scanner reader = new Scanner(fileChooser.getSelectedFile());
+                        StringBuffer buff = new StringBuffer();
+                        while (reader.hasNextLine()) {
+                            buff.append(reader.nextLine());
+                        }
+                        reader.close();
+                        addEditorPanel(Project.fromJSONtoProject(buff.toString()));
+                        goToEditorPanel();
+                    } catch (IOException ex) {
+                        System.out.println("ERROR: Failed to read from file");
+                    }
+                }
+
+            }
+        });
+        fileChooser.showOpenDialog(this);
+    }
+
     public boolean hasEditorPanel() {
         return editorPanel != null;
     }
 
     public void addEditorPanel() {
-        editorPanel = new EditorPanel(this);
+        editorPanel = new EditorPanel(this, currentSession.CreateNewProject());
+    }
+
+    public void addEditorPanel(Project p) {
+        editorPanel = new EditorPanel(this, p);
     }
 
     public void goToEditorPanel() {
@@ -123,14 +219,23 @@ public class MakeSomeNoiseWindow extends JFrame {
     public void addAccountPanel() {
         try {
             currentSession.getSignedIn();
-            accountPanel = new AccountPanel(currentSession.GetAccountInfo());
+            accountPanel = new AccountPanel(currentSession.getSignedIn(), currentSession.GetAccountInfo(), currentSession);
         } catch (NotSignedInException e) {
-            accountPanel = new AccountPanel();
+            accountPanel = new AccountPanel(Integer.valueOf(0), null, currentSession);
         }
     }
 
     public void goToAccountPanel() {
         if (!this.hasAccountPanel()) {
+            addAccountPanel();
+        }
+
+        // Check if the user has changed accounts; if they have then update the AccountPanel
+        try {
+            if (!currentSession.getSignedIn().equals(accountPanel.getAccountId())) {
+                addAccountPanel();
+            }
+        } catch (NotSignedInException e) {
             addAccountPanel();
         }
 

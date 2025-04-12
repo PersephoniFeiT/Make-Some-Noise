@@ -1,28 +1,21 @@
 package FrontEnd;
 
 import java.util.HashMap;
-
 import javax.swing.*;
+
+import BackEnd.Accounts.CurrentSession;
 
 public class AccountPanel extends JPanel {
 
+	private Integer accountId;
 	private AccountHeader header;
 	private ProjectThumbnailList projectList;
-	
-	public AccountPanel() {
+
+	public AccountPanel(Integer ID, HashMap<String, String> accountInfo, CurrentSession currentSession) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		header = new AccountHeader();
-		projectList = new ProjectThumbnailList();
-
-		add(header);
-		add(projectList);
-	}
-
-	public AccountPanel(HashMap<String, String> accountInfo) {
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		header = new AccountHeader(accountInfo);
+		accountId = ID;
+		header = new AccountHeader(accountInfo, currentSession);
 		projectList = new ProjectThumbnailList();
 
 		// TODO: Make this work when I have a server connection
@@ -33,5 +26,9 @@ public class AccountPanel extends JPanel {
 
 		add(header);
 		add(projectList);
+	}
+
+	public Integer getAccountId() {
+		return accountId;
 	}
 }
