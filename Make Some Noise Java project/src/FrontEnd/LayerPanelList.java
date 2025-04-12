@@ -76,6 +76,7 @@ public class LayerPanelList extends JScrollPane {
 					Object choice = layerType.getSelectedItem();
 					if (choice.equals("Simplex2 Noise")) {
 						noiseLayer = new Simplex2NoiseLayer(
+							Integer.parseInt(seed.text.getText()),
 							Double.parseDouble(floor.text.getText()),
 							Double.parseDouble(ceiling.text.getText()),
 							Double.parseDouble(amp.text.getText()),

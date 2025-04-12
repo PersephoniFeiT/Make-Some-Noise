@@ -123,7 +123,7 @@ public class Project {
                 layer = switch (type) {
                     case "PerlinNoiseLayer" -> new PerlinNoiseLayer();
                     case "RandomNoiseLayer" -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
-                    case "Simplex2NoiseLayer" -> new Simplex2NoiseLayer(freq, amp, floor, ceiling);
+                    case "Simplex2NoiseLayer" -> new Simplex2NoiseLayer(seed, freq, amp, floor, ceiling);
                     case "Simplex3NoiseLayer" -> new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
                     case "SimplexNoise" -> null;//new SimplexNoise();
                     default -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
