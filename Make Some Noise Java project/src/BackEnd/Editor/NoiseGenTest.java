@@ -1,5 +1,4 @@
 package BackEnd.Editor;
-import org.apache.commons.math4.legacy.optim.nonlinear.scalar.noderiv.Simplex;
 import org.junit.*;
 import static org.junit.Assert.*;
 
