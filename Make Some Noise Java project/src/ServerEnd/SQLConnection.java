@@ -72,10 +72,12 @@ public class SQLConnection {
         }
     }
 
-    public static ResultSet select(String tableName, String column, String[] conditionColumn, String[] conditionValue, String[] groupBy) throws DatabaseConnectionException {
+    public static List<Map<String, String>> select(String tableName, String column, String[] conditionColumn, String[] conditionValue, String[] groupBy) throws DatabaseConnectionException {
         if (conditionColumn.length != conditionValue.length) {
             throw new IllegalArgumentException("Condition columns and values must have the same length.");
         }
+
+        List<Map<String, String>> resultList = new ArrayList<>();
 
         // Start building SQL query
         StringBuilder sqlBuilder = new StringBuilder("SELECT " + column + " FROM " + tableName);
@@ -104,21 +106,35 @@ public class SQLConnection {
 
         String sql = sqlBuilder.toString();
 
-        try {
-            Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Set condition values
             for (int i = 0; i < conditionValue.length; i++) {
-                if (isInteger(conditionValue[i])) pstmt.setInt(i + 1, Integer.parseInt(conditionValue[i]));
-                else pstmt.setString(i + 1, conditionValue[i]);
+                if (isInteger(conditionValue[i])) {
+                    pstmt.setInt(i + 1, Integer.parseInt(conditionValue[i]));
+                } else {
+                    pstmt.setString(i + 1, conditionValue[i]);
+                }
             }
 
-            return pstmt.executeQuery(); // Caller must close ResultSet & Connection
+            try (ResultSet rs = pstmt.executeQuery()) {
+                ResultSetMetaData meta = rs.getMetaData();
+                int columnCount = meta.getColumnCount();
+
+                while (rs.next()) {
+                    Map<String, String> row = new HashMap<>();
+                    for (int i = 1; i <= columnCount; i++) {
+                        row.put(meta.getColumnLabel(i), rs.getString(i));
+                    }
+                    resultList.add(row);
+                }
+            }
 
         } catch (SQLException e) {
             throw new DatabaseConnectionException("Database connection error in select: " + e.getMessage());
         }
+
+        return resultList;
     }
 
     private static boolean isInteger(String str) {

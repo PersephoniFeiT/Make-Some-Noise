@@ -31,7 +31,7 @@ public class Sharing {
     public static List<Integer> SearchByTag(String tag){
         List<Integer> projectInfo = new ArrayList<>();
         try {
-            projectInfo = BasicDatabaseActions.searchByTag("tags", tag);
+            //projectInfo = BasicDatabaseActions.searchByTag("tags", tag);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
