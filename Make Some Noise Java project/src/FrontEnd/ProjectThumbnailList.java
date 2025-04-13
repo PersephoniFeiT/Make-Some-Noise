@@ -34,6 +34,10 @@ public class ProjectThumbnailList extends JScrollPane {
 		contents.addThumbnail(CurrentSession.GetProjectInfo(projectID), CurrentSession.getProjectTags(projectID));
 	}
 
+	public void addProjectList(List<Integer> projectIDs) {
+		projectIDs.forEach(projectID -> contents.addThumbnail(CurrentSession.GetProjectInfo(projectID), CurrentSession.getProjectTags(projectID)));
+	}
+
 	private class ContentPanel extends JPanel {
 		List<Integer> projectIDs;
 

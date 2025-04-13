@@ -237,7 +237,7 @@ public class BasicDatabaseActions {
      * titles that match the search terms. */
     public static List<Integer> searchBy(String toSearchBy, String value) throws SQLException, InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{value});
-        List<Map<String, String>> rs = SQLConnection.select("projects", "ID", new String[]{"toSearchBy"}, new String[]{value}, null);
+        List<Map<String, String>> rs = SQLConnection.select("projects", "ID", new String[]{toSearchBy}, new String[]{value}, null);
         List<Integer> projectIDs = new ArrayList<>();
         for (Map<String, String> m : rs){
             projectIDs.add(Integer.parseInt(m.get("ID")));
