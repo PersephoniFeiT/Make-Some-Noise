@@ -130,7 +130,7 @@ public class BasicDatabaseActions {
         return rs.getFirst().get(type);
     }
 
-    public static int createNewProject(int accountID, String JSON) throws SQLException, DatabaseConnectionException, InvalidInputException {
+    public static int createNewProject(int accountID, String JSON) throws SQLException, DatabaseConnectionException, InvalidInputException, DuplicateAccountException {
         BasicDatabaseActions.assertFormat(new String[]{JSON});
 
         //make a new project, get the ID
@@ -162,24 +162,47 @@ public class BasicDatabaseActions {
         //for (Map<String, String> m : existingProjectsRs) {
         if (!existingProjectsRs.isEmpty()) {
             String currentProjects = existingProjectsRs.getFirst().get("projectList"); // Assuming 'projects' is a string field or JSON
-            if (currentProjects != null && !currentProjects.isEmpty()) {
-                // If there are existing projects, append the new project ID to the list
-                // Remove brackets and whitespace
-                String trimmed = currentProjects.substring(1, currentProjects.length() - 1).trim();
-                // Append the new ID correctly
-                if (trimmed.isEmpty()) {
-                    updatedProjects = "[" + ID + "]";
-                } else {
-                    updatedProjects = "[" + trimmed + ", " + ID + "]";
-                }
-            } else {
-                // If no existing projects, start the list with the new project ID
-                updatedProjects = "[" + String.valueOf(ID) + "]";
-            }
+            updatedProjects = addIDToStringList(currentProjects, ID);
         }
+
         // update new project list
         SQLConnection.update("accounts", accountID, "projectList", updatedProjects);
         return ID;
+    }
+
+    private static String addIDToStringList(String prevList, Integer ID){
+        String updatedProjects = "[]";
+        if (prevList != null && !prevList.isEmpty()) {
+            // If there are existing projects, append the new project ID to the list
+            // Remove brackets and whitespace
+            String trimmed = prevList.substring(1, prevList.length() - 1).trim();
+            // Append the new ID correctly
+            if (trimmed.isEmpty()) {
+                updatedProjects = "[" + ID + "]";
+            } else {
+                updatedProjects = "[" + trimmed + ", " + ID + "]";
+            }
+        } else {
+            // If no existing projects, start the list with the new project ID
+            updatedProjects = "[" + String.valueOf(ID) + "]";
+        }
+        return updatedProjects;
+    }
+
+    private static String removeIDFromStringList(String prevList, Integer ID){
+        //String updatedProjects = "[]";
+        if (prevList != null && !prevList.isEmpty()) {
+            String trimmed = prevList.substring(1, prevList.length() - 1).trim();
+            String[] IDListStrings = trimmed.split(", ");
+            List<String> IDStringList = Arrays.asList(IDListStrings);
+
+            List<Integer> IDList = new ArrayList<>();
+            IDStringList.forEach(id -> IDList.add(Integer.parseInt(id.trim())));
+            IDList.remove(ID);
+            return IDList.toString();
+        } else {
+            return prevList;
+        }
     }
 
     /**  Project:Edit
@@ -196,8 +219,13 @@ public class BasicDatabaseActions {
         SQLConnection.update("projects", ID, fieldToEdit, value);
     }
 
-    public static void deleteProject(int ID) throws DatabaseConnectionException {
-        SQLConnection.delete("projects", "ID", ""+ID);
+    public static void deleteProject(int accountID, int projectID) throws DatabaseConnectionException, InvalidInputException, SQLException {
+        SQLConnection.delete("projects", "ID", ""+projectID);
+
+        // update new project list
+        String prevProjects = BasicDatabaseActions.getAccountInfoType(accountID, "projectList");
+        String updatedProjects = addIDToStringList(prevProjects, projectID);
+        SQLConnection.update("accounts", accountID, "projectList", updatedProjects);
     }
 
 

@@ -3,6 +3,7 @@ package BackEnd.Accounts;
 import Exceptions.Accounts.*;
 import ServerEnd.BasicDatabaseActions;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -127,7 +128,11 @@ public class CurrentSession {
     public Project CreateNewProject() {
         Project p = new Project("New Project");
         try {
-            BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
+            int ID = BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
+            p = new Project(ID,
+                    "New Project",
+                    BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "username"),
+                    LocalDate.now());
             return p;
         } catch (NotSignedInException e){
             return p;
