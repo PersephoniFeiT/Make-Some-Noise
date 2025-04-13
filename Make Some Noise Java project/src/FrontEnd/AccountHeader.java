@@ -4,13 +4,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.HashMap;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
+import javax.swing.*;
 
 import BackEnd.Accounts.CurrentSession;
 
@@ -21,7 +18,8 @@ public class AccountHeader extends JPanel {
 
 	private JTextField username;
 	private JTextField email;
-	
+	private JPasswordField passwordField;
+
 	public AccountHeader(HashMap<String, String> accountInfo, CurrentSession session) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMaximumSize(new Dimension(10000, 400));
@@ -30,9 +28,12 @@ public class AccountHeader extends JPanel {
 		if (accountInfo == null) {
 			username = new JTextField("Guest", columnSize);
 			email = new JTextField("No email", columnSize);
+			passwordField = new JPasswordField("", columnSize);
+			passwordField.setMaximumSize(new Dimension(350, 75));
 		} else {
 			username = new JTextField(accountInfo.get("username"), columnSize);
 			email = new JTextField(accountInfo.get("email"), columnSize);
+			passwordField = new JPasswordField(accountInfo.get("password"),columnSize);
 		}
 
 		JPanel usernameFeatures = new JPanel();
@@ -74,11 +75,37 @@ public class AccountHeader extends JPanel {
 		});
 		emailFeatures.add(changeEmailButton);
 
+		JPanel passwordFeatures = new JPanel();
+		passwordFeatures.setLayout(new FlowLayout());
+		passwordFeatures.add(new JLabel("Password: "));
+		passwordFeatures.add(passwordField);
+		JButton changePasswordButton = new JButton("Change");
+		changePasswordButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if (email.isEditable()) {
+					char[] passwordChars = passwordField.getPassword();
+					String password = new String(passwordChars);
+					// Securely wipe the password
+					Arrays.fill(passwordChars, '\0');
+					session.ChangePassword(password);
+				}
+
+				if (accountInfo != null) {
+					passwordField.setEditable(!passwordField.isEditable());
+				}
+			}
+		});
+		passwordFeatures.add(changePasswordButton);
+
 		username.setEditable(false);
 		email.setEditable(false);
+		passwordField.setEditable(false);
 
 		add(usernameFeatures);
 		add(emailFeatures);
+		add(passwordFeatures);
 	}
 
 }
