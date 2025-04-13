@@ -104,7 +104,7 @@ public class BasicDatabaseActions {
         if (fieldToEdit.equals("username") && BasicDatabaseActions.checkForDuplicateAccounts(value))
             throw new DuplicateAccountException("Account with username: " + value + " already exists.");
 
-        SQLConnection.update("account", ID, fieldToEdit, value);
+        SQLConnection.update("accounts", ID, fieldToEdit, value);
 
     }
 
@@ -189,7 +189,7 @@ public class BasicDatabaseActions {
         } catch (AssertionError e){
             throw new InvalidInputException("Invalid input.");
         }
-        SQLConnection.update("account", ID, fieldToEdit, value);
+        SQLConnection.update("accounts", ID, fieldToEdit, value);
     }
 
     public static void deleteProject(int ID) throws DatabaseConnectionException {

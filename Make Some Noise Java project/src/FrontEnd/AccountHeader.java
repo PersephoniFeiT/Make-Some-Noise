@@ -84,7 +84,7 @@ public class AccountHeader extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if (email.isEditable()) {
+				if (passwordField.isEditable()) {
 					char[] passwordChars = passwordField.getPassword();
 					String password = new String(passwordChars);
 					// Securely wipe the password
@@ -103,9 +103,14 @@ public class AccountHeader extends JPanel {
 		email.setEditable(false);
 		passwordField.setEditable(false);
 
+		//////////////////////////////////////////////////////
+		//get the list of projects in account
+
+
 		add(usernameFeatures);
 		add(emailFeatures);
 		add(passwordFeatures);
+		add(new JSeparator());
 	}
 
 }
