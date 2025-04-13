@@ -199,10 +199,11 @@ public class CurrentSession {
     }
 
 
-    public void ChangeStatus(int ID, boolean status){
+    public void ChangeStatus(int ID, String status){
         try {
             this.getSignedIn();
-            BasicDatabaseActions.modifyProject(ID, "status", String.valueOf((status) ? 1 : 0));
+            if (!status.equals("public")) status = "private";
+            BasicDatabaseActions.modifyProject(ID, "status", status);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }

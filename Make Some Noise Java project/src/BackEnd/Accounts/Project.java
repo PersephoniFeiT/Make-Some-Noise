@@ -16,14 +16,14 @@ public class Project {
     public String title;
     public String username;
     public final LocalDate dateCreated;
-    public boolean status;
+    public String status;
     public String thumbnail;
     public final List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
 
     public Project(Integer ID, String title, String username, LocalDate dateCreated){
         this.ID = ID;
-        this.status = false;
+        this.status = "private";
         this.thumbnail = "";
         this.username = username;
         this.title = title;
@@ -32,7 +32,7 @@ public class Project {
 
     public Project(String title){
         this.ID = null;
-        this.status = false;
+        this.status = "private";
         this.thumbnail = "";
         this.username = null;
         this.title = title;
@@ -92,14 +92,14 @@ public class Project {
             String username;
             if (!projectNode.has("username")) username = null; else username = projectNode.get("username").asText();
             LocalDate dateCreated = LocalDate.parse(projectNode.get("dateCreated").asText());
-            int status = projectNode.get("status").asInt();
+            String status = projectNode.get("status").asText();
             String thumbnail = projectNode.get("thumbnail").asText();
             // Extract tags from array in JSON
             List<String> tags = objectMapper.convertValue(projectNode.get("tags"), new TypeReference<List<String>>() {});
 
             // Create a new project instance
             Project project = new Project(projectId, title, username, dateCreated);
-            project.status = status == 1;
+            project.status = status;
             project.thumbnail = thumbnail;
             project.tags.addAll(tags);
 
@@ -155,7 +155,7 @@ public class Project {
         if (this.username == null) s.append("null,"); else s.append("\"").append(this.username).append("\",");
 
         s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
-        s.append("\"status\": ").append((this.status) ? 1 : 0).append(",");
+        s.append("\"status\": \"").append(this.status).append("\",");
         s.append("\"thumbnail\": \"").append(this.thumbnail).append("\",");
         s.append("\"tags\": ").append(this.tags.toString());
         if (!this.layers.isEmpty()) s.append(",");

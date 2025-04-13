@@ -3,6 +3,7 @@ package ServerEnd;
 import Exceptions.Accounts.*;
 import BackEnd.Accounts.Project;
 
+import javax.swing.plaf.basic.BasicIconFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -134,30 +135,33 @@ public class BasicDatabaseActions {
 
         //make a new project, get the ID
         int ID = SQLConnection.insert("projects",
-        new String[] {"ID", "username",
-                "dateCreated",
-                "status",
-                "projectStructInfo",
-                "thumbnail",
-                "tags"
-        },
-                new String[] {"",
-                BasicDatabaseActions.getAccountInfoType(accountID, "username"),
-                "date created",
-                "private",
-                JSON,
-                "thumbnail",
-                "[]"
-        });
-
+            new String[] {
+                    "title",
+                    "username",
+                    "dateCreated",
+                    "status",
+                    "projectInfoStruct",
+                    "thumbnail",
+                    "tags"
+            },
+            new String[] {
+                    "",
+                    BasicDatabaseActions.getAccountInfoType(accountID, "username"),
+                    "date created",
+                    "private",
+                    JSON,
+                    "thumbnail",
+                    "[]"
+            });
+/////////////////////////////////
         // Step 2: Fetch the existing projects list from the 'accounts' table
-        List<Map<String, String>> existingProjectsRs = SQLConnection.select("accounts", "projects", new String[]{"ID"}, new String[]{""+accountID}, null);
+        List<Map<String, String>> existingProjectsRs = SQLConnection.select("accounts", "projectList", new String[]{"ID"}, new String[]{""+accountID}, null);
 
         // Step 3: Prepare the updated projects list (including the new project ID)
-        String updatedProjects = "";
+        String updatedProjects = "[]";
         //for (Map<String, String> m : existingProjectsRs) {
         if (!existingProjectsRs.isEmpty()) {
-            String currentProjects = existingProjectsRs.getFirst().get("projects"); // Assuming 'projects' is a string field or JSON
+            String currentProjects = existingProjectsRs.getFirst().get("projectList"); // Assuming 'projects' is a string field or JSON
             if (currentProjects != null && !currentProjects.isEmpty()) {
                 // If there are existing projects, append the new project ID to the list
                 // Remove brackets and whitespace
@@ -174,7 +178,7 @@ public class BasicDatabaseActions {
             }
         }
         // update new project list
-        SQLConnection.update("accounts", accountID, "projects", updatedProjects);
+        SQLConnection.update("accounts", accountID, "projectList", updatedProjects);
         return ID;
     }
 
@@ -189,7 +193,7 @@ public class BasicDatabaseActions {
         } catch (AssertionError e){
             throw new InvalidInputException("Invalid input.");
         }
-        SQLConnection.update("accounts", ID, fieldToEdit, value);
+        SQLConnection.update("projects", ID, fieldToEdit, value);
     }
 
     public static void deleteProject(int ID) throws DatabaseConnectionException {
@@ -235,9 +239,10 @@ public class BasicDatabaseActions {
      * If a user is logged in and connected to the internet, they may search the server for posts. They will be
      * prompted to enter search terms. The application will show the user a list of public posts with tags and
      * titles that match the search terms. */
-    public static List<Integer> searchBy(String toSearchBy, String value) throws SQLException, InvalidInputException, DatabaseConnectionException{
-        BasicDatabaseActions.assertFormat(new String[]{value});
-        List<Map<String, String>> rs = SQLConnection.select("projects", "ID", new String[]{toSearchBy}, new String[]{value}, null);
+    public static List<Integer> searchBy(String[] toSearchBy, String[] value) throws SQLException, InvalidInputException, DatabaseConnectionException{
+        BasicDatabaseActions.assertFormat(toSearchBy);
+        BasicDatabaseActions.assertFormat(value);
+        List<Map<String, String>> rs = SQLConnection.select("projects", "ID", toSearchBy, value, null);
         List<Integer> projectIDs = new ArrayList<>();
         for (Map<String, String> m : rs){
             projectIDs.add(Integer.parseInt(m.get("ID")));
