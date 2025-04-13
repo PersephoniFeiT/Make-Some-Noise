@@ -19,6 +19,7 @@ public class SearchPanel extends JPanel {
 	//Sharing.SearchByTitle()
 
 	public SearchPanel() {
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		this.add(new JLabel("Search"));

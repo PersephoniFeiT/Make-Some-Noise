@@ -23,9 +23,16 @@ public class ProjectThumbnailList extends JScrollPane {
 
 	private ContentPanel contents;
 
+
 	// constructor
 	public ProjectThumbnailList(List<Integer> projectIDs) {
 		contents = new ContentPanel(projectIDs);
+		setViewportView(contents);
+	}
+
+	// constructor
+	public ProjectThumbnailList() {
+		contents = new ContentPanel();
 		setViewportView(contents);
 	}
 
