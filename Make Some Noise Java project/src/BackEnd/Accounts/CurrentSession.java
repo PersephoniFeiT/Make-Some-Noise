@@ -165,8 +165,8 @@ public class CurrentSession {
 
     ///TODO open new project
 
-
-    public List<String> getProjectTags(int ID) {
+    ///////////////////////////
+    public static List<String> getProjectTags(int ID) {
         try {
             String taglistString = BasicDatabaseActions.getProjectInfoType(0, "tags");
             String[] tagList = taglistString.split(", ");
@@ -177,7 +177,20 @@ public class CurrentSession {
         return new ArrayList<>();
     }
 
-    public void ChangeTitle(int ID, String title){
+    public static Map<String, String> GetProjectInfo(int projectID) {
+        Map<String, String> projectInfo = new HashMap<>();
+        try {
+            projectInfo.put("title", BasicDatabaseActions.getProjectInfoType(projectID, "title"));
+            projectInfo.put("username", BasicDatabaseActions.getProjectInfoType(projectID, "username"));
+            projectInfo.put("thumbnail", BasicDatabaseActions.getProjectInfoType(projectID, "thumbnail"));
+            projectInfo.put("dateCreated", BasicDatabaseActions.getProjectInfoType(projectID, "dateCreated"));
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+        return projectInfo;
+    }
+
+    public static void ChangeTitle(int ID, String title){
         try {
             BasicDatabaseActions.modifyProject(ID, "title", title);
         } catch (Exception e) {
@@ -188,13 +201,14 @@ public class CurrentSession {
 
     public void ChangeStatus(int ID, boolean status){
         try {
+            this.getSignedIn();
             BasicDatabaseActions.modifyProject(ID, "status", String.valueOf((status) ? 1 : 0));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
     }
 
-    public void ChangeTags(int ID, List<String> tags){
+    public static void ChangeTags(int ID, List<String> tags){
         try {
             BasicDatabaseActions.modifyProject(ID, "tags", tags.toString());
         } catch (Exception e) {
@@ -202,7 +216,7 @@ public class CurrentSession {
         }
     }
 
-    public void ChangeThumbnail(int ID, String tn){
+    public static void ChangeThumbnail(int ID, String tn){
         try {
             BasicDatabaseActions.modifyProject(ID, "thumbnail", tn);
         } catch (Exception e) {
@@ -210,7 +224,7 @@ public class CurrentSession {
         }
     }
 
-    public boolean isSaved(Project p){
+    public static boolean isSaved(Project p){
         try {
             return BasicDatabaseActions.compareToCurrentSave(p.getID(), p.toJSONString());
         } catch (Exception e){

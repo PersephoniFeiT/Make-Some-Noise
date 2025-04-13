@@ -1,10 +1,13 @@
 package FrontEnd;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 
 import BackEnd.Accounts.CurrentSession;
+import Exceptions.Accounts.NotSignedInException;
 
 public class AccountPanel extends JPanel {
 
@@ -12,13 +15,13 @@ public class AccountPanel extends JPanel {
 	private AccountHeader header;
 	private ProjectThumbnailList projectList;
 
-	public AccountPanel(Integer ID, HashMap<String, String> accountInfo, CurrentSession currentSession) {
+	public AccountPanel(Integer ID, Map<String, String> accountInfo, CurrentSession currentSession) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		accountId = ID;
 		header = new AccountHeader(accountInfo, currentSession);
 
-		projectList = new ProjectThumbnailList();
+		projectList = new ProjectThumbnailList(currentSession.GetProjectsInAccount());
 
 		// TODO: Make this work when I have a server connection
 		// String projectList = accountInfo.get("projectList");

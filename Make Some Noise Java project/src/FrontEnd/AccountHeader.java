@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -21,7 +22,7 @@ public class AccountHeader extends JPanel {
 	private JTextField email;
 	private JPasswordField passwordField;
 
-	public AccountHeader(HashMap<String, String> accountInfo, CurrentSession session) {
+	public AccountHeader(Map<String, String> accountInfo, CurrentSession session) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMaximumSize(new Dimension(10000, 400));
 
