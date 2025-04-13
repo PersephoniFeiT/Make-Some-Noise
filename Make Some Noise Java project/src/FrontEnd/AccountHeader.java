@@ -29,11 +29,10 @@ public class AccountHeader extends JPanel {
 			username = new JTextField("Guest", columnSize);
 			email = new JTextField("No email", columnSize);
 			passwordField = new JPasswordField("", columnSize);
-			passwordField.setMaximumSize(new Dimension(350, 75));
 		} else {
 			username = new JTextField(accountInfo.get("username"), columnSize);
 			email = new JTextField(accountInfo.get("email"), columnSize);
-			passwordField = new JPasswordField(accountInfo.get("password"),columnSize);
+			passwordField = new JPasswordField("",columnSize);
 		}
 
 		JPanel usernameFeatures = new JPanel();
@@ -75,6 +74,7 @@ public class AccountHeader extends JPanel {
 		});
 		emailFeatures.add(changeEmailButton);
 
+		passwordField.setMaximumSize(new Dimension(350, 75));
 		JPanel passwordFeatures = new JPanel();
 		passwordFeatures.setLayout(new FlowLayout());
 		passwordFeatures.add(new JLabel("Password: "));

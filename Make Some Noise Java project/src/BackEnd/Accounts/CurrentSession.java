@@ -103,11 +103,23 @@ public class CurrentSession {
         try {
             accountInfo.put("username", BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username"));
             accountInfo.put("email", BasicDatabaseActions.getAccountInfoType(getSignedIn(), "email"));
-            accountInfo.put("projectList", BasicDatabaseActions.getAccountInfoType(getSignedIn(), "projectList"));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
         return accountInfo;
+    }
+
+    public List<Integer> GetProjectsInAccount(){
+        List<Integer> IDList = new ArrayList<>();
+        try {
+            String projectStringList = BasicDatabaseActions.getAccountInfoType(getSignedIn(), "projectList");
+            String trimmed = projectStringList.substring(1, projectStringList.length() - 1).trim();
+            List<String> IDStringList = new ArrayList<String>(Arrays.asList(trimmed.split(",")));
+            for (int i = 0; i < IDStringList.size(); i++) IDList.add(i, Integer.parseInt(IDStringList.get(i).trim()));
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+        return IDList;
     }
 
     //////////////////////////////////////////////////////////////////
