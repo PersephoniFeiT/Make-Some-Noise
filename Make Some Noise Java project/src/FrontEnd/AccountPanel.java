@@ -1,6 +1,7 @@
 package FrontEnd;
 
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.*;
 
 import BackEnd.Accounts.CurrentSession;
@@ -16,6 +17,7 @@ public class AccountPanel extends JPanel {
 
 		accountId = ID;
 		header = new AccountHeader(accountInfo, currentSession);
+
 		projectList = new ProjectThumbnailList();
 
 		// TODO: Make this work when I have a server connection

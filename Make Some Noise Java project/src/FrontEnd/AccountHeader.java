@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -103,14 +104,9 @@ public class AccountHeader extends JPanel {
 		email.setEditable(false);
 		passwordField.setEditable(false);
 
-		//////////////////////////////////////////////////////
-		//get the list of projects in account
-
-
 		add(usernameFeatures);
 		add(emailFeatures);
 		add(passwordFeatures);
-		add(new JSeparator());
 	}
 
 }
