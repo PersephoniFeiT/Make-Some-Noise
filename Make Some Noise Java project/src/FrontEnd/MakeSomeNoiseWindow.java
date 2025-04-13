@@ -1,6 +1,8 @@
 package FrontEnd;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 // import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -140,6 +142,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         String fileContent = p.toJSONString();
 
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("JSON files", "json"));
         fileChooser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -161,7 +164,7 @@ public class MakeSomeNoiseWindow extends JFrame {
 
     public void openFile() {
         JFileChooser fileChooser = new JFileChooser();
-
+        fileChooser.setFileFilter(new FileNameExtensionFilter("JSON files", "json"));
         fileChooser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
