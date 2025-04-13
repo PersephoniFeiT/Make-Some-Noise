@@ -23,12 +23,6 @@ public class AccountPanel extends JPanel {
 
 		projectList = new ProjectThumbnailList(currentSession.GetProjectsInAccount());
 
-		// TODO: Make this work when I have a server connection
-		// String projectList = accountInfo.get("projectList");
-		// for(int i=0; i < projectList.length(), i++) {
-		// 	projectList.add(projectList.get(i));
-		// }
-
 		add(header);
 		add(projectList);
 	}

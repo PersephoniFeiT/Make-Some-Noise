@@ -9,6 +9,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Dimension;
@@ -24,7 +25,7 @@ public class ProjectThumbnailList extends JScrollPane {
 
 	// constructor
 	public ProjectThumbnailList(List<Integer> projectIDs) {
-		contents = new ContentPanel();
+		contents = new ContentPanel(projectIDs);
 		setViewportView(contents);
 	}
 
@@ -40,6 +41,12 @@ public class ProjectThumbnailList extends JScrollPane {
 		public ContentPanel() {
 			setLayout(new FlowLayout());
 		}
+
+		public ContentPanel(List<Integer> projectIDs) {
+			super();
+			projectIDs.forEach(i -> this.addThumbnail(CurrentSession.GetProjectInfo(i), CurrentSession.getProjectTags(i)));
+		}
+
 		public void addThumbnail(Map<String, String> proj, List<String> tags) {
 			add(new ProjectThumbnail(proj.get("title"), proj.get("username"), proj.get("dateCreated"), proj.get("thumbnail"), tags));
 		}
