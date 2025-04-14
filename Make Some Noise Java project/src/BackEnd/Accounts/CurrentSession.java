@@ -33,14 +33,15 @@ public class CurrentSession {
         Integer ID = null;
         try {
             ID = BasicDatabaseActions.signIn(username, password);
-        } catch (IncorrectPasswordException e) {
-            throw e;
         }
         catch (NoSuchAccountException e) {
-            throw new NoSuchAccountException(e.getMessage());
+            throw e;
+        }
+        catch (IncorrectPasswordException e) {
+            throw e;
         }
         catch (InvalidInputException e) {
-            throw new InvalidInputException(e.getMessage());
+            throw e;
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
