@@ -248,9 +248,14 @@ public class BasicDatabaseActions {
         return false;
     }
 
-    public static void saveProject(int projectID, String currentData) throws InvalidInputException, DatabaseConnectionException{
+    public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, SQLException, DuplicateAccountException {
         BasicDatabaseActions.assertFormat(new String[]{currentData});
-        SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
+        if (accountID == null) throw new NotSignedInException("You must be signed in to save.");
+        if (projectID == null){
+            int ID = BasicDatabaseActions.createNewProject(accountID, currentData);
+        } else {
+            SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
+        }
     }
 
 

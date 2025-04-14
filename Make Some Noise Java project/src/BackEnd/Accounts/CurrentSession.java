@@ -142,33 +142,20 @@ public class CurrentSession {
         return p;
     }
 
-    public void SaveProject(Project p) {
+    public boolean SaveProject(Project p) {
         try {
             this.getSignedIn();
-            BasicDatabaseActions.saveProject(p.getID(), p.toJSONString());
+            BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
+            return true;
         } catch (NotSignedInException e){
-            ///TODO prompt a sign-in, then file current project in database
-
-            ///sign in here
-
-            SaveProject(signInToNewProject(p));
+            return false;
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
+        return false;
     }
 
-    private Project signInToNewProject(Project p){
-        try {
-            p.username = BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "username");
-            int projectID = BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
-            return Project.fromJSONtoProject(BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "projectInfoStruct"));
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
-        return p;
-    }
 
-    ///TODO open new project
 
     ///////////////////////////
     public static List<String> getProjectTags(int ID) {
