@@ -78,7 +78,8 @@ public class MakeSomeNoiseWindow extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                currentSession.SaveProject(editorPanel.getProject());
+                //currentSession.SaveProject(editorPanel.getProject());
+                new PostProjectWindow(currentSession, editorPanel.getProject());
             }
         });
         fileMenu.add(menuItem);
@@ -220,12 +221,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void addAccountPanel() {
-        try {
-            currentSession.getSignedIn();
-            accountPanel = new AccountPanel(currentSession.getSignedIn(), currentSession.GetAccountInfo(), currentSession);
-        } catch (NotSignedInException e) {
-            accountPanel = new AccountPanel(Integer.valueOf(0), null, currentSession);
-        }
+        accountPanel = new AccountPanel(currentSession.GetAccountInfo(), currentSession);
     }
 
     public void goToAccountPanel() {

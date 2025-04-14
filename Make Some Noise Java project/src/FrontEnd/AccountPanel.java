@@ -15,18 +15,24 @@ public class AccountPanel extends JPanel {
 	private AccountHeader header;
 	private ProjectThumbnailList projectList;
 
-	public AccountPanel(Integer ID, Map<String, String> accountInfo, CurrentSession currentSession) {
+	public AccountPanel(Map<String, String> accountInfo, CurrentSession currentSession) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		accountId = ID;
-		header = new AccountHeader(accountInfo, currentSession);
+		String projectListText;
+		try {
+			accountId = currentSession.getSignedIn();
+			projectListText = "Your projects:";
+		} catch (NotSignedInException e){
+			accountId = null;
+			projectListText = "You are not signed in.";
+		}
 
-		projectList = new ProjectThumbnailList(currentSession.GetProjectsInAccount());
+		header = new AccountHeader(accountInfo, currentSession);
+		System.out.println("accPanel "+ accountId);
+		projectList = new ProjectThumbnailList(accountId, currentSession.GetProjectsInAccount());
 
 		add(header);
-		add(new JSeparator());
-		if (accountId != null) add(new JLabel("Your projects:"));
-		else add(new JLabel("You are not signed in."));
+		add(new JLabel(projectListText));
 		add(projectList);
 	}
 

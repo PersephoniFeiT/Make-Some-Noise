@@ -5,9 +5,12 @@ import BackEnd.Editor.Simplex3NoiseLayer;
 import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
 import BackEnd.Editor.RandomNoiseLayer;
+import BackEnd.Accounts.Project;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
@@ -16,11 +19,12 @@ import javax.swing.event.CaretListener;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.*;
-import BackEnd.Accounts.Project;;
+import java.util.Iterator;
 
 public class LayerPanelList extends JScrollPane {
 
@@ -44,6 +48,8 @@ public class LayerPanelList extends JScrollPane {
 		private JTextField layerName;
 
 		private JComboBox<String> layerType;
+
+		private JCheckBox layerIsVisible;
 		
 		private LabeledTextField seed;
 		private LabeledTextField freq;
@@ -63,6 +69,19 @@ public class LayerPanelList extends JScrollPane {
 			noiseLayer = nl;
 
 			// Populate the LayerPanel with a title and attribute fields
+			layerIsVisible = new JCheckBox();
+			layerIsVisible.setSelected(true);
+			layerIsVisible.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (layerIsVisible.isSelected()) {
+						proj.addLayer(nl);
+					} else {
+						proj.removeLayer(nl);
+					}
+				}
+			});
+
 			layerName = new JTextField("New Layer", 6);
 
 			String[] layerOptions = {"Random Noise", "Perlin Noise", "Simplex2 Noise", "Simplex3 Noise"};
@@ -73,34 +92,43 @@ public class LayerPanelList extends JScrollPane {
 				
 					project.removeLayer(noiseLayer);
 
-					Object choice = layerType.getSelectedItem();
-					if (choice.equals("Simplex2 Noise")) {
-						noiseLayer = new Simplex2NoiseLayer(
-							Double.parseDouble(floor.text.getText()),
-							Double.parseDouble(ceiling.text.getText()),
-							Double.parseDouble(amp.text.getText()),
-							Double.parseDouble(freq.text.getText())
-						);
-					} else if (choice.equals("Perlin Noise")) {
-						project.addLayer(new PerlinNoiseLayer());
-					} else if (choice.equals("Random Noise")) {
-						noiseLayer = new RandomNoiseLayer(
-							Integer.parseInt(seed.text.getText()),
-							Double.parseDouble(floor.text.getText()),
-							Double.parseDouble(ceiling.text.getText()),
-							Double.parseDouble(amp.text.getText()),
-							Double.parseDouble(freq.text.getText())
-						);
-					} else if (choice.equals("Simplex3 Noise")) {
-						noiseLayer = new Simplex3NoiseLayer(
-							Integer.parseInt(seed.text.getText()),
-							Double.parseDouble(floor.text.getText()),
-							Double.parseDouble(ceiling.text.getText()),
-							Double.parseDouble(amp.text.getText()),
-							Double.parseDouble(freq.text.getText())
-						);
+					String choice = layerType.getSelectedItem().toString();
+					switch (choice) {
+						case "Simplex2 Noise": 
+							noiseLayer = new Simplex2NoiseLayer(
+								Double.parseDouble(floor.text.getText()),
+								Double.parseDouble(ceiling.text.getText()),
+								Double.parseDouble(amp.text.getText()),
+								Double.parseDouble(freq.text.getText())
+							);
+							break;
+						case "Perlin Noise":
+							project.addLayer(new PerlinNoiseLayer());
+							break;
+						case "Random Noise": 
+							noiseLayer = new RandomNoiseLayer(
+								Integer.parseInt(seed.text.getText()),
+								Double.parseDouble(floor.text.getText()),
+								Double.parseDouble(ceiling.text.getText()),
+								Double.parseDouble(amp.text.getText()),
+								Double.parseDouble(freq.text.getText())
+							);
+							break;
+						case "Simplex3 Noise": 
+							noiseLayer = new Simplex3NoiseLayer(
+								Integer.parseInt(seed.text.getText()),
+								Double.parseDouble(floor.text.getText()),
+								Double.parseDouble(ceiling.text.getText()),
+								Double.parseDouble(amp.text.getText()),
+								Double.parseDouble(freq.text.getText())
+							);
+							break;
 					}
-					project.addLayer(noiseLayer);
+					if (layerIsVisible.isSelected()) {
+						project.addLayer(noiseLayer);
+					}
+
+					updateLayer();
 				}
 			});
 			JPanel layerNameAndType = new JPanel();
@@ -159,6 +187,7 @@ public class LayerPanelList extends JScrollPane {
 				}
 			});
 			
+			add(layerIsVisible);
 			add(layerNameAndType);
 			add(seed);
 			add(freq);
@@ -167,7 +196,9 @@ public class LayerPanelList extends JScrollPane {
 			add(floor);
 			add(ceiling);
 
-			setMaximumSize(new Dimension(10000, 200));
+			setMaximumSize(new Dimension(10000, 60));
+
+			hostEditorPanel.renderNoise();
 		}
 	
 		private void updateLayer() {
@@ -181,7 +212,17 @@ public class LayerPanelList extends JScrollPane {
 
 			try {
 				amp.setBackground(Color.white);
-				noiseLayer.setAmp(Double.parseDouble(amp.text.getText()));
+				double a = Double.parseDouble(amp.text.getText());
+				if (a < 0.0) {
+					// amp.text.setText("0.0");
+					amp.setBackground(Color.pink);
+					a = 0.0;
+				} else if (a > 1.0) {
+					// amp.text.setText("1.0");
+					amp.setBackground(Color.pink);
+					a = 1.0;
+				}
+				noiseLayer.setAmp(a);
 			} catch (NumberFormatException e) {
 				amp.setBackground(Color.pink);
 			}
@@ -195,17 +236,41 @@ public class LayerPanelList extends JScrollPane {
 
 			try {
 				floor.setBackground(Color.white);
-				noiseLayer.setFloor(Double.parseDouble(floor.text.getText()));
+				double f = Double.parseDouble(floor.text.getText());
+
+				if (f < 0.0) {
+					// floor.text.setText("0.0");
+					floor.setBackground(Color.pink);
+					f = 0.0;
+				} else if (f > noiseLayer.getCeiling()) {
+					// floor.text.setText(ceiling.text.getText());
+					floor.setBackground(Color.pink);
+					f = noiseLayer.getCeiling();
+				}
+
+				noiseLayer.setFloor(f);
 			} catch (NumberFormatException e) {
 				floor.setBackground(Color.pink);
 			}
 
 			try {
 				ceiling.setBackground(Color.white);
-				noiseLayer.setCeiling(Double.parseDouble(ceiling.text.getText()));
+				double c = Double.parseDouble(ceiling.text.getText());
+
+				if (c < noiseLayer.getFloor()) {
+					c = noiseLayer.getFloor();
+					ceiling.setBackground(Color.pink);
+				} else if (c > 1.0) {
+					c = 1.0;
+					ceiling.setBackground(Color.pink);
+				}
+
+				noiseLayer.setCeiling(c);
 			} catch (NumberFormatException e) {
 				ceiling.setBackground(Color.pink);
 			}
+
+			hostEditorPanel.renderNoise();
 		}
 	}
 
@@ -215,6 +280,7 @@ public class LayerPanelList extends JScrollPane {
 
 			public Header() {
 				setLayout(new FlowLayout());
+				setMaximumSize(new Dimension(1000, 50));
 	
 				add(new JLabel("Layers"));
 			
@@ -234,25 +300,39 @@ public class LayerPanelList extends JScrollPane {
 		public ContentPanel(Project p) {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+			add(new Header());
+
 			project = p;
 
-			add(new Header());
+			Iterator<NoiseLayer> layers = p.getLayerList().iterator();
+			while(layers.hasNext()) {
+				this.addLayer(layers.next());
+			}
 		}
 
 		public void addLayer() {
-			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 0.0, 1.0);
+			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 1.0, 1.0);
 			LayerPanel lp = new LayerPanel(newLayer, project);
 			project.addLayer(newLayer);
-			contents.add(lp);
+			this.add(lp);
+			revalidate();
+			repaint();
+		}
+
+		public void addLayer(NoiseLayer nl) {
+			LayerPanel lp = new LayerPanel(nl, project);
+			this.add(lp);
 			revalidate();
 			repaint();
 		}
 	}
 
 	private ContentPanel contents;
+	private EditorPanel hostEditorPanel;
 
-	public LayerPanelList(Project p) {
+	public LayerPanelList(Project p, EditorPanel ep) {
 		contents = new ContentPanel(p);
+		hostEditorPanel = ep;
 		setViewportView(contents);
 	}
 } 

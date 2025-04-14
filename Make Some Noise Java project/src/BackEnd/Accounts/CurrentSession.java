@@ -24,8 +24,7 @@ public class CurrentSession {
 
     public void CreateNewAccount(String username, String password, String email) {
         try {
-            BasicDatabaseActions.createNewAccount(username, password, email);
-            this.SignIn(username, password);
+            this.signedIn = BasicDatabaseActions.createNewAccount(username, password, email);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -79,6 +78,7 @@ public class CurrentSession {
     public void ChangePassword(String password){
         try {
             BasicDatabaseActions.modifyAccount(getSignedIn(), "password", password);
+            System.out.println("change pass");
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -90,7 +90,7 @@ public class CurrentSession {
             Matcher matcher = pattern.matcher(email);
             boolean matchFound = matcher.find();
             if(matchFound) {
-                BasicDatabaseActions.modifyAccount(getSignedIn(), "password", email);
+                BasicDatabaseActions.modifyAccount(getSignedIn(), "email", email);
             } else {
                 ExceptionHandler.handleException(new InvalidInputException("Incorrect email format: '" + email +"' is not an email."));
             }
@@ -127,48 +127,32 @@ public class CurrentSession {
 
     public Project CreateNewProject() {
         Project p = new Project("New Project");
-        try {
-            int ID = BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
-            p = new Project(ID,
-                    "New Project",
-                    BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "username"),
-                    LocalDate.now());
-            return p;
-        } catch (NotSignedInException e){
-            return p;
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
         return p;
     }
 
-    public void SaveProject(Project p) {
+    public boolean SaveProject(Project p) {
         try {
-            this.getSignedIn();
-            BasicDatabaseActions.saveProject(p.getID(), p.toJSONString());
+            Integer accountID = this.getSignedIn();
+            Integer projectID = p.getID();
+            if (p.getID() == null)
+                projectID = BasicDatabaseActions.createNewProject(accountID, p.toJSONString());
+            else
+                BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
+            BasicDatabaseActions.modifyProject(projectID, "title", p.title);
+            BasicDatabaseActions.modifyProject(projectID, "username", BasicDatabaseActions.getAccountInfoType(accountID, "username"));
+            BasicDatabaseActions.modifyProject(projectID, "status", p.status);
+            BasicDatabaseActions.modifyProject(projectID, "tags", p.tags.toString());
+            BasicDatabaseActions.modifyProject(projectID, "thumbnail", p.thumbnail);
+            return true;
         } catch (NotSignedInException e){
-            ///TODO prompt a sign-in, then file current project in database
-
-            ///sign in here
-
-            SaveProject(signInToNewProject(p));
+            return false;
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
+        return false;
     }
 
-    private Project signInToNewProject(Project p){
-        try {
-            p.username = BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "username");
-            int projectID = BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
-            return Project.fromJSONtoProject(BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "projectInfoStruct"));
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
-        return p;
-    }
 
-    ///TODO open new project
 
     ///////////////////////////
     public static List<String> getProjectTags(int ID) {
@@ -226,6 +210,14 @@ public class CurrentSession {
         try {
             BasicDatabaseActions.modifyProject(ID, "thumbnail", tn);
         } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+    }
+
+    public static void DeleteProject(Integer accountID, int projectID){
+        try {
+            BasicDatabaseActions.deleteProject(accountID, projectID);
+        } catch (Exception e){
             ExceptionHandler.handleException(e);
         }
     }

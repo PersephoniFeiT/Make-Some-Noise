@@ -46,12 +46,13 @@ public class AccountHeader extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
+                assert accountInfo != null;
+                username.setEditable(!accountInfo.isEmpty());
+
 				if (username.isEditable()) {
-					session.ChangeEmail(username.getText());
+					session.ChangeUsername(username.getText());
 				}
-				if (accountInfo != null) {
-					username.setEditable(!username.isEditable());
-				}
+
 			}
 		});
 		usernameFeatures.add(changeUsernameButton);
@@ -65,12 +66,11 @@ public class AccountHeader extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
+				assert accountInfo != null;
+				email.setEditable(!accountInfo.isEmpty());
+
 				if (email.isEditable()) {
 					session.ChangeEmail(email.getText());
-				}
-
-				if (accountInfo != null) {
-					email.setEditable(!email.isEditable());
 				}
 			}
 		});
@@ -86,16 +86,15 @@ public class AccountHeader extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
+				assert accountInfo != null;
+				passwordField.setEditable(!accountInfo.isEmpty());
+
 				if (passwordField.isEditable()) {
 					char[] passwordChars = passwordField.getPassword();
 					String password = new String(passwordChars);
 					// Securely wipe the password
 					Arrays.fill(passwordChars, '\0');
 					session.ChangePassword(password);
-				}
-
-				if (accountInfo != null) {
-					passwordField.setEditable(!passwordField.isEditable());
 				}
 			}
 		});
@@ -105,9 +104,21 @@ public class AccountHeader extends JPanel {
 		email.setEditable(false);
 		passwordField.setEditable(false);
 
+
+		JButton deleteButton = new JButton("DELETE ACCOUNT");
+		changeUsernameButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				session.DeleteAccount();
+			}
+		});
+
 		add(usernameFeatures);
 		add(emailFeatures);
 		add(passwordFeatures);
+
+		assert accountInfo != null;
+		if (!accountInfo.isEmpty()) add(deleteButton);
 	}
 
 }

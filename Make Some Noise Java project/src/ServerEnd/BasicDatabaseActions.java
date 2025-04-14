@@ -6,6 +6,7 @@ import BackEnd.Accounts.Project;
 import javax.swing.plaf.basic.BasicIconFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 /* Accounts table layout:
@@ -34,7 +35,11 @@ public class BasicDatabaseActions {
 
     private static boolean checkForDuplicateAccounts(String value) throws SQLException, DatabaseConnectionException {
         // Check if duplicate account
-        List<Map<String, String>> rs = SQLConnection.select("accounts", "username = " + value + ", COUNT(*) as count", new String[]{}, new String[]{}, null);
+        List<Map<String, String>> rs = SQLConnection.select("accounts",
+                "username, COUNT(*) as count",
+                new String[]{"username"},                 // WHERE username = ?
+                new String[]{value},                      // value = "test", etc.
+                new String[]{"username"} );
         for (Map<String,String> m : rs){
             int count = Integer.parseInt(m.get("count"));
             if (count > 0) return true;
@@ -70,9 +75,10 @@ public class BasicDatabaseActions {
         int ID = SQLConnection.insert("accounts",
                 new String[] {"username",
                         "password",
-                        "email"
+                        "email",
+                        "projectList"
                 },
-                new String[]{username, password, email});
+                new String[]{username, password, email, "[]"});
         return ID;
     }
 
@@ -145,12 +151,12 @@ public class BasicDatabaseActions {
                     "tags"
             },
             new String[] {
-                    "",
+                    "New Project",
                     BasicDatabaseActions.getAccountInfoType(accountID, "username"),
-                    "date created",
+                    LocalDate.now().toString(),
                     "private",
                     JSON,
-                    "thumbnail",
+                    "[THIS IS AN IMAGE]",
                     "[]"
             });
 /////////////////////////////////
@@ -224,7 +230,7 @@ public class BasicDatabaseActions {
 
         // update new project list
         String prevProjects = BasicDatabaseActions.getAccountInfoType(accountID, "projectList");
-        String updatedProjects = addIDToStringList(prevProjects, projectID);
+        String updatedProjects = removeIDFromStringList(prevProjects, projectID);
         SQLConnection.update("accounts", accountID, "projectList", updatedProjects);
     }
 
@@ -248,8 +254,14 @@ public class BasicDatabaseActions {
         return false;
     }
 
-    public static void saveProject(int projectID, String currentData) throws InvalidInputException, DatabaseConnectionException{
+    public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, SQLException, DuplicateAccountException {
         BasicDatabaseActions.assertFormat(new String[]{currentData});
+        if (accountID == null) throw new NotSignedInException("You must be signed in to save.");
+        if (projectID == null){
+            int ID = BasicDatabaseActions.createNewProject(accountID, currentData);
+            SQLConnection.update("projects", ID, "ID", ID+"");
+            projectID = ID;
+        }
         SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
     }
 

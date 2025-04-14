@@ -13,7 +13,7 @@ import java.util.List;
 public class Project {
     private final Integer ID;
 
-    public String title;
+    public String title = "New Project";
     public String username;
     public final LocalDate dateCreated;
     public String status;

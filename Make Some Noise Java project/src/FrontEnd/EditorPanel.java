@@ -1,19 +1,19 @@
 package FrontEnd;
 
-import javax.swing.JButton;
+// import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.*;
+// import java.awt.event.*;
 
 import BackEnd.Accounts.Project;
 
 class EditorPanel extends JPanel {
 
 	private NoisePanel noisePanel;
-	private JButton renderButton;
+	// private JButton renderButton;
     private LayerPanelList layers;
     
     private Project project;
@@ -25,47 +25,42 @@ class EditorPanel extends JPanel {
         project = p;
 
         // Create a NoisePanel to display the generated noise pattern
-        int width = 647;
-        int height = 400;
+        int width = 800;
+        int height = 494;
         noisePanel = new NoisePanel(width, height);
+
         // noisePanel.setBounds(10, 10, width, height);
         noisePanel.setBorder(new LineBorder(Color.BLACK));
         noisePanel.setPreferredSize(new Dimension(width, height));
 		add(noisePanel, BorderLayout.CENTER);
 
         // Create JButton that will render the Noise pattern on the NoisePanel np
-        renderButton = new JButton("Show Noise");
-        // renderButton.setBounds(20, 410, 130, 40);                  // x axis, y axis, width, height
-        renderButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				renderNoiseButtonPushed();
-			}
-        });
-        renderButton.setMaximumSize(new Dimension(130, 40));
-		add(renderButton, BorderLayout.WEST);
+        // renderButton = new JButton("Show Noise");
+        // // renderButton.setBounds(20, 410, 130, 40);                  // x axis, y axis, width, height
+        // renderButton.addActionListener(new ActionListener() {
+		// 	@Override
+		// 	public void actionPerformed(ActionEvent evt) {
+		// 		renderNoise();
+		// 	}
+        // });
+        // renderButton.setMaximumSize(new Dimension(130, 40));
+		// add(renderButton, BorderLayout.WEST);
 
         // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
-        layers = new LayerPanelList(project);
+        layers = new LayerPanelList(project, this);
         layers.setPreferredSize(new Dimension(450, 100));
         add(layers, BorderLayout.EAST);
 	}
 
-	public void renderNoiseButtonPushed() {
-        int width = 647;
-        int height = 400;
+	public void renderNoise() {
+        int width = noisePanel.getWidth();
+        int height = noisePanel.getHeight();
         double[][] values = BackEnd.Editor.LayerManager.multiplyLayers(width, height, project.getLayerList());
-
         for (int x=0; x < width; x++) {
             for (int y=0; y < height; y++) {
-                // System.out.print(values[x][y]);
                 noisePanel.setPixel(x, y, Color.HSBtoRGB((float)values[x][y], 0.5f, 1.0f));
             }
-            // System.out.print("\n");
         }
-
-        // System.out.println(project);
-
 	}
 
     public Project getProject() {
