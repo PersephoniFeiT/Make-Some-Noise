@@ -34,7 +34,7 @@ public class CurrentSession {
         try {
             ID = BasicDatabaseActions.signIn(username, password);
         } catch (IncorrectPasswordException e) {
-            throw new IncorrectPasswordException(e.getMessage());
+            throw e;
         }
         catch (NoSuchAccountException e) {
             throw new NoSuchAccountException(e.getMessage());
@@ -159,7 +159,7 @@ public class CurrentSession {
     ///////////////////////////
     public static List<String> getProjectTags(int ID) {
         try {
-            String taglistString = BasicDatabaseActions.getProjectInfoType(0, "tags");
+            String taglistString = BasicDatabaseActions.getProjectInfoType(ID, "tags");
             String[] tagList = taglistString.split(", ");
             return Arrays.asList(tagList);
         } catch (Exception e) {
@@ -181,39 +181,30 @@ public class CurrentSession {
         return projectInfo;
     }
 
-    public static void ChangeTitle(int ID, String title){
-        try {
-            BasicDatabaseActions.modifyProject(ID, "title", title);
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
+    public static void ChangeTitle(Project p, String title){
+        p.title = title;
+            //BasicDatabaseActions.modifyProject(ID, "title", title);
     }
 
 
-    public void ChangeStatus(int ID, String status){
+    public void ChangeStatus(Project p, String status){
         try {
             this.getSignedIn();
             if (!status.equals("public")) status = "private";
-            BasicDatabaseActions.modifyProject(ID, "status", status);
+            p.status = status;
+            //BasicDatabaseActions.modifyProject(ID, "status", status);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
     }
 
-    public static void ChangeTags(int ID, List<String> tags){
-        try {
-            BasicDatabaseActions.modifyProject(ID, "tags", tags.toString());
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
+    public static void ChangeTags(Project p, List<String> tags){
+        p.tags = new ArrayList<>(tags);
+        //BasicDatabaseActions.modifyProject(ID, "tags", tags.toString());
     }
 
-    public static void ChangeThumbnail(int ID, String tn){
-        try {
-            BasicDatabaseActions.modifyProject(ID, "thumbnail", tn);
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
+    public static void ChangeThumbnail(Project p, String tn){
+        p.thumbnail = tn;
     }
 
     public static void DeleteProject(Integer accountID, int projectID){

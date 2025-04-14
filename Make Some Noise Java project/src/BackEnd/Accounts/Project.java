@@ -18,7 +18,7 @@ public class Project {
     public final LocalDate dateCreated;
     public String status;
     public String thumbnail;
-    public final List<String> tags = new ArrayList<>();
+    public List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
 
     public Project(Integer ID, String title, String username, LocalDate dateCreated){

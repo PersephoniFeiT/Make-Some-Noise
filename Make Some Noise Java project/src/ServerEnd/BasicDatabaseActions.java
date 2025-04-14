@@ -58,9 +58,10 @@ public class BasicDatabaseActions {
      * If a user is logged in, they may choose to view their account. They will be able to see their projects
      * saved on the server and the associated title, image preview, and tags. They will also be able to see their
      * biographical field. */
-    public static String getAccountInfoType(int ID, String type) throws SQLException, DatabaseConnectionException, InvalidInputException {
+    public static String getAccountInfoType(int ID, String type) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, String>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new String[]{""+ID}, null);
+        if (rs.isEmpty() || rs.getFirst().get(type) == null) throw new NoSuchAccountException("Cannot get account info of accoutn that doesn't exist.");
         return rs.getFirst().get(type);
     }
 
@@ -132,10 +133,11 @@ public class BasicDatabaseActions {
     public static String getProjectInfoType(int ID, String type) throws InvalidInputException, SQLException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, String>> rs = SQLConnection.select("projects", type, new String[]{"ID"},new String[]{""+ID}, null);
+        if (rs.isEmpty() || rs.getFirst().get(type) == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
         return rs.getFirst().get(type);
     }
 
-    public static int createNewProject(int accountID, String JSON) throws SQLException, DatabaseConnectionException, InvalidInputException, DuplicateAccountException {
+    public static int createNewProject(int accountID, String JSON) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{JSON});
 
         //make a new project, get the ID
@@ -188,7 +190,7 @@ public class BasicDatabaseActions {
         // Step 3: Prepare the updated projects list (including the new project ID)
         String updatedProjects = "[]";
         //for (Map<String, String> m : existingProjectsRs) {
-        if (!existingProjectsRs.isEmpty()) {
+        if (!existingProjectsRs.isEmpty() && existingProjectsRs.getFirst().get("projectList") != null) {
             String currentProjects = existingProjectsRs.getFirst().get("projectList"); // Assuming 'projects' is a string field or JSON
             updatedProjects = addIDToStringList(currentProjects, ID);
         }
@@ -247,7 +249,7 @@ public class BasicDatabaseActions {
         SQLConnection.update("projects", ID, fieldToEdit, value);
     }
 
-    public static void deleteProject(int accountID, int projectID) throws DatabaseConnectionException, InvalidInputException, SQLException {
+    public static void deleteProject(int accountID, int projectID) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         SQLConnection.delete("projects", "ID", ""+projectID);
 
         // update new project list
@@ -276,7 +278,7 @@ public class BasicDatabaseActions {
         return false;
     }
 
-    public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, SQLException, DuplicateAccountException {
+    public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{currentData});
         if (accountID == null) throw new NotSignedInException("You must be signed in to save.");
         if (projectID == null){
