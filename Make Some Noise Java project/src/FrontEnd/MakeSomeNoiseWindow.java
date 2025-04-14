@@ -114,6 +114,17 @@ public class MakeSomeNoiseWindow extends JFrame {
         });
         fileMenu.add(menuItem);
 
+        menuItem = new JMenuItem("Save Image");
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                saveImage();
+
+            }
+        });
+        fileMenu.add(menuItem);
+
         menuBar.add(fileMenu);
 
         // Create and populate drop-down menu for searching project functions
@@ -158,6 +169,12 @@ public class MakeSomeNoiseWindow extends JFrame {
             }
         });
         fileChooser.showSaveDialog(this);
+    }
+
+    public void saveImage() {
+        if (editorPanel != null) {
+            editorPanel.writeImage();
+        }
     }
 
     public void openFile() {
