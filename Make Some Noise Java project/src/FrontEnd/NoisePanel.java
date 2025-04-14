@@ -1,7 +1,10 @@
 package FrontEnd;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
 
 public class NoisePanel extends JPanel{
 
@@ -44,5 +47,9 @@ public class NoisePanel extends JPanel{
 
 	public int getWidth() {
 		return bitmap.getWidth();
+	}
+
+	public void writeToFile(File file) throws IOException {
+		ImageIO.write(bitmap, "png", file);
 	}
 }
