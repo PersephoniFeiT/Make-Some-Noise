@@ -120,25 +120,13 @@ public class Project {
                 double gain = layerNode.get("gain").asDouble();
 
                 String type = layerNode.get("type").asText();
-                switch (type) {
-                    case ("PerlinNoiseLayer"): 
-                        layer = new PerlinNoiseLayer();
-                        break;
-                    case "RandomNoiseLayer": 
-                        layer = new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
-                        break;
-                    case "Simplex2NoiseLayer": 
-                        layer = new Simplex2NoiseLayer(freq, amp, floor, ceiling);
-                        break;
-                    case "Simplex3NoiseLayer":
-                        layer = new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
-                        break;
-                    case "SimplexNoise":
-                        layer = null;//new SimplexNoise();
-                        break;
-                    default: 
-                        layer = new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
-                        break;
+                layer = switch (type) {
+                    case "PerlinNoiseLayer" -> new PerlinNoiseLayer();
+                    case "RandomNoiseLayer" -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
+                    case "Simplex2NoiseLayer" -> new Simplex2NoiseLayer(seed, freq, amp, floor, ceiling);
+                    case "Simplex3NoiseLayer" -> new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
+                    case "SimplexNoise" -> null;//new SimplexNoise();
+                    default -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
                 };
 
                 project.layers.add(layer);

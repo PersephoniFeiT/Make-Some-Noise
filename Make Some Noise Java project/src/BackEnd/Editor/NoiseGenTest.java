@@ -9,7 +9,7 @@ public class NoiseGenTest {
     @Test
     public void NL1(){
         NoiseLayer rnoise = new RandomNoiseLayer(0, 0.5, 1, 1, 1);
-        NoiseLayer s2noise = new Simplex2NoiseLayer(0.5, 1, 1, 1);
+        NoiseLayer s2noise = new Simplex2NoiseLayer(0, 0.5, 1, 1, 1);
         NoiseLayer s3noise = new Simplex3NoiseLayer(0, 0.5, 1, 1, 1);
         for(int i = 0; i <= 1000; i++){ //statistically exhaustive NL.1.0 case
             assertTrue(rnoise.evaluate(i % 500, (1000 - i) % 250) >= 0.5);
@@ -19,14 +19,17 @@ public class NoiseGenTest {
 
         rnoise.setFloor(0);
         rnoise.setCeiling(.5);
+        System.out.println(rnoise.getCeiling());
         s2noise.setFloor(0);
         s2noise.setCeiling(.5);
         s3noise.setFloor(0);
         s3noise.setCeiling(.5);
         for(int i = 0; i <= 1000; i++){ //statistically exhaustive NL.1.1 case
-            assertTrue(rnoise.evaluate(i % 500, (1000 - i) % 250) <= 0.5);
+            double v = rnoise.evaluate(i % 500, (1000 - i) % 250);
+            System.out.println(v);
+            assertTrue(v <= 0.5);
             assertTrue(s2noise.evaluate(i % 500, (1000 - i) % 250) <= 0.5);
-            assertTrue(s3noise.evaluate(i, (1000 - i) % 250) <= 0.5);
+            assertTrue(s3noise.evaluate(i % 500, (1000 - i) % 250) <= 0.5);
         }
         s2noise.setCeiling(0.5);
         
@@ -44,7 +47,7 @@ public class NoiseGenTest {
             assertTrue(rval <= 0.75);
             assertTrue(s2val <= 0.75);
             assertTrue(s3val <= 0.75);
-            assertTrue(rval >= 0.25);
+            assertTrue("RandomNoiseLayer broke lower amplitude constraints: " + rval, rval >= 0.25);
             assertTrue(s2val >= 0.25);
             assertTrue(s3val >= 0.25);
         }
@@ -58,11 +61,14 @@ public class NoiseGenTest {
         int seed2 = seed1;
         NoiseLayer rn1 = new RandomNoiseLayer(seed1, 0, 1, 1, 1);
         NoiseLayer rn2 = new RandomNoiseLayer(seed2, 0, 1, 1, 1);
+        NoiseLayer s2n1 = new Simplex2NoiseLayer(seed1, 0, 1, 1,1);
+        NoiseLayer s2n2 = new Simplex2NoiseLayer(seed2, 0, 1, 1, 1);
         NoiseLayer s3n1 = new Simplex3NoiseLayer(seed1, 0, 1, 1, 1);
         NoiseLayer s3n2 = new Simplex3NoiseLayer(seed2, 0, 1, 1, 1); //TODO: Test on Simplex2 noise once it's seed-dependant
 
         for(int i = 0; i < 1000; i++){ //statistically exhaustive  NL.2.0 cases
             assertTrue(rn1.evaluate(i % 500, (1000 - i % 500) % 250) == rn2.evaluate(i % 500, (1000 - i % 500) % 250));
+            assertTrue(s2n1.evaluate(i % 500, (1000 - i % 500) % 250) == s2n2.evaluate(i % 500, (1000 - i % 500) % 250));
             assertTrue(s3n1.evaluate(i % 500, (1000 - i % 500) % 250) == s3n2.evaluate(i % 500, (1000 - i % 500) % 250));
         }
 
@@ -119,8 +125,8 @@ public class NoiseGenTest {
         double k = 4;
         RandomNoiseLayer rOracle = new RandomNoiseLayer(0, 0, 1, 1, 1);
         RandomNoiseLayer rAmpl = new RandomNoiseLayer(0, 0, 1, 1/k, 1);
-        Simplex2NoiseLayer s2Oracle = new Simplex2NoiseLayer(0, 1, 1, 0);
-        Simplex2NoiseLayer s2Ampl = new Simplex2NoiseLayer(0, 1, 1/k, 1);
+        Simplex2NoiseLayer s2Oracle = new Simplex2NoiseLayer(0, 0, 1, 1, 0);
+        Simplex2NoiseLayer s2Ampl = new Simplex2NoiseLayer(0, 0, 1, 1/k, 1);
         Simplex3NoiseLayer s3Oracle = new Simplex3NoiseLayer(0, 0, 1, 1, 1);
         Simplex3NoiseLayer s3Ampl = new Simplex3NoiseLayer(0, 0, 1, 1/k, 1);
         for (int i = 0; i < 1000; i++){ //statistically exhaustive  NL.3.0 case

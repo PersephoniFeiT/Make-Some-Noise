@@ -92,37 +92,33 @@ public class LayerPanelList extends JScrollPane {
 				
 					project.removeLayer(noiseLayer);
 
-					String choice = layerType.getSelectedItem().toString();
-					switch (choice) {
-						case "Simplex2 Noise": 
-							noiseLayer = new Simplex2NoiseLayer(
-								Double.parseDouble(floor.text.getText()),
-								Double.parseDouble(ceiling.text.getText()),
-								Double.parseDouble(amp.text.getText()),
-								Double.parseDouble(freq.text.getText())
-							);
-							break;
-						case "Perlin Noise":
-							project.addLayer(new PerlinNoiseLayer());
-							break;
-						case "Random Noise": 
-							noiseLayer = new RandomNoiseLayer(
-								Integer.parseInt(seed.text.getText()),
-								Double.parseDouble(floor.text.getText()),
-								Double.parseDouble(ceiling.text.getText()),
-								Double.parseDouble(amp.text.getText()),
-								Double.parseDouble(freq.text.getText())
-							);
-							break;
-						case "Simplex3 Noise": 
-							noiseLayer = new Simplex3NoiseLayer(
-								Integer.parseInt(seed.text.getText()),
-								Double.parseDouble(floor.text.getText()),
-								Double.parseDouble(ceiling.text.getText()),
-								Double.parseDouble(amp.text.getText()),
-								Double.parseDouble(freq.text.getText())
-							);
-							break;
+					Object choice = layerType.getSelectedItem();
+					if (choice.equals("Simplex2 Noise")) {
+						noiseLayer = new Simplex2NoiseLayer(
+							Integer.parseInt(seed.text.getText()),
+							Double.parseDouble(floor.text.getText()),
+							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(amp.text.getText()),
+							Double.parseDouble(freq.text.getText())
+						);
+					} else if (choice.equals("Perlin Noise")) {
+						project.addLayer(new PerlinNoiseLayer());
+					} else if (choice.equals("Random Noise")) {
+						noiseLayer = new RandomNoiseLayer(
+							Integer.parseInt(seed.text.getText()),
+							Double.parseDouble(floor.text.getText()),
+							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(amp.text.getText()),
+							Double.parseDouble(freq.text.getText())
+						);
+					} else if (choice.equals("Simplex3 Noise")) {
+						noiseLayer = new Simplex3NoiseLayer(
+							Integer.parseInt(seed.text.getText()),
+							Double.parseDouble(floor.text.getText()),
+							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(amp.text.getText()),
+							Double.parseDouble(freq.text.getText())
+						);
 					}
 					if (layerIsVisible.isSelected()) {
 						project.addLayer(noiseLayer);
