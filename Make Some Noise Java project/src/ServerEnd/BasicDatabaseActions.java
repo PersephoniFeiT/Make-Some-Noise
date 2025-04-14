@@ -86,6 +86,7 @@ public class BasicDatabaseActions {
         BasicDatabaseActions.assertFormat(new String[]{username, password});
 
         List<Map<String, String>> rs = SQLConnection.select("accounts", "*", new String[]{"username"}, new String[]{username}, null);
+        if (rs.isEmpty() || rs.getFirst().isEmpty()) throw new NoSuchAccountException("There is no account with username " + username);
         for (Map<String, String> m : rs){
             //assuming 1st col is ID, 2nd is username, 3rd is pwd
             if (m.get("password").equals(password)) return Integer.parseInt(m.get("ID"));
