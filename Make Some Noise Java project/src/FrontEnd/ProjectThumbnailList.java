@@ -1,16 +1,12 @@
 package FrontEnd;
 
 import BackEnd.Accounts.CurrentSession;
-import BackEnd.Accounts.Project;
-import Exceptions.Accounts.NotSignedInException;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.List;
 import java.awt.Dimension;
 import java.awt.FlowLayout;

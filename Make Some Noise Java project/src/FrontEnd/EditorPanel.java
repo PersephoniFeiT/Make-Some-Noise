@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
-import Exceptions.Accounts.NotSignedInException;
+import Exceptions.NotSignedInException;
 
 class EditorPanel extends JPanel {
 

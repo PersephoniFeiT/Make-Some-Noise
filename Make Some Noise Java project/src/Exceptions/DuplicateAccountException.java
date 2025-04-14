@@ -1,4 +1,4 @@
-package Exceptions.Accounts;
+package Exceptions;
 
 public class DuplicateAccountException extends Exception {
         public DuplicateAccountException(String message) {

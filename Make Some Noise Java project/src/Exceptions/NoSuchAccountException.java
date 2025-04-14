@@ -1,4 +1,4 @@
-package Exceptions.Accounts;
+package Exceptions;
 
 public class NoSuchAccountException extends Exception {
         public NoSuchAccountException(String message) {

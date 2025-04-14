@@ -1,4 +1,4 @@
-package Exceptions.Accounts;
+package Exceptions;
 
 public class NotSignedInException extends Exception {
         public NotSignedInException(String message) {

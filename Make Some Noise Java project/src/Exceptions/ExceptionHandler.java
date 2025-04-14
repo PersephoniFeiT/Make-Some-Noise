@@ -1,4 +1,4 @@
-package Exceptions.Accounts;
+package Exceptions;
 
 import java.sql.SQLException;
 import java.util.logging.Logger;

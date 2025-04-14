@@ -17,10 +17,10 @@ import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
 import BackEnd.Accounts.CurrentSession;
-import Exceptions.Accounts.ExceptionHandler;
-import Exceptions.Accounts.IncorrectPasswordException;
-import Exceptions.Accounts.InvalidInputException;
-import Exceptions.Accounts.NoSuchAccountException;
+import Exceptions.ExceptionHandler;
+import Exceptions.IncorrectPasswordException;
+import Exceptions.InvalidInputException;
+import Exceptions.NoSuchAccountException;
 
 public class SignInWindow extends JFrame {
 

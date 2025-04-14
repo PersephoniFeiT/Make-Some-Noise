@@ -1,9 +1,8 @@
 package BackEnd.Accounts;
 
-import Exceptions.Accounts.*;
+import Exceptions.*;
 import ServerEnd.BasicDatabaseActions;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
