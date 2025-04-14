@@ -183,7 +183,7 @@ public class BasicDatabaseActions {
         SQLConnection.update("projects", ID, "projectInfoStruct", updatedJson);
 
 
-        /////////////////////////////////
+        ////////////////////////////
         // update account list
         // Step 2: Fetch the existing projects list from the 'accounts' table
         List<Map<String, String>> existingProjectsRs = SQLConnection.select("accounts", "projectList", new String[]{"ID"}, new String[]{""+accountID}, null);
