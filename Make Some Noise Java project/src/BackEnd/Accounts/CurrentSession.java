@@ -78,6 +78,7 @@ public class CurrentSession {
     public void ChangePassword(String password){
         try {
             BasicDatabaseActions.modifyAccount(getSignedIn(), "password", password);
+            System.out.println("change pass");
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -89,7 +90,7 @@ public class CurrentSession {
             Matcher matcher = pattern.matcher(email);
             boolean matchFound = matcher.find();
             if(matchFound) {
-                BasicDatabaseActions.modifyAccount(getSignedIn(), "password", email);
+                BasicDatabaseActions.modifyAccount(getSignedIn(), "email", email);
             } else {
                 ExceptionHandler.handleException(new InvalidInputException("Incorrect email format: '" + email +"' is not an email."));
             }
@@ -133,6 +134,11 @@ public class CurrentSession {
         try {
             this.getSignedIn();
             BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
+            BasicDatabaseActions.modifyProject(p.getID(), "title", p.title);
+            BasicDatabaseActions.modifyProject(p.getID(), "username", p.username);
+            BasicDatabaseActions.modifyProject(p.getID(), "status", p.status);
+            BasicDatabaseActions.modifyProject(p.getID(), "tags", p.tags.toString());
+            BasicDatabaseActions.modifyProject(p.getID(), "thumbnail", p.thumbnail);
             return true;
         } catch (NotSignedInException e){
             return false;

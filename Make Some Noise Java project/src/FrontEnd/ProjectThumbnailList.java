@@ -98,6 +98,7 @@ public class ProjectThumbnailList extends JScrollPane {
 				}
 				add(new JLabel(tagsString.toString()));
 
+				System.out.println("accountID = " + accountID + ", projectID = " + projectID);
 				if (accountID != null) {
 					JButton deleteButton = new JButton("DELETE");
 					deleteButton.addActionListener(new ActionListener() {
