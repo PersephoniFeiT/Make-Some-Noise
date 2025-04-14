@@ -1,5 +1,6 @@
 package ServerEnd;
 
+import BackEnd.Accounts.Project;
 import Exceptions.*;
 
 import java.sql.SQLException;
@@ -141,6 +142,8 @@ public class BasicDatabaseActions {
     public static int createNewProject(int accountID, String JSON) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{JSON});
 
+        Project p = Project.fromJSONtoProject(JSON);
+
         //make a new project, get the ID
         int ID = SQLConnection.insert("projects",
             new String[] {
@@ -153,14 +156,15 @@ public class BasicDatabaseActions {
                     "tags"
             },
             new String[] {
-                    "New Project",
+                    p.title,
                     BasicDatabaseActions.getAccountInfoType(accountID, "username"),
-                    LocalDate.now().toString(),
+                    p.dateCreated.toString(),
                     "private",
                     JSON,
                     "[THIS IS AN IMAGE]",
-                    "[]"
+                    p.tags.toString()
             });
+
         //update the JSON ID
         // update new project list
         String updatedJson;
@@ -181,7 +185,6 @@ public class BasicDatabaseActions {
         }
         // Now you can store it in the DB
         SQLConnection.update("projects", ID, "projectInfoStruct", updatedJson);
-
 
         ////////////////////////////
         // update account list
@@ -281,13 +284,22 @@ public class BasicDatabaseActions {
 
     public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{currentData});
+
         if (accountID == null) throw new NotSignedInException("You must be signed in to save.");
         if (projectID == null){
+            System.out.println("Creating new project in database.");
             int ID = BasicDatabaseActions.createNewProject(accountID, currentData);
             SQLConnection.update("projects", ID, "ID", ID+"");
             projectID = ID;
         }
+        Project p = Project.fromJSONtoProject(currentData);
         SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
+        SQLConnection.update("projects", projectID, "title", p.title);
+        SQLConnection.update("projects", projectID, "username", p.username);
+        SQLConnection.update("projects", projectID, "status", p.status);
+        SQLConnection.update("projects", projectID, "thumbnail", p.thumbnail);
+        SQLConnection.update("projects", projectID, "tags", p.tags.toString());
+        System.out.println("Saved to database.");
     }
 
 

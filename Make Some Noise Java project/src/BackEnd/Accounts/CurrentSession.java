@@ -78,7 +78,7 @@ public class CurrentSession {
     public void ChangePassword(String password){
         try {
             BasicDatabaseActions.modifyAccount(getSignedIn(), "password", password);
-            System.out.println("change pass");
+            System.out.println("Password changed.");
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -130,7 +130,7 @@ public class CurrentSession {
         return p;
     }
 
-    public boolean SaveProject(Project p) {
+    public boolean SaveProject(Project p) throws NotSignedInException {
         try {
             Integer accountID = this.getSignedIn();
             Integer projectID = p.getID();
@@ -148,7 +148,7 @@ public class CurrentSession {
             BasicDatabaseActions.modifyProject(projectID, "thumbnail", p.thumbnail);
             return true;
         } catch (NotSignedInException e){
-            return false;
+            throw e;
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
