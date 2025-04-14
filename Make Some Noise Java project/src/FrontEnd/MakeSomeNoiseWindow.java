@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
-import Exceptions.Accounts.NotSignedInException;
+import Exceptions.NotSignedInException;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

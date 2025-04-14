@@ -2,9 +2,8 @@ package ServerEnd;
 
 import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
-import Exceptions.Accounts.DatabaseConnectionException;
+import Exceptions.DatabaseConnectionException;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.*;
 
