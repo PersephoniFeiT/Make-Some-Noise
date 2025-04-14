@@ -15,7 +15,7 @@ import java.util.List;
 public class SearchPanel extends JPanel {
 
 	private SearchBar searchBar = new SearchBar();
-	private ProjectThumbnailList searchResults = new ProjectThumbnailList(new CurrentSession(), new ArrayList<>());
+	private ProjectThumbnailList searchResults = new ProjectThumbnailList(null, new ArrayList<>());
 	private JComboBox<String> searchByDrop = new JComboBox<>(new String[]{"Title", "Username", "Tag"});
 	private String searchBy = "title";
 	//Sharing.SearchByTitle()
@@ -48,7 +48,7 @@ public class SearchPanel extends JPanel {
 						searchByList = Sharing.SearchByTitle(searchBar.getText());
 						break;
 				}
-				searchResults = new ProjectThumbnailList(new CurrentSession(), searchByList);
+				searchResults = new ProjectThumbnailList(null, searchByList);
 			}
 		});
 

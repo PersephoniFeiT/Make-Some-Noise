@@ -22,24 +22,31 @@ import java.util.Map;
 public class ProjectThumbnailList extends JScrollPane {
 
 	private ContentPanel contents;
-	private CurrentSession cs;
+	private Integer accountID;
 
 	// constructor
-	public ProjectThumbnailList(CurrentSession cs, List<Integer> projectIDs) {
-		contents = new ContentPanel(projectIDs);
-		this.cs = cs;
-		setViewportView(contents);
-	}
-
-	// constructor
-	public ProjectThumbnailList(CurrentSession cs) {
+	public ProjectThumbnailList() {
 		contents = new ContentPanel();
-		this.cs = cs;
+		this.accountID = null;
 		setViewportView(contents);
 	}
+
+	// constructor
+	public ProjectThumbnailList(List<Integer> projectIDs) {
+		contents = new ContentPanel(projectIDs);
+		this.accountID = null;
+		setViewportView(contents);
+	}
+
+	// constructor
+	public ProjectThumbnailList(Integer accountID, List<Integer> projectIDs) {
+		this(projectIDs);
+		this.accountID = accountID;
+	}
+
 
 	public void addProject(Integer projectID) {
-		contents.addThumbnail(cs, projectID);
+		contents.addThumbnail(accountID, projectID);
 	}
 
 	public void addProjectList(List<Integer> projectIDs) {
@@ -58,17 +65,17 @@ public class ProjectThumbnailList extends JScrollPane {
 
 		public ContentPanel(List<Integer> projectIDs) {
 			super();
-			projectIDs.forEach(i -> this.addThumbnail(cs, i));
+			projectIDs.forEach(i -> this.addThumbnail(accountID, i));
 		}
 
-		public void addThumbnail(CurrentSession cs, Integer projectID) {
-			add(new ProjectThumbnail(cs, projectID));
+		public void addThumbnail(Integer accountID, Integer projectID) {
+			add(new ProjectThumbnail(accountID, projectID));
 		}
 
 		//////////////////
 		private class ProjectThumbnail extends JPanel {
 
-			public ProjectThumbnail(CurrentSession cs, Integer projectID) {
+			public ProjectThumbnail(Integer accountID, Integer projectID) {
 				Map<String, String> projectInfo =  CurrentSession.GetProjectInfo(projectID);
 				List<String> tags = CurrentSession.getProjectTags(projectID);
 
@@ -91,11 +98,16 @@ public class ProjectThumbnailList extends JScrollPane {
 				}
 				add(new JLabel(tagsString.toString()));
 
-				try {
-					cs.getSignedIn();
-					JButton deleteButton = new DeleteButton(cs, projectID);
+				if (accountID != null) {
+					JButton deleteButton = new JButton("DELETE");
+					deleteButton.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							CurrentSession.DeleteProject(accountID, projectID);
+						}
+					});
 					add(deleteButton);
-				} catch (NotSignedInException e){}
+				}
 				
 			}
 		}

@@ -24,8 +24,7 @@ public class CurrentSession {
 
     public void CreateNewAccount(String username, String password, String email) {
         try {
-            BasicDatabaseActions.createNewAccount(username, password, email);
-            this.SignIn(username, password);
+            this.signedIn = BasicDatabaseActions.createNewAccount(username, password, email);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -127,18 +126,6 @@ public class CurrentSession {
 
     public Project CreateNewProject() {
         Project p = new Project("New Project");
-        try {
-            int ID = BasicDatabaseActions.createNewProject(this.getSignedIn(), p.toJSONString());
-            p = new Project(ID,
-                    "New Project",
-                    BasicDatabaseActions.getAccountInfoType(this.getSignedIn(), "username"),
-                    LocalDate.now());
-            return p;
-        } catch (NotSignedInException e){
-            return p;
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
         return p;
     }
 
@@ -217,9 +204,9 @@ public class CurrentSession {
         }
     }
 
-    public void DeleteProject(int ID){
+    public static void DeleteProject(Integer accountID, int projectID){
         try {
-            BasicDatabaseActions.deleteProject(getSignedIn(), ID);
+            BasicDatabaseActions.deleteProject(accountID, projectID);
         } catch (Exception e){
             ExceptionHandler.handleException(e);
         }

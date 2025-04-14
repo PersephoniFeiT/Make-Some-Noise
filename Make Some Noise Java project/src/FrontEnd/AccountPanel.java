@@ -21,7 +21,7 @@ public class AccountPanel extends JPanel {
 		accountId = ID;
 		header = new AccountHeader(accountInfo, currentSession);
 
-		projectList = new ProjectThumbnailList(currentSession, currentSession.GetProjectsInAccount());
+		projectList = new ProjectThumbnailList(ID, currentSession.GetProjectsInAccount());
 
 		add(header);
 		if (accountId != null) add(new JLabel("Your projects:"));

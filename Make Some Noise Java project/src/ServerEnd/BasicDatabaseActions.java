@@ -35,7 +35,11 @@ public class BasicDatabaseActions {
 
     private static boolean checkForDuplicateAccounts(String value) throws SQLException, DatabaseConnectionException {
         // Check if duplicate account
-        List<Map<String, String>> rs = SQLConnection.select("accounts", "username = " + value + ", COUNT(*) as count", new String[]{}, new String[]{}, null);
+        List<Map<String, String>> rs = SQLConnection.select("accounts",
+                "username, COUNT(*) as count",
+                new String[]{"username"},                 // WHERE username = ?
+                new String[]{value},                      // value = "test", etc.
+                new String[]{"username"} );
         for (Map<String,String> m : rs){
             int count = Integer.parseInt(m.get("count"));
             if (count > 0) return true;
@@ -71,9 +75,10 @@ public class BasicDatabaseActions {
         int ID = SQLConnection.insert("accounts",
                 new String[] {"username",
                         "password",
-                        "email"
+                        "email",
+                        "projectList"
                 },
-                new String[]{username, password, email});
+                new String[]{username, password, email, "[]"});
         return ID;
     }
 
