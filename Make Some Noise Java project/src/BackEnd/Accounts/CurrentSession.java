@@ -78,6 +78,7 @@ public class CurrentSession {
     public void ChangePassword(String password){
         try {
             BasicDatabaseActions.modifyAccount(getSignedIn(), "password", password);
+            System.out.println("change pass");
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -89,7 +90,7 @@ public class CurrentSession {
             Matcher matcher = pattern.matcher(email);
             boolean matchFound = matcher.find();
             if(matchFound) {
-                BasicDatabaseActions.modifyAccount(getSignedIn(), "password", email);
+                BasicDatabaseActions.modifyAccount(getSignedIn(), "email", email);
             } else {
                 ExceptionHandler.handleException(new InvalidInputException("Incorrect email format: '" + email +"' is not an email."));
             }
