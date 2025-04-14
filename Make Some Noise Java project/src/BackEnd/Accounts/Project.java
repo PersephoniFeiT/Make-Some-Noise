@@ -171,8 +171,8 @@ public class Project {
             s.append("\"ceiling\": ").append(l.getCeiling()).append(",");
             s.append("\"gain\": ").append(l.getGain());
             s.append("}");
-            i++;
             if (i<this.layers.size()) s.append(",");
+            i++;
         }
         s.append("}}");
         return s.toString();
