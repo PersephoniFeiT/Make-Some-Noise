@@ -21,11 +21,11 @@ public class AccountPanel extends JPanel {
 		accountId = ID;
 		header = new AccountHeader(accountInfo, currentSession);
 
-		projectList = new ProjectThumbnailList(ID, currentSession.GetProjectsInAccount());
-
 		add(header);
 		if (accountId != null) add(new JLabel("Your projects:"));
 		else add(new JLabel("You are not signed in."));
+
+		projectList = new ProjectThumbnailList(accountId, currentSession.GetProjectsInAccount());
 		add(projectList);
 	}
 

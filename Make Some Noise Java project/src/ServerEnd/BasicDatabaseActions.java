@@ -151,12 +151,12 @@ public class BasicDatabaseActions {
                     "tags"
             },
             new String[] {
-                    "",
+                    "New Project",
                     BasicDatabaseActions.getAccountInfoType(accountID, "username"),
                     LocalDate.now().toString(),
                     "private",
                     JSON,
-                    "thumbnail",
+                    "[THIS IS AN IMAGE]",
                     "[]"
             });
 /////////////////////////////////
@@ -260,9 +260,9 @@ public class BasicDatabaseActions {
         if (projectID == null){
             int ID = BasicDatabaseActions.createNewProject(accountID, currentData);
             SQLConnection.update("projects", ID, "ID", ID+"");
-        } else {
-            SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
+            projectID = ID;
         }
+        SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
     }
 
 

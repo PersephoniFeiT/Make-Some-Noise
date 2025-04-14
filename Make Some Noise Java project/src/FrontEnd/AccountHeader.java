@@ -105,6 +105,15 @@ public class AccountHeader extends JPanel {
 		email.setEditable(false);
 		passwordField.setEditable(false);
 
+
+		JButton deleteButton = new JButton("DELETE ACCOUNT");
+		changeUsernameButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				session.DeleteAccount();
+			}
+		});
+
 		add(usernameFeatures);
 		add(emailFeatures);
 		add(passwordFeatures);

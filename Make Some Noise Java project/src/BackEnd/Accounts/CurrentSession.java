@@ -134,6 +134,11 @@ public class CurrentSession {
         try {
             this.getSignedIn();
             BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
+            BasicDatabaseActions.modifyProject(p.getID(), "title", p.title);
+            BasicDatabaseActions.modifyProject(p.getID(), "username", p.username);
+            BasicDatabaseActions.modifyProject(p.getID(), "status", p.status);
+            BasicDatabaseActions.modifyProject(p.getID(), "tags", p.tags.toString());
+            BasicDatabaseActions.modifyProject(p.getID(), "thumbnail", p.thumbnail);
             return true;
         } catch (NotSignedInException e){
             return false;
