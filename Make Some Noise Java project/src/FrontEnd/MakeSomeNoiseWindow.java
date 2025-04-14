@@ -76,7 +76,8 @@ public class MakeSomeNoiseWindow extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                currentSession.SaveProject(editorPanel.getProject());
+                //currentSession.SaveProject(editorPanel.getProject());
+                new PostProjectWindow(currentSession, editorPanel.getProject());
             }
         });
         fileMenu.add(menuItem);
