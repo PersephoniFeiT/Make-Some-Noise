@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
+
 /* Accounts table layout:
 ID, username, password, email, list of project ids
 the list of project ids is stored in the string form: '23, 234, 1324, 1232'*/
@@ -159,7 +162,30 @@ public class BasicDatabaseActions {
                     "[THIS IS AN IMAGE]",
                     "[]"
             });
-/////////////////////////////////
+        //update the JSON ID
+        // update new project list
+        String updatedJson;
+        try {
+            // Your original JSON string with "" as the key
+            // Create Jackson ObjectMapper
+            ObjectMapper mapper = new ObjectMapper();
+            // Convert JSON string to Map
+            Map<String, Object> jsonMap = mapper.readValue(JSON, Map.class);
+            // Get the only entry with key ""
+            Object value = jsonMap.remove("");  // remove the "" key
+            // Put the new entry with actual project ID
+            jsonMap.put(String.valueOf(ID), value);
+            // Convert back to JSON string
+            updatedJson = mapper.writeValueAsString(jsonMap);
+        } catch (Exception e){
+            updatedJson = JSON;
+        }
+        // Now you can store it in the DB
+        SQLConnection.update("projects", ID, "projectInfoStruct", updatedJson);
+
+
+        /////////////////////////////////
+        // update account list
         // Step 2: Fetch the existing projects list from the 'accounts' table
         List<Map<String, String>> existingProjectsRs = SQLConnection.select("accounts", "projectList", new String[]{"ID"}, new String[]{""+accountID}, null);
 
