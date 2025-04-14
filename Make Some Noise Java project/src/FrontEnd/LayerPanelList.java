@@ -76,10 +76,8 @@ public class LayerPanelList extends JScrollPane {
 				public void actionPerformed(ActionEvent e) {
 					if (layerIsVisible.isSelected()) {
 						proj.addLayer(nl);
-						System.out.println("added layer");
 					} else {
 						proj.removeLayer(nl);
-						System.out.println("removed layer");
 					}
 					updateLayer();
 				}
