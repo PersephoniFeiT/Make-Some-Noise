@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 
 /* Accounts table layout:
 ID, username, password, email, list of project ids
