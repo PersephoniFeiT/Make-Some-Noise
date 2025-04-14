@@ -1,11 +1,12 @@
 package FrontEnd;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.BorderLayout;
@@ -35,6 +36,9 @@ class EditorPanel extends JPanel {
 
         project = p;
 
+        JPanel editorHeader = new JPanel();
+        editorHeader.setLayout(new BoxLayout(editorHeader, BoxLayout.Y_AXIS));
+
         JTextField projectTitleField = new JTextField(p.title, 50);
         projectTitleField.setEditable(false);
         
@@ -60,7 +64,24 @@ class EditorPanel extends JPanel {
         projTitleEditing.setLayout(new FlowLayout());
         projTitleEditing.add(projectTitleField);
         projTitleEditing.add(updateProjectTitleButton);
-        add(projTitleEditing, BorderLayout.NORTH);
+        editorHeader.add(projTitleEditing);
+
+        JCheckBox isVisible = new JCheckBox("Share online");
+        isVisible.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String v = (isVisible.isSelected()) ? "public" : "private";
+                if (project.getID() != null) {
+                    currentSession.ChangeStatus(project.getID(), v);
+                }
+            }
+        });
+        JPanel sharingInfo = new JPanel();
+        sharingInfo.setLayout(new FlowLayout());
+        sharingInfo.add(isVisible);
+        editorHeader.add(sharingInfo);
+        
+        add(editorHeader, BorderLayout.NORTH);
 
         // Create a NoisePanel to display the generated noise pattern
         int width = 800;
@@ -102,7 +123,6 @@ class EditorPanel extends JPanel {
 	}
 
     public void writeImage() {
-
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("png", "png"));

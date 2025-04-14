@@ -311,6 +311,7 @@ public class LayerPanelList extends JScrollPane {
 			LayerPanel lp = new LayerPanel(newLayer, project);
 			project.addLayer(newLayer);
 			this.add(lp);
+			lp.updateLayer();
 			revalidate();
 			repaint();
 		}
@@ -318,6 +319,7 @@ public class LayerPanelList extends JScrollPane {
 		public void addLayer(NoiseLayer nl) {
 			LayerPanel lp = new LayerPanel(nl, project);
 			this.add(lp);
+			lp.updateLayer();
 			revalidate();
 			repaint();
 		}
