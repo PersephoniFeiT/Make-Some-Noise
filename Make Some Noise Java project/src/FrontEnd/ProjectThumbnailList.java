@@ -22,26 +22,25 @@ import java.util.Map;
 public class ProjectThumbnailList extends JScrollPane {
 
 	private ContentPanel contents;
-	private Integer accountID;
+	private Integer accountID = null;
 
 	// constructor
 	public ProjectThumbnailList() {
 		contents = new ContentPanel();
-		this.accountID = null;
 		setViewportView(contents);
 	}
 
 	// constructor
 	public ProjectThumbnailList(List<Integer> projectIDs) {
 		contents = new ContentPanel(projectIDs);
-		this.accountID = null;
 		setViewportView(contents);
 	}
 
 	// constructor
 	public ProjectThumbnailList(Integer accountID, List<Integer> projectIDs) {
-		this(projectIDs);
 		this.accountID = accountID;
+		contents = new ContentPanel(projectIDs);
+		setViewportView(contents);
 	}
 
 
@@ -85,7 +84,7 @@ public class ProjectThumbnailList extends JScrollPane {
 				setMaximumSize(new Dimension(300, 300));
 
 				// TODO: add image stuff
-				add(new JLabel("[THIS IS AN IMAGE]"));
+				add(new JLabel(projectInfo.get("thumbnail")));
 				
 				add(new JLabel(projectInfo.get("title")));
 				add(new JLabel("By " + projectInfo.get("username")));
@@ -98,7 +97,6 @@ public class ProjectThumbnailList extends JScrollPane {
 				}
 				add(new JLabel(tagsString.toString()));
 
-				System.out.println("accountID = " + accountID + ", projectID = " + projectID);
 				if (accountID != null) {
 					JButton deleteButton = new JButton("DELETE");
 					deleteButton.addActionListener(new ActionListener() {
@@ -107,7 +105,7 @@ public class ProjectThumbnailList extends JScrollPane {
 							CurrentSession.DeleteProject(accountID, projectID);
 						}
 					});
-					add(deleteButton);
+					this.add(deleteButton);
 				}
 				
 			}

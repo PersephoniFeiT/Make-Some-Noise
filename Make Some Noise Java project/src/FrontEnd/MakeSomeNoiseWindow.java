@@ -217,12 +217,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void addAccountPanel() {
-        try {
-            currentSession.getSignedIn();
-            accountPanel = new AccountPanel(currentSession.getSignedIn(), currentSession.GetAccountInfo(), currentSession);
-        } catch (NotSignedInException e) {
-            accountPanel = new AccountPanel(Integer.valueOf(0), null, currentSession);
-        }
+        accountPanel = new AccountPanel(currentSession.GetAccountInfo(), currentSession);
     }
 
     public void goToAccountPanel() {

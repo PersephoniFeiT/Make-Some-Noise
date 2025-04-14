@@ -230,7 +230,7 @@ public class BasicDatabaseActions {
 
         // update new project list
         String prevProjects = BasicDatabaseActions.getAccountInfoType(accountID, "projectList");
-        String updatedProjects = addIDToStringList(prevProjects, projectID);
+        String updatedProjects = removeIDFromStringList(prevProjects, projectID);
         SQLConnection.update("accounts", accountID, "projectList", updatedProjects);
     }
 

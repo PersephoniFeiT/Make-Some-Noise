@@ -132,13 +132,17 @@ public class CurrentSession {
 
     public boolean SaveProject(Project p) {
         try {
-            this.getSignedIn();
-            BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
-            BasicDatabaseActions.modifyProject(p.getID(), "title", p.title);
-            BasicDatabaseActions.modifyProject(p.getID(), "username", p.username);
-            BasicDatabaseActions.modifyProject(p.getID(), "status", p.status);
-            BasicDatabaseActions.modifyProject(p.getID(), "tags", p.tags.toString());
-            BasicDatabaseActions.modifyProject(p.getID(), "thumbnail", p.thumbnail);
+            Integer accountID = this.getSignedIn();
+            Integer projectID = p.getID();
+            if (p.getID() == null)
+                projectID = BasicDatabaseActions.createNewProject(accountID, p.toJSONString());
+            else
+                BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
+            BasicDatabaseActions.modifyProject(projectID, "title", p.title);
+            BasicDatabaseActions.modifyProject(projectID, "username", BasicDatabaseActions.getAccountInfoType(accountID, "username"));
+            BasicDatabaseActions.modifyProject(projectID, "status", p.status);
+            BasicDatabaseActions.modifyProject(projectID, "tags", p.tags.toString());
+            BasicDatabaseActions.modifyProject(projectID, "thumbnail", p.thumbnail);
             return true;
         } catch (NotSignedInException e){
             return false;
