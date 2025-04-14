@@ -79,6 +79,7 @@ public class LayerPanelList extends JScrollPane {
 					} else {
 						proj.removeLayer(nl);
 					}
+					updateLayer();
 				}
 			});
 
@@ -123,8 +124,7 @@ public class LayerPanelList extends JScrollPane {
 					if (layerIsVisible.isSelected()) {
 						project.addLayer(noiseLayer);
 					}
-
-					updateLayer();
+					hostEditorPanel.renderNoise();
 				}
 			});
 			JPanel layerNameAndType = new JPanel();
