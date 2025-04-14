@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Project {
-    private final Integer ID;
+    private Integer ID;
 
     public String title = "New Project";
     public String username;
@@ -40,6 +40,8 @@ public class Project {
     }
 
     public Integer getID(){return this.ID;}
+
+    public void setID(Integer ID){this.ID = ID;}
 
     public void removeLayer(int index){
         this.layers.remove(index);

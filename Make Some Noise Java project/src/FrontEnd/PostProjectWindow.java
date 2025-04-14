@@ -31,7 +31,7 @@ public class PostProjectWindow extends JFrame {
 
 		add(new JLabel("Title:"));
 
-		titleField = new JTextField(30);
+		titleField = new JTextField(proj.title, 30);
 		add(titleField);
 
 		add(new JLabel("Tags"));

@@ -134,10 +134,13 @@ public class CurrentSession {
         try {
             Integer accountID = this.getSignedIn();
             Integer projectID = p.getID();
-            if (p.getID() == null)
+            if (p.getID() == null) {
                 projectID = BasicDatabaseActions.createNewProject(accountID, p.toJSONString());
-            else
+                p.setID(projectID);
+            }
+            else {
                 BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
+            }
             BasicDatabaseActions.modifyProject(projectID, "title", p.title);
             BasicDatabaseActions.modifyProject(projectID, "username", BasicDatabaseActions.getAccountInfoType(accountID, "username"));
             BasicDatabaseActions.modifyProject(projectID, "status", p.status);

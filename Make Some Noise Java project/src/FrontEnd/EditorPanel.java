@@ -1,14 +1,26 @@
 package FrontEnd;
 
-// import javax.swing.JButton;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 // import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
+import Exceptions.Accounts.NotSignedInException;
 
 class EditorPanel extends JPanel {
 
@@ -18,11 +30,58 @@ class EditorPanel extends JPanel {
     
     private Project project;
 
-	public EditorPanel(MakeSomeNoiseWindow parentWindow, Project p) {
+	public EditorPanel(MakeSomeNoiseWindow parentWindow, Project p, CurrentSession currentSession) {
         setLayout(new BorderLayout());                            // using BorderLayout layout managers
         setSize(1000, 600);                                       // width and height
 
         project = p;
+
+        JPanel editorHeader = new JPanel();
+        editorHeader.setLayout(new BoxLayout(editorHeader, BoxLayout.Y_AXIS));
+
+        JTextField projectTitleField = new JTextField(p.title, 50);
+        projectTitleField.setEditable(false);
+        
+        JButton updateProjectTitleButton = new JButton("Rename");
+        updateProjectTitleButton.setMaximumSize(new Dimension(5, 5));
+        updateProjectTitleButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                if (projectTitleField.isEditable()) {
+                    projectTitleField.setEditable(false);
+                    CurrentSession.ChangeTitle(project.getID(), projectTitleField.getText());
+                } else {
+                    try {
+                        currentSession.getSignedIn();
+                        projectTitleField.setEditable(true);
+                    } catch (NotSignedInException er) {
+                        // Do nothing
+                    }
+                }
+            }
+        });
+        JPanel projTitleEditing = new JPanel();
+        projTitleEditing.setLayout(new FlowLayout());
+        projTitleEditing.add(projectTitleField);
+        projTitleEditing.add(updateProjectTitleButton);
+        editorHeader.add(projTitleEditing);
+
+        JCheckBox isVisible = new JCheckBox("Share online");
+        isVisible.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String v = (isVisible.isSelected()) ? "public" : "private";
+                if (project.getID() != null) {
+                    currentSession.ChangeStatus(project.getID(), v);
+                }
+            }
+        });
+        JPanel sharingInfo = new JPanel();
+        sharingInfo.setLayout(new FlowLayout());
+        sharingInfo.add(isVisible);
+        editorHeader.add(sharingInfo);
+        
+        add(editorHeader, BorderLayout.NORTH);
 
         // Create a NoisePanel to display the generated noise pattern
         int width = 800;
@@ -62,6 +121,26 @@ class EditorPanel extends JPanel {
             }
         }
 	}
+
+    public void writeImage() {
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("png", "png"));
+        fileChooser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
+                    try { 
+                        noisePanel.writeToFile(fileChooser.getSelectedFile());
+                    } catch (IOException ex) {
+                        System.out.println("ERROR: Failed to save image");
+                    }
+                }
+            }
+        });
+        fileChooser.showSaveDialog(this);
+        
+    }
 
     public Project getProject() {
         return project;
