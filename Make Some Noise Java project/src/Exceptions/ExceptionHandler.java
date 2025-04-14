@@ -23,10 +23,10 @@ public class ExceptionHandler {
                 "Error: " + e.getMessage());
     }
     private static void handleDuplicateAccountException(Exception e) {
-        logger.severe("This account already exists: " + e.getMessage());
+        logger.warning("This account already exists: " + e.getMessage());
     }
     private static void handleIncorrectPasswordException(Exception e) {
-        logger.severe(e.getMessage());
+        logger.warning(e.getMessage());
     }
 
     private static void handleNoSuchAccountException(Exception e) {
@@ -34,7 +34,7 @@ public class ExceptionHandler {
     }
 
     private static void handleNotSignedInException(Exception e) {
-        logger.severe("User is not logged in." + e.getMessage());
+        logger.warning("User is not logged in." + e.getMessage());
     }
 
     private static void handleInvalidInputException(Exception e) {
