@@ -51,7 +51,7 @@ class EditorPanel extends JPanel {
                         currentSession.getSignedIn();
                         projectTitleField.setEditable(true);
                     } catch (NotSignedInException er) {
-                        // Do nothing
+                        parentWindow.signInErrorMessage();
                     }
                 }
             }
