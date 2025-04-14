@@ -49,7 +49,7 @@ class EditorPanel extends JPanel {
             public void actionPerformed(ActionEvent ev) {
                 if (projectTitleField.isEditable()) {
                     projectTitleField.setEditable(false);
-                    CurrentSession.ChangeTitle(project.getID(), projectTitleField.getText());
+                    CurrentSession.ChangeTitle(project, projectTitleField.getText());
                 } else {
                     try {
                         currentSession.getSignedIn();
@@ -72,7 +72,7 @@ class EditorPanel extends JPanel {
             public void actionPerformed(ActionEvent e){
                 String v = (isVisible.isSelected()) ? "public" : "private";
                 if (project.getID() != null) {
-                    currentSession.ChangeStatus(project.getID(), v);
+                    currentSession.ChangeStatus(project, v);
                 }
             }
         });

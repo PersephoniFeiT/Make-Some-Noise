@@ -57,10 +57,9 @@ public class PostProjectWindow extends JFrame {
 	public void submitForm(CurrentSession cs, Project p) {
 		cs.SaveProject(p);
 
-		Integer ID = p.getID();
-		CurrentSession.ChangeTags(ID, parseTags());
-		CurrentSession.ChangeTitle(ID, this.titleField.getText());
-		cs.ChangeStatus(ID, postPubliclyBox.isSelected() ? "public" : "private");
+		CurrentSession.ChangeTags(p, parseTags());
+		CurrentSession.ChangeTitle(p, this.titleField.getText());
+		cs.ChangeStatus(p, postPubliclyBox.isSelected() ? "public" : "private");
 	}
 
 	// Method to parse the given tags, seperating them by semicolons and trimming leading and trailing whitespace
