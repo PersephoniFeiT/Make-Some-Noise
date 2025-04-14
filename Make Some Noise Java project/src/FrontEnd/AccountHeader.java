@@ -47,7 +47,7 @@ public class AccountHeader extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				if (username.isEditable()) {
-					session.ChangeEmail(username.getText());
+					session.ChangeUsername(username.getText());
 				}
 				if (accountInfo != null) {
 					username.setEditable(!username.isEditable());

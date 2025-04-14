@@ -217,6 +217,14 @@ public class CurrentSession {
         }
     }
 
+    public void DeleteProject(int ID){
+        try {
+            BasicDatabaseActions.deleteProject(getSignedIn(), ID);
+        } catch (Exception e){
+            ExceptionHandler.handleException(e);
+        }
+    }
+
     public static boolean isSaved(Project p){
         try {
             return BasicDatabaseActions.compareToCurrentSave(p.getID(), p.toJSONString());

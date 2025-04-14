@@ -2,13 +2,13 @@ package FrontEnd;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
-import javax.swing.JScrollPane;
-import javax.swing.border.EtchedBorder;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import Exceptions.Accounts.NotSignedInException;
 
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,29 +22,32 @@ import java.util.Map;
 public class ProjectThumbnailList extends JScrollPane {
 
 	private ContentPanel contents;
-
+	private CurrentSession cs;
 
 	// constructor
-	public ProjectThumbnailList(List<Integer> projectIDs) {
+	public ProjectThumbnailList(CurrentSession cs, List<Integer> projectIDs) {
 		contents = new ContentPanel(projectIDs);
+		this.cs = cs;
 		setViewportView(contents);
 	}
 
 	// constructor
-	public ProjectThumbnailList() {
+	public ProjectThumbnailList(CurrentSession cs) {
 		contents = new ContentPanel();
+		this.cs = cs;
 		setViewportView(contents);
 	}
 
-	//////////////////
 	public void addProject(Integer projectID) {
-		contents.addThumbnail(CurrentSession.GetProjectInfo(projectID), CurrentSession.getProjectTags(projectID));
+		contents.addThumbnail(cs, projectID);
 	}
 
 	public void addProjectList(List<Integer> projectIDs) {
-		projectIDs.forEach(projectID -> contents.addThumbnail(CurrentSession.GetProjectInfo(projectID), CurrentSession.getProjectTags(projectID)));
+		projectIDs.forEach(this::addProject);
 	}
 
+
+	/////////////////////
 	private class ContentPanel extends JPanel {
 		List<Integer> projectIDs;
 
@@ -55,17 +58,21 @@ public class ProjectThumbnailList extends JScrollPane {
 
 		public ContentPanel(List<Integer> projectIDs) {
 			super();
-			projectIDs.forEach(i -> this.addThumbnail(CurrentSession.GetProjectInfo(i), CurrentSession.getProjectTags(i)));
+			projectIDs.forEach(i -> this.addThumbnail(cs, i));
 		}
 
-		public void addThumbnail(Map<String, String> proj, List<String> tags) {
-			add(new ProjectThumbnail(proj.get("title"), proj.get("username"), proj.get("dateCreated"), proj.get("thumbnail"), tags));
+		public void addThumbnail(CurrentSession cs, Integer projectID) {
+			add(new ProjectThumbnail(cs, projectID));
 		}
 
 		//////////////////
 		private class ProjectThumbnail extends JPanel {
 
-			public ProjectThumbnail(String title, String username, String dateCreated, String thumbnail, List<String> tags) {
+			public ProjectThumbnail(CurrentSession cs, Integer projectID) {
+				Map<String, String> projectInfo =  CurrentSession.GetProjectInfo(projectID);
+				List<String> tags = CurrentSession.getProjectTags(projectID);
+
+
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 				setMaximumSize(new Dimension(300, 300));
@@ -73,9 +80,9 @@ public class ProjectThumbnailList extends JScrollPane {
 				// TODO: add image stuff
 				add(new JLabel("[THIS IS AN IMAGE]"));
 				
-				add(new JLabel(title));
-				add(new JLabel("By " + username));
-				add(new JLabel("Created " + dateCreated));
+				add(new JLabel(projectInfo.get("title")));
+				add(new JLabel("By " + projectInfo.get("username")));
+				add(new JLabel("Created " + projectInfo.get("dateCreated")));
 				
 				// Construct a single string containing every tag on this project
 				StringBuilder tagsString = new StringBuilder();
@@ -83,6 +90,12 @@ public class ProjectThumbnailList extends JScrollPane {
 					tagsString.append("#").append(tags.get(i)).append(", ");
 				}
 				add(new JLabel(tagsString.toString()));
+
+				try {
+					cs.getSignedIn();
+					JButton deleteButton = new DeleteButton(cs, projectID);
+					add(deleteButton);
+				} catch (NotSignedInException e){}
 				
 			}
 		}

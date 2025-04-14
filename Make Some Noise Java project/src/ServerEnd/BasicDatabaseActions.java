@@ -6,6 +6,7 @@ import BackEnd.Accounts.Project;
 import javax.swing.plaf.basic.BasicIconFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 /* Accounts table layout:
@@ -147,7 +148,7 @@ public class BasicDatabaseActions {
             new String[] {
                     "",
                     BasicDatabaseActions.getAccountInfoType(accountID, "username"),
-                    "date created",
+                    LocalDate.now().toString(),
                     "private",
                     JSON,
                     "thumbnail",
