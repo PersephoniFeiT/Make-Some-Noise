@@ -192,11 +192,11 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void addEditorPanel() {
-        editorPanel = new EditorPanel(this, currentSession.CreateNewProject());
+        editorPanel = new EditorPanel(this, currentSession.CreateNewProject(), currentSession);
     }
 
     public void addEditorPanel(Project p) {
-        editorPanel = new EditorPanel(this, p);
+        editorPanel = new EditorPanel(this, p, currentSession);
     }
 
     public void goToEditorPanel() {
