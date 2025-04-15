@@ -60,13 +60,6 @@ public class ProjectThumbnailList extends JScrollPane {
 	}
 
 	public void goToEditorPanel(String projectInfo){
-		System.out.println(projectInfo);
-		Project p = Project.fromJSONtoProject(projectInfo);
-		System.out.println(p.title);
-		System.out.println(p.status);
-		System.out.println(p.thumbnail);
-		System.out.println(p.dateCreated);
-
 		this.mainWindow.addEditorPanel(Project.fromJSONtoProject(projectInfo));
 		this.mainWindow.goToEditorPanel();
 	}
