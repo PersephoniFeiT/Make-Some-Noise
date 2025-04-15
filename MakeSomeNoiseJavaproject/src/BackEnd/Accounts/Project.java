@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -92,7 +93,8 @@ public class Project {
             String status = projectNode.get("status").asText();
             String thumbnail = projectNode.get("thumbnail").asText();
             // Extract tags from array in JSON
-            List<String> tags = objectMapper.convertValue(projectNode.get("tags"), new TypeReference<List<String>>() {});
+            String tagString = projectNode.get("tags").asText();
+            List<String> tags = Arrays.asList(tagString.split("[^A-Za-z]+"));
 
             // Create a new project instance
             Project project = new Project(projectId, title, dateCreated);
@@ -165,7 +167,14 @@ public class Project {
         s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
         s.append("\"status\": \"").append(this.status).append("\",");
         s.append("\"thumbnail\": \"").append(this.thumbnail).append("\",");
-        s.append("\"tags\": ").append(this.tags.toString());
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonTags = objectMapper.writeValueAsString(this.tags);
+            s.append("\"tags\": ").append(jsonTags);
+        } catch (Exception e){
+            s.append("\"tags\": []");
+        }
         if (!this.layers.isEmpty()) s.append(",");
 
         int i = 1;

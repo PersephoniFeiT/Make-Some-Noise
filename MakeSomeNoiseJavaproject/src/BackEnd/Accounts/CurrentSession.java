@@ -201,8 +201,7 @@ public class CurrentSession {
     }
 
     public static void ChangeTags(Project p, List<String> tags){
-        p.tags = new ArrayList<>(tags);
-        //BasicDatabaseActions.modifyProject(ID, "tags", tags.toString());
+        p.tags = new ArrayList<String>(tags);
     }
 
     public static void ChangeThumbnail(Project p, String tn){

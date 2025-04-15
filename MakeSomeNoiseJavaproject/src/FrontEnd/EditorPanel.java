@@ -20,6 +20,8 @@ import java.awt.image.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
@@ -87,7 +89,7 @@ class EditorPanel extends JPanel {
         });
         sharingInfo.add(isVisible);
 
-        JTextField tagsList = new JTextField(String.join("; ", project.tags), 30);
+        JTextField tagsList = new JTextField(String.join(", ", project.tags), 30);
         tagsList.setEditable(false);
         JButton editTagsButton = new JButton("Change");
         editTagsButton.addActionListener(new ActionListener() {
@@ -95,7 +97,10 @@ class EditorPanel extends JPanel {
             public void actionPerformed(ActionEvent ev) {
                 if (tagsList.isEditable()) {
                     tagsList.setEditable(false);
-                    CurrentSession.ChangeTags(project, Arrays.asList(tagsList.getText().split("\\s*;\\s*")));
+                    List<String> tags = Arrays.stream(tagsList.getText().split("[^A-Za-z]+"))
+                            .filter(s -> !s.isEmpty())
+                            .collect(Collectors.toList());
+                    CurrentSession.ChangeTags(project, tags);
                 } else {
                     try {
                         currentSession.getSignedIn();
