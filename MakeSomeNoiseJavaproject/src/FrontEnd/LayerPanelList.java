@@ -32,8 +32,8 @@ public class LayerPanelList extends JScrollPane {
 	private EditorPanel hostEditorPanel;
 
 	public LayerPanelList(Project p, EditorPanel ep) {
-		contents = new ContentPanel(p, ep);
 		hostEditorPanel = ep;
+		contents = new ContentPanel(p, ep);
 		setViewportView(contents);
 	}
 

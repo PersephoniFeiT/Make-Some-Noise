@@ -23,7 +23,7 @@ public class Project {
     public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
         this.status = "private";
-        this.thumbnail = "[IMAGE HERE]";
+        this.thumbnail = "/Make\ Some\ Noise\ Java\ project/src/ImageSources/stockThumbnail.png";
         this.title = title;
         this.dateCreated = dateCreated;
     }
@@ -31,7 +31,7 @@ public class Project {
     public Project(String title){
         this.ID = null;
         this.status = "private";
-        this.thumbnail = "[IMAGE HERE]";
+        this.thumbnail = "/Make\ Some\ Noise\ Java\ project/src/ImageSources/stockThumbnail.png";
         this.title = title;
         this.dateCreated = LocalDate.now();
     }

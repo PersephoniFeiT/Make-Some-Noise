@@ -3,6 +3,7 @@ package FrontEnd;
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
@@ -10,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -122,8 +125,16 @@ public class ProjectThumbnailList extends JScrollPane {
 				});
 
 				// TODO: add image stuff
-				add(new JLabel(projectInfo.get("thumbnail")));
-				
+				BufferedImage tn;
+				System.out.println("Working directory: " + System.getProperty("user.dir"));
+				try {
+					tn = ImageIO.read(new File(projectInfo.get("thumbnail")));
+					JLabel picLabel = new JLabel(new ImageIcon(tn));
+					add(picLabel);
+				} catch (Exception e){
+					add(new JLabel("[Image could not be loaded]"));
+				}
+
 				add(new JLabel(projectInfo.get("title")));
 				add(new JLabel("By " + projectInfo.get("username")));
 				add(new JLabel("Created " + projectInfo.get("dateCreated")));
