@@ -160,6 +160,11 @@ public class MakeSomeNoiseWindow extends JFrame {
         setVisible(true);
     }
 
+    public static void reloadPanel(JPanel panel){
+        panel.revalidate();
+        panel.repaint();
+    }
+
     public void saveProject() {
         Project p = editorPanel.getProject();
                 
@@ -249,23 +254,12 @@ public class MakeSomeNoiseWindow extends JFrame {
         return accountPanel != null;
     }
 
-    public void addAccountPanel() {
+    public void createAccountPanel() {
         accountPanel = new AccountPanel(currentSession.GetAccountInfo(), currentSession);
     }
 
     public void goToAccountPanel() {
-        //if (!this.hasAccountPanel()) {
-            addAccountPanel();
-        /* }
-
-        // Check if the user has changed accounts; if they have then update the AccountPanel
-        try {
-            if (!currentSession.getSignedIn().equals(accountPanel.getAccountId())) {
-                addAccountPanel();
-            }
-        } catch (NotSignedInException e) {
-            addAccountPanel();
-        } */
+        createAccountPanel();
 
         if (currentPanel != null) {
             remove(currentPanel);

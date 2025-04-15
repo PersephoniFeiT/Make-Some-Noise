@@ -40,6 +40,18 @@ public class ProjectThumbnailList extends JScrollPane {
 	}
 
 
+	public void reloadThumbnails(){
+		// Clear existing contents
+		this.contents.removeAll();
+		// Re-add thumbnails
+		if (this.contents.projectIDs != null) {
+			this.contents.projectIDs.forEach(i -> this.contents.addThumbnail(accountID, i));
+		}
+		// Refresh UI
+		this.revalidate();
+		this.repaint();
+	}
+
 	public void addProject(Integer projectID) {
 		contents.addThumbnail(accountID, projectID);
 	}
@@ -60,11 +72,17 @@ public class ProjectThumbnailList extends JScrollPane {
 
 		public ContentPanel(List<Integer> projectIDs) {
 			super();
+			this.projectIDs = projectIDs; // <-- store for reloads
+			setLayout(new FlowLayout());
 			projectIDs.forEach(i -> this.addThumbnail(accountID, i));
 		}
 
 		public void addThumbnail(Integer accountID, Integer projectID) {
 			add(new ProjectThumbnail(accountID, projectID));
+		}
+
+		public void removeThumbnail(Integer projectID) {
+			this.projectIDs.remove(projectID);
 		}
 
 		//////////////////
@@ -99,6 +117,8 @@ public class ProjectThumbnailList extends JScrollPane {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							CurrentSession.DeleteProject(accountID, projectID);
+							ContentPanel.this.removeThumbnail(projectID);
+							ProjectThumbnailList.this.reloadThumbnails();
 						}
 					});
 					this.add(deleteButton);
