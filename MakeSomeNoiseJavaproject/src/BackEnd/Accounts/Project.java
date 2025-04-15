@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Project {
     private Integer ID;
@@ -94,7 +95,9 @@ public class Project {
             String thumbnail = projectNode.get("thumbnail").asText();
             // Extract tags from array in JSON
             String tagString = projectNode.get("tags").asText();
-            List<String> tags = Arrays.asList(tagString.split("[^A-Za-z]+"));
+            List<String> tags = Arrays.stream(tagString.split("[^A-Za-z]+"))
+                    .filter(s -> !s.isEmpty())
+                    .toList();
 
             // Create a new project instance
             Project project = new Project(projectId, title, dateCreated);

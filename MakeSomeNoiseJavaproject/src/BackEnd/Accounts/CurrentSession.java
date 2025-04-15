@@ -6,6 +6,7 @@ import ServerEnd.BasicDatabaseActions;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CurrentSession {
     private Integer signedIn;
@@ -161,8 +162,9 @@ public class CurrentSession {
     public static List<String> getProjectTags(int ID) {
         try {
             String taglistString = BasicDatabaseActions.getProjectInfoType(ID, "tags");
-            String[] tagList = taglistString.split(", ");
-            return Arrays.asList(tagList);
+            return Arrays.stream(taglistString.split("[^A-Za-z]+"))
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }

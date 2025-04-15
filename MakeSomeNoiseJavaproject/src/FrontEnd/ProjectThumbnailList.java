@@ -123,7 +123,6 @@ public class ProjectThumbnailList extends JScrollPane {
 					}
 				});
 
-				// TODO: add image stuff
 				BufferedImage tn;
 				System.out.println("Working directory: " + System.getProperty("user.dir"));
 				System.out.println(projectInfo.get("thumbnail"));
