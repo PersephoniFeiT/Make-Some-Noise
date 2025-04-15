@@ -48,7 +48,16 @@ public class SearchPanel extends JPanel {
 						searchByList = Sharing.SearchByTitle(searchBar.getText());
 						break;
 				}
+				// Remove old results
+				remove(searchResults);
+
+				// Add new results
 				searchResults = new ProjectThumbnailList(null, searchByList);
+				add(searchResults);
+
+				// Refresh UI
+				revalidate();
+				repaint();
 			}
 		});
 

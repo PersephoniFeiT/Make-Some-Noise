@@ -316,10 +316,10 @@ public class BasicDatabaseActions {
      * If a user is logged in and connected to the internet, they may search the server for posts. They will be
      * prompted to enter search terms. The application will show the user a list of public posts with tags and
      * titles that match the search terms. */
-    public static List<Integer> searchBy(String[] toSearchBy, String[] value) throws SQLException, InvalidInputException, DatabaseConnectionException{
+    public static List<Integer> searchBy(String[] toSearchBy, String[] value) throws InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(toSearchBy);
         BasicDatabaseActions.assertFormat(value);
-        List<Map<String, String>> rs = SQLConnection.select("projects", "ID", toSearchBy, value, null);
+        List<Map<String, String>> rs = SQLConnection.selectLike("projects", "ID", toSearchBy, value, null);
         List<Integer> projectIDs = new ArrayList<>();
         for (Map<String, String> m : rs){
             projectIDs.add(Integer.parseInt(m.get("ID")));
