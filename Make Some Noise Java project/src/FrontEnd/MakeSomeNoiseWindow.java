@@ -255,7 +255,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void createAccountPanel() {
-        accountPanel = new AccountPanel(currentSession.GetAccountInfo(), currentSession);
+        accountPanel = new AccountPanel(this, currentSession.GetAccountInfo(), currentSession);
     }
 
     public void goToAccountPanel() {
@@ -275,7 +275,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void addSearchPanel() {
-        searchPanel = new SearchPanel();
+        searchPanel = new SearchPanel(this);
     }
 
     public void goToSearchPanel() {

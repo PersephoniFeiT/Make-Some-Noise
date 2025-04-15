@@ -14,13 +14,16 @@ import java.util.List;
 
 public class SearchPanel extends JPanel {
 
+	private MakeSomeNoiseWindow mainWindow;
 	private SearchBar searchBar = new SearchBar();
-	private ProjectThumbnailList searchResults = new ProjectThumbnailList(null, new ArrayList<>());
+	private ProjectThumbnailList searchResults;
 	private JComboBox<String> searchByDrop = new JComboBox<>(new String[]{"Title", "Username", "Tag"});
 	private String searchBy = "title";
 	//Sharing.SearchByTitle()
 
-	public SearchPanel() {
+	public SearchPanel(MakeSomeNoiseWindow mainWindow) {
+		this.mainWindow = mainWindow;
+		searchResults = new ProjectThumbnailList(this.mainWindow, null, new ArrayList<>());
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -52,7 +55,7 @@ public class SearchPanel extends JPanel {
 				remove(searchResults);
 
 				// Add new results
-				searchResults = new ProjectThumbnailList(null, searchByList);
+				searchResults = new ProjectThumbnailList(SearchPanel.this.mainWindow, null, searchByList);
 				add(searchResults);
 
 				// Refresh UI
