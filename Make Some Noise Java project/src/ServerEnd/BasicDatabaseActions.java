@@ -62,8 +62,8 @@ public class BasicDatabaseActions {
     public static String getAccountInfoType(int ID, String type) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, String>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new String[]{""+ID}, null);
-        if (rs.isEmpty() || rs.getFirst().get(type) == null) throw new NoSuchAccountException("Cannot get account info of accoutn that doesn't exist.");
-        return rs.getFirst().get(type);
+        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new NoSuchAccountException("Cannot get account info of accoutn that doesn't exist.");
+        return rs.get(0).get(type);
     }
 
     public static int createNewAccount(String username, String password, String email) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
@@ -87,7 +87,7 @@ public class BasicDatabaseActions {
         BasicDatabaseActions.assertFormat(new String[]{username, password});
 
         List<Map<String, String>> rs = SQLConnection.select("accounts", "*", new String[]{"username"}, new String[]{username}, null);
-        if (rs.isEmpty() || rs.getFirst().isEmpty()) throw new NoSuchAccountException("There is no account with username " + username);
+        if (rs.isEmpty() || rs.get(0).isEmpty()) throw new NoSuchAccountException("There is no account with username " + username);
         for (Map<String, String> m : rs){
             //assuming 1st col is ID, 2nd is username, 3rd is pwd
             if (m.get("password").equals(password)) return Integer.parseInt(m.get("ID"));
@@ -135,8 +135,8 @@ public class BasicDatabaseActions {
     public static String getProjectInfoType(int ID, String type) throws InvalidInputException, SQLException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, String>> rs = SQLConnection.select("projects", type, new String[]{"ID"},new String[]{""+ID}, null);
-        if (rs.isEmpty() || rs.getFirst().get(type) == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
-        return rs.getFirst().get(type);
+        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
+        return rs.get(0).get(type);
     }
 
     public static int createNewProject(int accountID, String JSON) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
@@ -194,8 +194,8 @@ public class BasicDatabaseActions {
         // Step 3: Prepare the updated projects list (including the new project ID)
         String updatedProjects = "[]";
         //for (Map<String, String> m : existingProjectsRs) {
-        if (!existingProjectsRs.isEmpty() && existingProjectsRs.getFirst().get("projectList") != null) {
-            String currentProjects = existingProjectsRs.getFirst().get("projectList"); // Assuming 'projects' is a string field or JSON
+        if (!existingProjectsRs.isEmpty() && existingProjectsRs.get(0).get("projectList") != null) {
+            String currentProjects = existingProjectsRs.get(0).get("projectList"); // Assuming 'projects' is a string field or JSON
             updatedProjects = addIDToStringList(currentProjects, ID);
         }
 
