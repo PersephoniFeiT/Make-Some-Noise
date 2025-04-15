@@ -98,7 +98,7 @@ class EditorPanel extends JPanel {
                         currentSession.getSignedIn();
                         tagsList.setEditable(true);
                     } catch (NotSignedInException er) {
-                        // Do nothing
+                        parentWindow.signInErrorMessage();
                     }
                 }
             }
