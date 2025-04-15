@@ -191,6 +191,14 @@ public class MakeSomeNoiseWindow extends JFrame {
         fileChooser.showSaveDialog(this);
     }
 
+    public void deleteProject(Integer accID, int projID) {
+        int userChoice = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this project? This will clear the current canvas and layers, and delete the remote save");
+
+        if (userChoice == JOptionPane.YES_OPTION) {
+            CurrentSession.DeleteProject(accID, projID);
+        }
+    }
+
     public void saveImage() {
         if (editorPanel != null) {
             editorPanel.writeImage();

@@ -107,6 +107,19 @@ class EditorPanel extends JPanel {
         sharingInfo.add(tagsList);
         sharingInfo.add(editTagsButton);
 
+        JButton deleteButton = new JButton("Delete project");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                try {
+                    parentWindow.deleteProject(currentSession.getSignedIn(), project.getID());
+                } catch (NotSignedInException ex) {
+                    parentWindow.signInErrorMessage();
+                }
+            }
+        });
+        sharingInfo.add(deleteButton);
+
         editorHeader.add(sharingInfo);
         
         add(editorHeader, BorderLayout.NORTH);
