@@ -152,7 +152,7 @@ class EditorPanel extends JPanel {
         add(layers, BorderLayout.EAST);
 	}
 
-	public void renderNoise() {
+    public void renderNoise() {
         int width = noisePanel.getWidth();
         int height = noisePanel.getHeight();
         double[][] values = BackEnd.Editor.LayerManager.multiplyLayers(width, height, project.getLayerList());
@@ -161,7 +161,7 @@ class EditorPanel extends JPanel {
                 noisePanel.setPixel(x, y, Color.HSBtoRGB((float)values[x][y], 0.5f, 1.0f));
             }
         }
-	}
+    }
 
     public void writeImage() {
 
