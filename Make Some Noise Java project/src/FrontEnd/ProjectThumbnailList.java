@@ -113,7 +113,12 @@ public class ProjectThumbnailList extends JScrollPane {
 				this.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(final MouseEvent e) {
-						ProjectThumbnailList.this.goToEditorPanel(projectInfo.get("projectInfoStruct"));
+						if (accountID == null){ // if it's null, it's not your project or you're on share
+							//so download the file.
+							ProjectThumbnailList.this.mainWindow.saveProjectLocal(Project.fromJSONtoProject(projectInfo.get("projectInfoStruct")));
+						} else {
+							ProjectThumbnailList.this.goToEditorPanel(projectInfo.get("projectInfoStruct"));
+						}
 					}
 				});
 

@@ -295,7 +295,7 @@ public class BasicDatabaseActions {
         Project p = Project.fromJSONtoProject(currentData);
         SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
         SQLConnection.update("projects", projectID, "title", p.title);
-        SQLConnection.update("projects", projectID, "username", p.username);
+        SQLConnection.update("projects", projectID, "username", BasicDatabaseActions.getAccountInfoType(accountID, "username"));
         SQLConnection.update("projects", projectID, "status", p.status);
         SQLConnection.update("projects", projectID, "thumbnail", p.thumbnail);
         SQLConnection.update("projects", projectID, "tags", p.tags.toString());
