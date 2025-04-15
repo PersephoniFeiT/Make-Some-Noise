@@ -195,6 +195,18 @@ public class LayerPanelList extends JScrollPane {
 					updateLayer();
 				}
 			});
+
+			JButton deleteButton = new JButton("Delete");
+			deleteButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					project.removeLayer(noiseLayer);
+					contents.remove(LayerPanel.this);
+					hostEditorPanel.renderNoise();
+					hostEditorPanel.revalidate();
+					hostEditorPanel.repaint();
+				}
+			});
 			
 			add(layerIsVisible);
 			add(layerNameAndType);
@@ -204,6 +216,7 @@ public class LayerPanelList extends JScrollPane {
 			add(gain);
 			add(floor);
 			add(ceiling);
+			add(deleteButton);
 
 			setMaximumSize(new Dimension(10000, 60));
 
@@ -336,6 +349,12 @@ public class LayerPanelList extends JScrollPane {
 			LayerPanel lp = new LayerPanel(nl, project, hostEditorPanel);
 			this.add(lp);
 			lp.updateLayer();
+			revalidate();
+			repaint();
+		}
+
+		public void removeLayer(LayerPanel lp) {
+			this.remove(lp);
 			revalidate();
 			repaint();
 		}

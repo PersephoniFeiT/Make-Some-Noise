@@ -125,8 +125,8 @@ class EditorPanel extends JPanel {
         add(editorHeader, BorderLayout.NORTH);
 
         // Create a NoisePanel to display the generated noise pattern
-        int width = 800;
-        int height = 494;
+        int width = 700;
+        int height = 463;
         noisePanel = new NoisePanel(width, height);
 
         // noisePanel.setBounds(10, 10, width, height);
@@ -148,7 +148,7 @@ class EditorPanel extends JPanel {
 
         // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
         layers = new LayerPanelList(project, this);
-        layers.setPreferredSize(new Dimension(450, 100));
+        layers.setPreferredSize(new Dimension(550, 100));
         add(layers, BorderLayout.EAST);
 	}
 

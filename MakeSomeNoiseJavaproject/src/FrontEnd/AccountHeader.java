@@ -106,7 +106,7 @@ public class AccountHeader extends JPanel {
 
 
 		JButton deleteButton = new JButton("DELETE ACCOUNT");
-		changeUsernameButton.addActionListener(new ActionListener() {
+		deleteButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				session.DeleteAccount();
