@@ -1,13 +1,13 @@
 package ServerEnd;
 
-import Exceptions.Accounts.*;
 import BackEnd.Accounts.Project;
+import Exceptions.*;
 
-import javax.swing.plaf.basic.BasicIconFactory;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /* Accounts table layout:
 ID, username, password, email, list of project ids
@@ -59,9 +59,10 @@ public class BasicDatabaseActions {
      * If a user is logged in, they may choose to view their account. They will be able to see their projects
      * saved on the server and the associated title, image preview, and tags. They will also be able to see their
      * biographical field. */
-    public static String getAccountInfoType(int ID, String type) throws SQLException, DatabaseConnectionException, InvalidInputException {
+    public static String getAccountInfoType(int ID, String type) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, String>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new String[]{""+ID}, null);
+        if (rs.isEmpty() || rs.getFirst().get(type) == null) throw new NoSuchAccountException("Cannot get account info of accoutn that doesn't exist.");
         return rs.getFirst().get(type);
     }
 
@@ -86,6 +87,7 @@ public class BasicDatabaseActions {
         BasicDatabaseActions.assertFormat(new String[]{username, password});
 
         List<Map<String, String>> rs = SQLConnection.select("accounts", "*", new String[]{"username"}, new String[]{username}, null);
+        if (rs.isEmpty() || rs.getFirst().isEmpty()) throw new NoSuchAccountException("There is no account with username " + username);
         for (Map<String, String> m : rs){
             //assuming 1st col is ID, 2nd is username, 3rd is pwd
             if (m.get("password").equals(password)) return Integer.parseInt(m.get("ID"));
@@ -133,11 +135,14 @@ public class BasicDatabaseActions {
     public static String getProjectInfoType(int ID, String type) throws InvalidInputException, SQLException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, String>> rs = SQLConnection.select("projects", type, new String[]{"ID"},new String[]{""+ID}, null);
+        if (rs.isEmpty() || rs.getFirst().get(type) == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
         return rs.getFirst().get(type);
     }
 
-    public static int createNewProject(int accountID, String JSON) throws SQLException, DatabaseConnectionException, InvalidInputException, DuplicateAccountException {
+    public static int createNewProject(int accountID, String JSON) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{JSON});
+
+        Project p = Project.fromJSONtoProject(JSON);
 
         //make a new project, get the ID
         int ID = SQLConnection.insert("projects",
@@ -151,22 +156,45 @@ public class BasicDatabaseActions {
                     "tags"
             },
             new String[] {
-                    "New Project",
+                    p.title,
                     BasicDatabaseActions.getAccountInfoType(accountID, "username"),
-                    LocalDate.now().toString(),
+                    p.dateCreated.toString(),
                     "private",
                     JSON,
                     "[THIS IS AN IMAGE]",
-                    "[]"
+                    p.tags.toString()
             });
-/////////////////////////////////
+
+        //update the JSON ID
+        // update new project list
+        String updatedJson;
+        try {
+            // Your original JSON string with "" as the key
+            // Create Jackson ObjectMapper
+            ObjectMapper mapper = new ObjectMapper();
+            // Convert JSON string to Map
+            Map<String, Object> jsonMap = mapper.readValue(JSON, Map.class);
+            // Get the only entry with key ""
+            Object value = jsonMap.remove("");  // remove the "" key
+            // Put the new entry with actual project ID
+            jsonMap.put(String.valueOf(ID), value);
+            // Convert back to JSON string
+            updatedJson = mapper.writeValueAsString(jsonMap);
+        } catch (Exception e){
+            updatedJson = JSON;
+        }
+        // Now you can store it in the DB
+        SQLConnection.update("projects", ID, "projectInfoStruct", updatedJson);
+
+        ////////////////////////////
+        // update account list
         // Step 2: Fetch the existing projects list from the 'accounts' table
         List<Map<String, String>> existingProjectsRs = SQLConnection.select("accounts", "projectList", new String[]{"ID"}, new String[]{""+accountID}, null);
 
         // Step 3: Prepare the updated projects list (including the new project ID)
         String updatedProjects = "[]";
         //for (Map<String, String> m : existingProjectsRs) {
-        if (!existingProjectsRs.isEmpty()) {
+        if (!existingProjectsRs.isEmpty() && existingProjectsRs.getFirst().get("projectList") != null) {
             String currentProjects = existingProjectsRs.getFirst().get("projectList"); // Assuming 'projects' is a string field or JSON
             updatedProjects = addIDToStringList(currentProjects, ID);
         }
@@ -225,7 +253,7 @@ public class BasicDatabaseActions {
         SQLConnection.update("projects", ID, fieldToEdit, value);
     }
 
-    public static void deleteProject(int accountID, int projectID) throws DatabaseConnectionException, InvalidInputException, SQLException {
+    public static void deleteProject(int accountID, int projectID) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         SQLConnection.delete("projects", "ID", ""+projectID);
 
         // update new project list
@@ -254,15 +282,24 @@ public class BasicDatabaseActions {
         return false;
     }
 
-    public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, SQLException, DuplicateAccountException {
+    public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{currentData});
+
         if (accountID == null) throw new NotSignedInException("You must be signed in to save.");
         if (projectID == null){
+            System.out.println("Creating new project in database.");
             int ID = BasicDatabaseActions.createNewProject(accountID, currentData);
             SQLConnection.update("projects", ID, "ID", ID+"");
             projectID = ID;
         }
+        Project p = Project.fromJSONtoProject(currentData);
         SQLConnection.update("projects", projectID, "projectInfoStruct", currentData);
+        SQLConnection.update("projects", projectID, "title", p.title);
+        SQLConnection.update("projects", projectID, "username", p.username);
+        SQLConnection.update("projects", projectID, "status", p.status);
+        SQLConnection.update("projects", projectID, "thumbnail", p.thumbnail);
+        SQLConnection.update("projects", projectID, "tags", p.tags.toString());
+        System.out.println("Saved to database.");
     }
 
 
@@ -279,10 +316,10 @@ public class BasicDatabaseActions {
      * If a user is logged in and connected to the internet, they may search the server for posts. They will be
      * prompted to enter search terms. The application will show the user a list of public posts with tags and
      * titles that match the search terms. */
-    public static List<Integer> searchBy(String[] toSearchBy, String[] value) throws SQLException, InvalidInputException, DatabaseConnectionException{
+    public static List<Integer> searchBy(String[] toSearchBy, String[] value) throws InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(toSearchBy);
         BasicDatabaseActions.assertFormat(value);
-        List<Map<String, String>> rs = SQLConnection.select("projects", "ID", toSearchBy, value, null);
+        List<Map<String, String>> rs = SQLConnection.selectLike("projects", "ID", toSearchBy, value, null);
         List<Integer> projectIDs = new ArrayList<>();
         for (Map<String, String> m : rs){
             projectIDs.add(Integer.parseInt(m.get("ID")));

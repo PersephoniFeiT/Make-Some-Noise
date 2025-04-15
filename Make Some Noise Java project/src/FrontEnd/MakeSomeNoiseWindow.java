@@ -1,6 +1,8 @@
 package FrontEnd;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 // import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,7 +10,10 @@ import java.util.Scanner;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
-import Exceptions.Accounts.NotSignedInException;
+import Exceptions.IncorrectPasswordException;
+import Exceptions.InvalidInputException;
+import Exceptions.NoSuchAccountException;
+import Exceptions.NotSignedInException;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -45,7 +50,12 @@ public class MakeSomeNoiseWindow extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createSignInWindow();
+                try {
+                    currentSession.getSignedIn();
+                    signOut();
+                } catch (NotSignedInException ex) {
+                    createSignInWindow();
+                }
             }
         });
         accountsMenu.add(menuItem);
@@ -76,8 +86,12 @@ public class MakeSomeNoiseWindow extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //currentSession.SaveProject(editorPanel.getProject());
-                new PostProjectWindow(currentSession, editorPanel.getProject());
+                try {
+                    currentSession.SaveProject(editorPanel.getProject());
+                } catch (NotSignedInException x){
+                    System.out.println("not signed in.");
+                }
+                //new PostProjectWindow(currentSession, editorPanel.getProject());
             }
         });
         fileMenu.add(menuItem);
@@ -146,12 +160,18 @@ public class MakeSomeNoiseWindow extends JFrame {
         setVisible(true);
     }
 
+    public static void reloadPanel(JPanel panel){
+        panel.revalidate();
+        panel.repaint();
+    }
+
     public void saveProject() {
         Project p = editorPanel.getProject();
                 
         String fileContent = p.toJSONString();
 
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("JSON files", "json"));
         fileChooser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -179,7 +199,7 @@ public class MakeSomeNoiseWindow extends JFrame {
 
     public void openFile() {
         JFileChooser fileChooser = new JFileChooser();
-
+        fileChooser.setFileFilter(new FileNameExtensionFilter("JSON files", "json"));
         fileChooser.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -238,23 +258,12 @@ public class MakeSomeNoiseWindow extends JFrame {
         return accountPanel != null;
     }
 
-    public void addAccountPanel() {
+    public void createAccountPanel() {
         accountPanel = new AccountPanel(currentSession.GetAccountInfo(), currentSession);
     }
 
     public void goToAccountPanel() {
-        if (!this.hasAccountPanel()) {
-            addAccountPanel();
-        }
-
-        // Check if the user has changed accounts; if they have then update the AccountPanel
-        try {
-            if (!currentSession.getSignedIn().equals(accountPanel.getAccountId())) {
-                addAccountPanel();
-            }
-        } catch (NotSignedInException e) {
-            addAccountPanel();
-        }
+        createAccountPanel();
 
         if (currentPanel != null) {
             remove(currentPanel);
@@ -288,13 +297,28 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void createSignInWindow() {
-        new SignInWindow(currentSession);
+        new SignInWindow(this);
+    }
+
+    public void signIn(String username, String password) throws IncorrectPasswordException, NoSuchAccountException, InvalidInputException {
+        currentSession.SignIn(username, password);
+
+        menuBar.getMenu(0).getItem(0).setText("Sign Out");
+    }
+
+    public void signOut() {
+        currentSession.SignOut();
+
+        menuBar.getMenu(0).getItem(0).setText("Sign In");
+    }
+
+    public void createAccount(String username, String password, String email) {
+        currentSession.CreateNewAccount(username, password, email);
     }
 
 
     public static void main(String[] args) throws Exception {
         CurrentSession cs = new CurrentSession();
         new MakeSomeNoiseWindow(cs);
-
     }
 }

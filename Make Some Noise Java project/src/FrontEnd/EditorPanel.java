@@ -1,11 +1,13 @@
 package FrontEnd;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.BorderLayout;
@@ -16,10 +18,11 @@ import java.awt.event.ActionEvent;
 // import java.awt.event.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
-import Exceptions.Accounts.NotSignedInException;
+import Exceptions.NotSignedInException;
 
 class EditorPanel extends JPanel {
 
@@ -35,6 +38,12 @@ class EditorPanel extends JPanel {
 
         project = p;
 
+        JPanel editorHeader = new JPanel();
+        editorHeader.setLayout(new BoxLayout(editorHeader, BoxLayout.Y_AXIS));
+
+        JPanel projTitleEditing = new JPanel();
+        projTitleEditing.setLayout(new FlowLayout());
+
         JTextField projectTitleField = new JTextField(p.title, 50);
         projectTitleField.setEditable(false);
         
@@ -45,7 +54,7 @@ class EditorPanel extends JPanel {
             public void actionPerformed(ActionEvent ev) {
                 if (projectTitleField.isEditable()) {
                     projectTitleField.setEditable(false);
-                    CurrentSession.ChangeTitle(project.getID(), projectTitleField.getText());
+                    CurrentSession.ChangeTitle(project, projectTitleField.getText());
                 } else {
                     try {
                         currentSession.getSignedIn();
@@ -56,11 +65,51 @@ class EditorPanel extends JPanel {
                 }
             }
         });
-        JPanel projTitleEditing = new JPanel();
-        projTitleEditing.setLayout(new FlowLayout());
         projTitleEditing.add(projectTitleField);
         projTitleEditing.add(updateProjectTitleButton);
-        add(projTitleEditing, BorderLayout.NORTH);
+        editorHeader.add(projTitleEditing);
+
+        JPanel sharingInfo = new JPanel();
+        sharingInfo.setLayout(new FlowLayout());
+
+        JCheckBox isVisible = new JCheckBox("Share online");
+        isVisible.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String v = (isVisible.isSelected()) ? "public" : "private";
+                if (project.getID() != null) {
+                    currentSession.ChangeStatus(project, v);
+                }
+            }
+        });
+        sharingInfo.add(isVisible);
+
+        JTextField tagsList = new JTextField(String.join("; ", project.tags), 30);
+        tagsList.setEditable(false);
+        JButton editTagsButton = new JButton("Change");
+        editTagsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                if (tagsList.isEditable()) {
+                    tagsList.setEditable(false);
+                    CurrentSession.ChangeTags(project, Arrays.asList(tagsList.getText().split("\\s*;\\s*")));
+                } else {
+                    try {
+                        currentSession.getSignedIn();
+                        tagsList.setEditable(true);
+                    } catch (NotSignedInException er) {
+                        // Do nothing
+                    }
+                }
+            }
+        });
+        sharingInfo.add(new JLabel("Tags: "));
+        sharingInfo.add(tagsList);
+        sharingInfo.add(editTagsButton);
+
+        editorHeader.add(sharingInfo);
+        
+        add(editorHeader, BorderLayout.NORTH);
 
         // Create a NoisePanel to display the generated noise pattern
         int width = 800;
@@ -102,7 +151,6 @@ class EditorPanel extends JPanel {
 	}
 
     public void writeImage() {
-
 
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("png", "png"));

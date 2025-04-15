@@ -1,10 +1,9 @@
 package BackEnd.Accounts;
 
-import Exceptions.Accounts.ExceptionHandler;
+import Exceptions.ExceptionHandler;
 import ServerEnd.BasicDatabaseActions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Sharing {

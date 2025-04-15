@@ -1,9 +1,8 @@
 package BackEnd.Accounts;
 
-import Exceptions.Accounts.*;
+import Exceptions.*;
 import ServerEnd.BasicDatabaseActions;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,14 +33,15 @@ public class CurrentSession {
         Integer ID = null;
         try {
             ID = BasicDatabaseActions.signIn(username, password);
-        } catch (IncorrectPasswordException e) {
-            throw new IncorrectPasswordException(e.getMessage());
         }
         catch (NoSuchAccountException e) {
-            throw new NoSuchAccountException(e.getMessage());
+            throw e;
+        }
+        catch (IncorrectPasswordException e) {
+            throw e;
         }
         catch (InvalidInputException e) {
-            throw new InvalidInputException(e.getMessage());
+            throw e;
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -78,7 +78,7 @@ public class CurrentSession {
     public void ChangePassword(String password){
         try {
             BasicDatabaseActions.modifyAccount(getSignedIn(), "password", password);
-            System.out.println("change pass");
+            System.out.println("Password changed.");
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -130,14 +130,17 @@ public class CurrentSession {
         return p;
     }
 
-    public boolean SaveProject(Project p) {
+    public boolean SaveProject(Project p) throws NotSignedInException {
         try {
             Integer accountID = this.getSignedIn();
             Integer projectID = p.getID();
-            if (p.getID() == null)
+            if (p.getID() == null) {
                 projectID = BasicDatabaseActions.createNewProject(accountID, p.toJSONString());
-            else
+                p.setID(projectID);
+            }
+            else {
                 BasicDatabaseActions.saveProject(this.getSignedIn(), p.getID(), p.toJSONString());
+            }
             BasicDatabaseActions.modifyProject(projectID, "title", p.title);
             BasicDatabaseActions.modifyProject(projectID, "username", BasicDatabaseActions.getAccountInfoType(accountID, "username"));
             BasicDatabaseActions.modifyProject(projectID, "status", p.status);
@@ -145,7 +148,7 @@ public class CurrentSession {
             BasicDatabaseActions.modifyProject(projectID, "thumbnail", p.thumbnail);
             return true;
         } catch (NotSignedInException e){
-            return false;
+            throw e;
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -157,7 +160,7 @@ public class CurrentSession {
     ///////////////////////////
     public static List<String> getProjectTags(int ID) {
         try {
-            String taglistString = BasicDatabaseActions.getProjectInfoType(0, "tags");
+            String taglistString = BasicDatabaseActions.getProjectInfoType(ID, "tags");
             String[] tagList = taglistString.split(", ");
             return Arrays.asList(tagList);
         } catch (Exception e) {
@@ -179,39 +182,30 @@ public class CurrentSession {
         return projectInfo;
     }
 
-    public static void ChangeTitle(int ID, String title){
-        try {
-            BasicDatabaseActions.modifyProject(ID, "title", title);
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
+    public static void ChangeTitle(Project p, String title){
+        p.title = title;
+            //BasicDatabaseActions.modifyProject(ID, "title", title);
     }
 
 
-    public void ChangeStatus(int ID, String status){
+    public void ChangeStatus(Project p, String status){
         try {
             this.getSignedIn();
             if (!status.equals("public")) status = "private";
-            BasicDatabaseActions.modifyProject(ID, "status", status);
+            p.status = status;
+            //BasicDatabaseActions.modifyProject(ID, "status", status);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
     }
 
-    public static void ChangeTags(int ID, List<String> tags){
-        try {
-            BasicDatabaseActions.modifyProject(ID, "tags", tags.toString());
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
+    public static void ChangeTags(Project p, List<String> tags){
+        p.tags = new ArrayList<>(tags);
+        //BasicDatabaseActions.modifyProject(ID, "tags", tags.toString());
     }
 
-    public static void ChangeThumbnail(int ID, String tn){
-        try {
-            BasicDatabaseActions.modifyProject(ID, "thumbnail", tn);
-        } catch (Exception e) {
-            ExceptionHandler.handleException(e);
-        }
+    public static void ChangeThumbnail(Project p, String tn){
+        p.thumbnail = tn;
     }
 
     public static void DeleteProject(Integer accountID, int projectID){

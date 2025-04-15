@@ -17,15 +17,14 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
-import BackEnd.Accounts.CurrentSession;
-import Exceptions.Accounts.ExceptionHandler;
-import Exceptions.Accounts.IncorrectPasswordException;
-import Exceptions.Accounts.InvalidInputException;
-import Exceptions.Accounts.NoSuchAccountException;
+import Exceptions.ExceptionHandler;
+import Exceptions.IncorrectPasswordException;
+import Exceptions.InvalidInputException;
+import Exceptions.NoSuchAccountException;
 
 public class SignInWindow extends JFrame {
 
-	public SignInWindow(CurrentSession currentSession) {
+	public SignInWindow(MakeSomeNoiseWindow hostWindow) {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));  	       // using BoxLayout layout managers
 		setSize(300, 400);        				                               // width and height
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -74,9 +73,10 @@ public class SignInWindow extends JFrame {
 				// Securely wipe the password
 				Arrays.fill(passwordChars, '\0');
 				try {
-					currentSession.SignIn(userNameField.getText(), password);
+          hostWindow.signIn(userNameField.getText(), password);
 					setVisible(false);
 					dispose();
+				} catch (IncorrectPasswordException e) {
 				} catch (NoSuchAccountException e) {
 					userNameFieldLabel.setText("Unrecognized username, try again");
 					userNameFieldLabel.setForeground(Color.RED);
@@ -103,7 +103,7 @@ public class SignInWindow extends JFrame {
 		createAccountButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				new CreateAccountWindow(currentSession);
+				new CreateAccountWindow(hostWindow);
 				setVisible(false);
 				dispose();
 

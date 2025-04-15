@@ -2,9 +2,8 @@ package ServerEnd;
 
 import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
-import Exceptions.Accounts.DatabaseConnectionException;
+import Exceptions.DatabaseConnectionException;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.*;
 
@@ -136,6 +135,68 @@ public class SQLConnection {
 
         return resultList;
     }
+
+    public static List<Map<String, String>> selectLike(String tableName, String column, String[] conditionColumn, String[] conditionValue, String[] groupBy) throws DatabaseConnectionException {
+        if (conditionColumn.length != conditionValue.length) {
+            throw new IllegalArgumentException("Condition columns and values must have the same length.");
+        }
+
+        List<Map<String, String>> resultList = new ArrayList<>();
+
+        // Build SQL query
+        StringBuilder sqlBuilder = new StringBuilder("SELECT " + column + " FROM " + tableName);
+
+        // WHERE clause using LIKE for substring matching
+        if (conditionColumn.length > 0) {
+            sqlBuilder.append(" WHERE ");
+            for (int i = 0; i < conditionColumn.length; i++) {
+                sqlBuilder.append(conditionColumn[i]).append(" LIKE ?");
+                if (i < conditionColumn.length - 1) {
+                    sqlBuilder.append(" AND ");
+                }
+            }
+        }
+
+        // GROUP BY clause
+        if (groupBy != null && groupBy.length > 0) {
+            sqlBuilder.append(" GROUP BY ");
+            for (int i = 0; i < groupBy.length; i++) {
+                sqlBuilder.append(groupBy[i]);
+                if (i < groupBy.length - 1) {
+                    sqlBuilder.append(", ");
+                }
+            }
+        }
+
+        String sql = sqlBuilder.toString();
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            for (int i = 0; i < conditionValue.length; i++) {
+                pstmt.setString(i + 1, "%" + conditionValue[i] + "%");
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                ResultSetMetaData meta = rs.getMetaData();
+                int columnCount = meta.getColumnCount();
+
+                while (rs.next()) {
+                    Map<String, String> row = new HashMap<>();
+                    for (int i = 1; i <= columnCount; i++) {
+                        row.put(meta.getColumnLabel(i), rs.getString(i));
+                    }
+                    resultList.add(row);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseConnectionException("Database connection error in select: " + e.getMessage());
+        }
+
+        return resultList;
+    }
+
 
     private static boolean isInteger(String str) {
         if (str == null || str.isEmpty()) {

@@ -1,12 +1,14 @@
 package BackEnd.Editor;
 
 public class Simplex2NoiseLayer implements NoiseLayer{
+    int seed;
     double floor;
     double ceiling;
     double amplitude;
     double frequency;
 
-    public Simplex2NoiseLayer(double floor, double ceiling, double amplitude, double frequency){
+    public Simplex2NoiseLayer(int seed, double floor, double ceiling, double amplitude, double frequency){
+        this.seed = seed;
         this.floor = (floor < 0 || floor > 1 )? 0 : (floor > ceiling)? ceiling : floor;
         this.ceiling = (ceiling > 1 || ceiling < 0)? 1 : (ceiling < floor)? floor : ceiling;
         this.amplitude = (amplitude >= 1)? 1 : (amplitude <= 0)? 0 : amplitude;
@@ -15,13 +17,13 @@ public class Simplex2NoiseLayer implements NoiseLayer{
 
     @Override
     public double evaluate(int x, int y) {
-        double val = (amplitude * SimplexNoise.noise(x, y) + 1) / 2;
+        double val = (amplitude * SimplexNoise.noise(((double) x + Double.valueOf(getSeed()).hashCode())/100.0, ((double) y + Double.valueOf(getSeed()).hashCode())/100.0) + 1) / 2;
         return (val > ceiling)? ceiling : (val < floor)? floor : val;
     }
 
     @Override
     public int getSeed() {
-        return -1;
+        return seed;
     }
 
     @Override

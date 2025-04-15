@@ -1,7 +1,7 @@
 package BackEnd.Accounts;
 import BackEnd.Editor.*;
 import BackEnd.Editor.PerlinNoiseLayer;
-import Exceptions.Accounts.ExceptionHandler;
+import Exceptions.ExceptionHandler;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,14 +11,14 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Project {
-    private final Integer ID;
+    private Integer ID;
 
     public String title = "New Project";
     public String username;
     public final LocalDate dateCreated;
     public String status;
     public String thumbnail;
-    public final List<String> tags = new ArrayList<>();
+    public List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
 
     public Project(Integer ID, String title, String username, LocalDate dateCreated){
@@ -40,6 +40,8 @@ public class Project {
     }
 
     public Integer getID(){return this.ID;}
+
+    public void setID(Integer ID){this.ID = ID;}
 
     public void removeLayer(int index){
         this.layers.remove(index);
@@ -123,7 +125,7 @@ public class Project {
                 layer = switch (type) {
                     case "PerlinNoiseLayer" -> new PerlinNoiseLayer();
                     case "RandomNoiseLayer" -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
-                    case "Simplex2NoiseLayer" -> new Simplex2NoiseLayer(freq, amp, floor, ceiling);
+                    case "Simplex2NoiseLayer" -> new Simplex2NoiseLayer(seed, freq, amp, floor, ceiling);
                     case "Simplex3NoiseLayer" -> new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
                     case "SimplexNoise" -> null;//new SimplexNoise();
                     default -> new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
@@ -171,8 +173,8 @@ public class Project {
             s.append("\"ceiling\": ").append(l.getCeiling()).append(",");
             s.append("\"gain\": ").append(l.getGain());
             s.append("}");
-            i++;
             if (i<this.layers.size()) s.append(",");
+            i++;
         }
         s.append("}}");
         return s.toString();

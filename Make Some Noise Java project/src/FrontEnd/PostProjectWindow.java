@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
+import Exceptions.NotSignedInException;
 
 public class PostProjectWindow extends JFrame {
 	
@@ -55,12 +56,15 @@ public class PostProjectWindow extends JFrame {
 
 	// Method to submit the form, publishing the project to the server with the given title and tags
 	public void submitForm(CurrentSession cs, Project p) {
-		cs.SaveProject(p);
+		try {
+			cs.SaveProject(p);
+		} catch (NotSignedInException x){
+			System.out.println("Must be signed in to save.");
+		}
 
-		Integer ID = p.getID();
-		CurrentSession.ChangeTags(ID, parseTags());
-		CurrentSession.ChangeTitle(ID, this.titleField.getText());
-		cs.ChangeStatus(ID, postPubliclyBox.isSelected() ? "public" : "private");
+		CurrentSession.ChangeTags(p, parseTags());
+		CurrentSession.ChangeTitle(p, this.titleField.getText());
+		cs.ChangeStatus(p, postPubliclyBox.isSelected() ? "public" : "private");
 	}
 
 	// Method to parse the given tags, seperating them by semicolons and trimming leading and trailing whitespace
