@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
-import BackEnd.Accounts.CurrentSession;
 import Exceptions.ExceptionHandler;
 import Exceptions.IncorrectPasswordException;
 import Exceptions.InvalidInputException;

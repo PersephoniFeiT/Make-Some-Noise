@@ -16,8 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
-import BackEnd.Accounts.CurrentSession;
-
 public class CreateAccountWindow extends JFrame {
 
 	public CreateAccountWindow(MakeSomeNoiseWindow hostWindow) {
