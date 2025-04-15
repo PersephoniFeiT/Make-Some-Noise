@@ -73,10 +73,9 @@ public class SignInWindow extends JFrame {
 				// Securely wipe the password
 				Arrays.fill(passwordChars, '\0');
 				try {
-          hostWindow.signIn(userNameField.getText(), password);
+          			hostWindow.signIn(userNameField.getText(), password);
 					setVisible(false);
 					dispose();
-				} catch (IncorrectPasswordException e) {
 				} catch (NoSuchAccountException e) {
 					userNameFieldLabel.setText("Unrecognized username, try again");
 					userNameFieldLabel.setForeground(Color.RED);
