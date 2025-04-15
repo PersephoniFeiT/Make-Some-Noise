@@ -110,9 +110,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ev) {
-
-                saveProject();
-                
+                saveProjectLocal(editorPanel.getProject());;
             }
         });
         fileMenu.add(menuItem);
@@ -165,9 +163,7 @@ public class MakeSomeNoiseWindow extends JFrame {
         panel.repaint();
     }
 
-    public void saveProject() {
-        Project p = editorPanel.getProject();
-                
+    public void saveProjectLocal(Project p) {
         String fileContent = p.toJSONString();
 
         JFileChooser fileChooser = new JFileChooser();
@@ -259,7 +255,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void createAccountPanel() {
-        accountPanel = new AccountPanel(currentSession.GetAccountInfo(), currentSession);
+        accountPanel = new AccountPanel(this, currentSession.GetAccountInfo(), currentSession);
     }
 
     public void goToAccountPanel() {
@@ -279,7 +275,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void addSearchPanel() {
-        searchPanel = new SearchPanel();
+        searchPanel = new SearchPanel(this);
     }
 
     public void goToSearchPanel() {

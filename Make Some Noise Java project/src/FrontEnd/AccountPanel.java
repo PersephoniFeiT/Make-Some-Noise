@@ -11,8 +11,10 @@ public class AccountPanel extends JPanel {
 	private Integer accountId;
 	private AccountHeader header;
 	private ProjectThumbnailList projectList;
+	private MakeSomeNoiseWindow mainWindow;
 
-	public AccountPanel(Map<String, String> accountInfo, CurrentSession currentSession) {
+	public AccountPanel(MakeSomeNoiseWindow mainWindow, Map<String, String> accountInfo, CurrentSession currentSession) {
+		this.mainWindow = mainWindow;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		String projectListText;
@@ -25,7 +27,7 @@ public class AccountPanel extends JPanel {
 		}
 
 		header = new AccountHeader(accountInfo, currentSession);
-		projectList = new ProjectThumbnailList(accountId, currentSession.GetProjectsInAccount());
+		projectList = new ProjectThumbnailList(mainWindow, accountId, currentSession.GetProjectsInAccount());
 
 		add(header);
 		add(new JLabel(projectListText));

@@ -18,15 +18,15 @@ Please ensure you have MySQL downloaded. Run the server on localhost, and ensure
 
 `accounts:`
 
-| ID  | username    | password    | email       | projectList   |
-|-----|-------------|-------------|-------------|---------------|
-| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | VARCHAR(9999) |
+| ID  | username    | password    | email       | projectList |
+|-----|-------------|-------------|-------------|-------------|
+| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | JSON        |
 
 `projects:`
 
-| ID  | title       | username    | dateCreated | status     | projectInfoStruct | thumbnail   | tags          |
-|-----|-------------|-------------|-------------|------------|-------------------|-------------|---------------|
-| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | VARCHAR(7) | VARCHAR(9999)     | VARCHAR(45) | VARCHAR(9999) |
+| ID  | title       | username    | dateCreated | status     | projectInfoStruct | thumbnail   | tags |
+|-----|-------------|-------------|-------------|------------|-------------------|-------------|------|
+| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | VARCHAR(7) | VARCHAR(9999)     | VARCHAR(45) | JSON |
 
 
 ## Dependency Management
