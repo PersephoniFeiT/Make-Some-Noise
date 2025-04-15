@@ -192,6 +192,7 @@ public class MakeSomeNoiseWindow extends JFrame {
 
         if (userChoice == JOptionPane.YES_OPTION) {
             CurrentSession.DeleteProject(accID, projID);
+            addEditorPanel();
         }
     }
 
