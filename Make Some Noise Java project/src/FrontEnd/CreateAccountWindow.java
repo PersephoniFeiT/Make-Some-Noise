@@ -20,7 +20,7 @@ import BackEnd.Accounts.CurrentSession;
 
 public class CreateAccountWindow extends JFrame {
 
-	public CreateAccountWindow(CurrentSession currentSession) {
+	public CreateAccountWindow(MakeSomeNoiseWindow hostWindow) {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));                           // using BorderLayout layout managers
 		setSize(300, 400);                                       // width and height
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -69,7 +69,7 @@ public class CreateAccountWindow extends JFrame {
 				String password = new String(passwordChars);
 				// Securely wipe the password
 				Arrays.fill(passwordChars, '\0');
-				currentSession.CreateNewAccount(userNameField.getText(), password, emailField.getText());
+				hostWindow.createAccount(userNameField.getText(), password, emailField.getText());
 				setVisible(false);
 				dispose();
 			}
@@ -86,7 +86,7 @@ public class CreateAccountWindow extends JFrame {
 		createAccountButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				new SignInWindow(currentSession);
+				new SignInWindow(hostWindow);
 				setVisible(false);
 				dispose();
 			}

@@ -24,7 +24,7 @@ import Exceptions.NoSuchAccountException;
 
 public class SignInWindow extends JFrame {
 
-	public SignInWindow(CurrentSession currentSession) {
+	public SignInWindow(MakeSomeNoiseWindow hostWindow) {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));  	       // using BoxLayout layout managers
 		setSize(300, 400);        				                               // width and height
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -66,7 +66,7 @@ public class SignInWindow extends JFrame {
 				// Securely wipe the password
 				Arrays.fill(passwordChars, '\0');
 				try {
-					currentSession.SignIn(userNameField.getText(), password);
+					hostWindow.signIn(userNameField.getText(), password);
 				} catch (IncorrectPasswordException e) {
 				} catch (NoSuchAccountException e) {
 				} catch (InvalidInputException e) {
@@ -91,7 +91,7 @@ public class SignInWindow extends JFrame {
 		createAccountButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				new CreateAccountWindow(currentSession);
+				new CreateAccountWindow(hostWindow);
 				setVisible(false);
 				dispose();
 

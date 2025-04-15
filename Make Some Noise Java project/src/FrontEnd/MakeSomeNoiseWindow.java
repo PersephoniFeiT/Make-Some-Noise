@@ -10,6 +10,9 @@ import java.util.Scanner;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
+import Exceptions.IncorrectPasswordException;
+import Exceptions.InvalidInputException;
+import Exceptions.NoSuchAccountException;
 import Exceptions.NotSignedInException;
 
 import java.awt.BorderLayout;
@@ -47,7 +50,12 @@ public class MakeSomeNoiseWindow extends JFrame {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createSignInWindow();
+                try {
+                    currentSession.getSignedIn();
+                    signOut();
+                } catch (NotSignedInException ex) {
+                    createSignInWindow();
+                }
             }
         });
         accountsMenu.add(menuItem);
@@ -291,13 +299,28 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void createSignInWindow() {
-        new SignInWindow(currentSession);
+        new SignInWindow(this);
+    }
+
+    public void signIn(String username, String password) throws IncorrectPasswordException, NoSuchAccountException, InvalidInputException {
+        currentSession.SignIn(username, password);
+
+        menuBar.getMenu(1).getItem(1).setName("Sign Out");
+    }
+
+    public void signOut() {
+        currentSession.SignOut();
+
+        menuBar.getMenu(1).getItem(1).setName("Sign In");
+    }
+
+    public void createAccount(String username, String password, String email) {
+        currentSession.CreateNewAccount(username, password, email);
     }
 
 
     public static void main(String[] args) throws Exception {
         CurrentSession cs = new CurrentSession();
         new MakeSomeNoiseWindow(cs);
-
     }
 }
