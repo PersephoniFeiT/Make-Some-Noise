@@ -28,7 +28,33 @@ import java.util.Iterator;
 
 public class LayerPanelList extends JScrollPane {
 
+	private ContentPanel contents;
+	private EditorPanel hostEditorPanel;
+
+	public LayerPanelList(Project p, EditorPanel ep) {
+		contents = new ContentPanel(p, ep);
+		hostEditorPanel = ep;
+		setViewportView(contents);
+	}
+
 	private class LayerPanel extends JPanel {
+
+		private JTextField layerName;
+
+		private JComboBox<String> layerType;
+
+		private JCheckBox layerIsVisible;
+
+		private LabeledTextField seed;
+		private LabeledTextField freq;
+		private LabeledTextField amp;
+		private LabeledTextField gain;
+		private LabeledTextField floor;
+		private LabeledTextField ceiling;
+
+		private NoiseLayer noiseLayer;
+		private Project project;
+		private EditorPanel hostEditorPanel;
 
 		private class LabeledTextField extends JPanel {
 			private JLabel label;
@@ -44,27 +70,12 @@ public class LayerPanelList extends JScrollPane {
 				add(text);
 			}
 		}
-
-		private JTextField layerName;
-
-		private JComboBox<String> layerType;
-
-		private JCheckBox layerIsVisible;
 		
-		private LabeledTextField seed;
-		private LabeledTextField freq;
-		private LabeledTextField amp;
-		private LabeledTextField gain;
-		private LabeledTextField floor;
-		private LabeledTextField ceiling;
-
-		private NoiseLayer noiseLayer;
-		private Project project;
-		
-		public LayerPanel(NoiseLayer nl, Project proj) {
+		public LayerPanel(NoiseLayer nl, Project proj, EditorPanel host) {
 			setLayout(new FlowLayout());
 			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
+			this.hostEditorPanel = host;
 			project = proj;
 			noiseLayer = nl;
 
@@ -266,11 +277,14 @@ public class LayerPanelList extends JScrollPane {
 				ceiling.setBackground(Color.pink);
 			}
 
-			hostEditorPanel.renderNoise();
+			this.hostEditorPanel.renderNoise();
 		}
 	}
 
 	private class ContentPanel extends JPanel {
+
+		private Project project;
+		private EditorPanel hostEditorPanel;
 
 		private class Header extends JPanel {
 
@@ -290,14 +304,14 @@ public class LayerPanelList extends JScrollPane {
 				add(addLayerButton);
 			}
 		}
-		
-		private Project project;
 
-		public ContentPanel(Project p) {
+
+		public ContentPanel(Project p, EditorPanel host) {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 			add(new Header());
 
+			this.hostEditorPanel = host;
 			project = p;
 
 			Iterator<NoiseLayer> layers = p.getLayerList().iterator();
@@ -308,7 +322,7 @@ public class LayerPanelList extends JScrollPane {
 
 		public void addLayer() {
 			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 1.0, 1.0);
-			LayerPanel lp = new LayerPanel(newLayer, project);
+			LayerPanel lp = new LayerPanel(newLayer, project, hostEditorPanel);
 			project.addLayer(newLayer);
 			this.add(lp);
 			lp.updateLayer();
@@ -317,20 +331,11 @@ public class LayerPanelList extends JScrollPane {
 		}
 
 		public void addLayer(NoiseLayer nl) {
-			LayerPanel lp = new LayerPanel(nl, project);
+			LayerPanel lp = new LayerPanel(nl, project, hostEditorPanel);
 			this.add(lp);
 			lp.updateLayer();
 			revalidate();
 			repaint();
 		}
-	}
-
-	private ContentPanel contents;
-	private EditorPanel hostEditorPanel;
-
-	public LayerPanelList(Project p, EditorPanel ep) {
-		contents = new ContentPanel(p);
-		hostEditorPanel = ep;
-		setViewportView(contents);
 	}
 } 
