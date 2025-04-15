@@ -161,7 +161,7 @@ public class BasicDatabaseActions {
                     p.dateCreated.toString(),
                     "private",
                     JSON,
-                    "stockThumbnail.png",
+                    "MakeSomeNoiseJavaproject/src/ImageSources/stockThumbnail.png",
                     p.tags.toString()
             });
 
