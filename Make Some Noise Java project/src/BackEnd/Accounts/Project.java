@@ -14,18 +14,16 @@ public class Project {
     private Integer ID;
 
     public String title = "New Project";
-    public String username;
     public final LocalDate dateCreated;
     public String status;
     public String thumbnail;
     public List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
 
-    public Project(Integer ID, String title, String username, LocalDate dateCreated){
+    public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
         this.status = "private";
-        this.thumbnail = "";
-        this.username = username;
+        this.thumbnail = "[IMAGE HERE]";
         this.title = title;
         this.dateCreated = dateCreated;
     }
@@ -33,8 +31,7 @@ public class Project {
     public Project(String title){
         this.ID = null;
         this.status = "private";
-        this.thumbnail = "";
-        this.username = null;
+        this.thumbnail = "[IMAGE HERE]";
         this.title = title;
         this.dateCreated = LocalDate.now();
     }
@@ -90,9 +87,7 @@ public class Project {
 
             // Extract primitive fields
             String title;
-            if (!projectNode.has("title")) title = null; else title = projectNode.get("title").asText();
-            String username;
-            if (!projectNode.has("username")) username = null; else username = projectNode.get("username").asText();
+            if (!projectNode.has("title")) title = ""; else title = projectNode.get("title").asText();
             LocalDate dateCreated = LocalDate.parse(projectNode.get("dateCreated").asText());
             String status = projectNode.get("status").asText();
             String thumbnail = projectNode.get("thumbnail").asText();
@@ -100,7 +95,7 @@ public class Project {
             List<String> tags = objectMapper.convertValue(projectNode.get("tags"), new TypeReference<List<String>>() {});
 
             // Create a new project instance
-            Project project = new Project(projectId, title, username, dateCreated);
+            Project project = new Project(projectId, title, dateCreated);
             project.status = status;
             project.thumbnail = thumbnail;
             project.tags.addAll(tags);
@@ -164,9 +159,6 @@ public class Project {
 
         s.append("\"title\": ");
         if (this.title == null) s.append("\"New Project\","); else s.append("\"").append(this.title).append("\",");
-
-        s.append("\"username\": ");
-        if (this.username == null) s.append("null,"); else s.append("\"").append(this.username).append("\",");
 
         s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
         s.append("\"status\": \"").append(this.status).append("\",");

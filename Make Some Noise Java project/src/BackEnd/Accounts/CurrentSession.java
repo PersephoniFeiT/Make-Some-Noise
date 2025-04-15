@@ -176,6 +176,7 @@ public class CurrentSession {
             projectInfo.put("username", BasicDatabaseActions.getProjectInfoType(projectID, "username"));
             projectInfo.put("thumbnail", BasicDatabaseActions.getProjectInfoType(projectID, "thumbnail"));
             projectInfo.put("dateCreated", BasicDatabaseActions.getProjectInfoType(projectID, "dateCreated"));
+            projectInfo.put("projectInfoStruct", BasicDatabaseActions.getProjectInfoType(projectID, "projectInfoStruct"));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }

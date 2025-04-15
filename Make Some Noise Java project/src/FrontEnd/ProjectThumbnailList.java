@@ -1,12 +1,15 @@
 package FrontEnd;
 
 import BackEnd.Accounts.CurrentSession;
+import BackEnd.Accounts.Project;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -19,21 +22,25 @@ public class ProjectThumbnailList extends JScrollPane {
 
 	private ContentPanel contents;
 	private Integer accountID = null;
+	private MakeSomeNoiseWindow mainWindow;
 
 	// constructor
-	public ProjectThumbnailList() {
+	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow) {
+		this.mainWindow = mainWindow;
 		contents = new ContentPanel();
 		setViewportView(contents);
 	}
 
 	// constructor
-	public ProjectThumbnailList(List<Integer> projectIDs) {
+	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, List<Integer> projectIDs) {
+		this.mainWindow = mainWindow;
 		contents = new ContentPanel(projectIDs);
 		setViewportView(contents);
 	}
 
 	// constructor
-	public ProjectThumbnailList(Integer accountID, List<Integer> projectIDs) {
+	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, Integer accountID, List<Integer> projectIDs) {
+		this.mainWindow = mainWindow;
 		this.accountID = accountID;
 		contents = new ContentPanel(projectIDs);
 		setViewportView(contents);
@@ -50,6 +57,11 @@ public class ProjectThumbnailList extends JScrollPane {
 		// Refresh UI
 		this.revalidate();
 		this.repaint();
+	}
+
+	public void goToEditorPanel(String projectInfo){
+		this.mainWindow.addEditorPanel(Project.fromJSONtoProject(projectInfo));
+		this.mainWindow.goToEditorPanel();
 	}
 
 	public void addProject(Integer projectID) {
@@ -96,6 +108,18 @@ public class ProjectThumbnailList extends JScrollPane {
 				setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 				setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 				setMaximumSize(new Dimension(300, 300));
+
+				this.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mousePressed(final MouseEvent e) {
+						if (accountID == null){ // if it's null, it's not your project or you're on share
+							//so download the file.
+							ProjectThumbnailList.this.mainWindow.saveProjectLocal(Project.fromJSONtoProject(projectInfo.get("projectInfoStruct")));
+						} else {
+							ProjectThumbnailList.this.goToEditorPanel(projectInfo.get("projectInfoStruct"));
+						}
+					}
+				});
 
 				// TODO: add image stuff
 				add(new JLabel(projectInfo.get("thumbnail")));
