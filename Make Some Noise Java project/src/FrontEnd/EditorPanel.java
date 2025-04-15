@@ -4,6 +4,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -17,6 +18,7 @@ import java.awt.event.ActionEvent;
 // import java.awt.event.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Arrays;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
@@ -39,6 +41,9 @@ class EditorPanel extends JPanel {
         JPanel editorHeader = new JPanel();
         editorHeader.setLayout(new BoxLayout(editorHeader, BoxLayout.Y_AXIS));
 
+        JPanel projTitleEditing = new JPanel();
+        projTitleEditing.setLayout(new FlowLayout());
+
         JTextField projectTitleField = new JTextField(p.title, 50);
         projectTitleField.setEditable(false);
         
@@ -60,11 +65,12 @@ class EditorPanel extends JPanel {
                 }
             }
         });
-        JPanel projTitleEditing = new JPanel();
-        projTitleEditing.setLayout(new FlowLayout());
         projTitleEditing.add(projectTitleField);
         projTitleEditing.add(updateProjectTitleButton);
         editorHeader.add(projTitleEditing);
+
+        JPanel sharingInfo = new JPanel();
+        sharingInfo.setLayout(new FlowLayout());
 
         JCheckBox isVisible = new JCheckBox("Share online");
         isVisible.addActionListener(new ActionListener() {
@@ -76,9 +82,31 @@ class EditorPanel extends JPanel {
                 }
             }
         });
-        JPanel sharingInfo = new JPanel();
-        sharingInfo.setLayout(new FlowLayout());
         sharingInfo.add(isVisible);
+
+        JTextField tagsList = new JTextField(String.join("; ", project.tags), 30);
+        tagsList.setEditable(false);
+        JButton editTagsButton = new JButton("Change");
+        editTagsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ev) {
+                if (tagsList.isEditable()) {
+                    tagsList.setEditable(false);
+                    CurrentSession.ChangeTags(project, Arrays.asList(tagsList.getText().split("\\s*;\\s*")));
+                } else {
+                    try {
+                        currentSession.getSignedIn();
+                        tagsList.setEditable(true);
+                    } catch (NotSignedInException er) {
+                        // Do nothing
+                    }
+                }
+            }
+        });
+        sharingInfo.add(new JLabel("Tags: "));
+        sharingInfo.add(tagsList);
+        sharingInfo.add(editTagsButton);
+
         editorHeader.add(sharingInfo);
         
         add(editorHeader, BorderLayout.NORTH);
