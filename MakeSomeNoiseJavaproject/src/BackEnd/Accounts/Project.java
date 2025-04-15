@@ -122,19 +122,21 @@ public class Project {
                         layer = new PerlinNoiseLayer();
                         break;
                     case "RandomNoiseLayer":
-                        layer =  new RandomNoiseLayer(seed, freq, amp, floor, ceiling);
+                        //int seed, double floor, double ceiling, double amplitude, double frequency
+                        layer =  new RandomNoiseLayer(seed, floor, ceiling, amp, freq);
                         break;
                     case "Simplex2NoiseLayer":
-                        layer =  new Simplex2NoiseLayer(seed, freq, amp, floor, ceiling);
+                        //int seed, double floor, double ceiling, double amplitude, double frequency
+                        layer =  new Simplex2NoiseLayer(seed, floor, ceiling, amp, freq);
                         break;
                     case "Simplex3NoiseLayer":
-                        layer =  new Simplex3NoiseLayer(seed, freq, amp, floor, ceiling);
+                        layer =  new Simplex3NoiseLayer(seed, floor, ceiling, amp, freq);
                         break;
                     case "SimplexNoise":
                         layer =  null;//new SimplexNoise();
                         break;
                     default: 
-                        layer = new RandomNoiseLayer(seed, freq, amp, floor, ceiling); //not a known type?
+                        layer = new RandomNoiseLayer(seed, floor, ceiling, amp, freq); //not a known type?
                         break;
                 };
 

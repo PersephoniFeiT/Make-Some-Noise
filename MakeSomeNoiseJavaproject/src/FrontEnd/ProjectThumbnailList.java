@@ -129,8 +129,8 @@ public class ProjectThumbnailList extends JScrollPane {
 				System.out.println(projectInfo.get("thumbnail"));
 				try {
 					tn = ImageIO.read(new File(projectInfo.get("thumbnail")));
-					Image scaled = tn.getScaledInstance(90, 35, Image.SCALE_SMOOTH);
-					JLabel picLabel = new JLabel(new ImageIcon(scaled));
+					Image scaled = tn.getScaledInstance(90, 50, Image.SCALE_SMOOTH);
+					JLabel picLabel = new JLabel(new ImageIcon(scaled),SwingConstants.CENTER);
 					add(picLabel);
 				} catch (Exception e){
 					add(new JLabel("[Image could not be loaded]"));

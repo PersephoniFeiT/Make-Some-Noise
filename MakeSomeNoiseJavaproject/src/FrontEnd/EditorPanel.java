@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.image.*;
 // import java.awt.event.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -27,6 +28,8 @@ import Exceptions.NotSignedInException;
 class EditorPanel extends JPanel {
 
 	private NoisePanel noisePanel;
+    private int noisePanelWidth = 700;
+    private int noisePanelHeight = 463;
 	// private JButton renderButton;
     private LayerPanelList layers;
     
@@ -125,8 +128,8 @@ class EditorPanel extends JPanel {
         add(editorHeader, BorderLayout.NORTH);
 
         // Create a NoisePanel to display the generated noise pattern
-        int width = 700;
-        int height = 463;
+        int width = noisePanelWidth;
+        int height = noisePanelHeight;
         noisePanel = new NoisePanel(width, height);
 
         // noisePanel.setBounds(10, 10, width, height);
@@ -153,14 +156,20 @@ class EditorPanel extends JPanel {
 	}
 
     public void renderNoise() {
-        int width = noisePanel.getWidth();
-        int height = noisePanel.getHeight();
+        int width = noisePanelWidth;
+        int height = noisePanelHeight;
         double[][] values = BackEnd.Editor.LayerManager.multiplyLayers(width, height, project.getLayerList());
-        for (int x=0; x < width; x++) {
-            for (int y=0; y < height; y++) {
-                noisePanel.setPixel(x, y, Color.HSBtoRGB((float)values[x][y], 0.5f, 1.0f));
+
+        BufferedImage newBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                float h = (float) values[x][y];
+                int color = Color.HSBtoRGB(h, 0.5f, 1.0f);
+                newBitmap.setRGB(x, y, color);
             }
         }
+        noisePanel.setBitmap(newBitmap); // 👉 Add this method to NoisePanel
     }
 
     public void writeImage() {

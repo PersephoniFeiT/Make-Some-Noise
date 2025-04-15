@@ -33,6 +33,11 @@ public class NoisePanel extends JPanel{
 		repaint();
 	}
 
+	public void setBitmap(BufferedImage img) {
+		this.bitmap = img;
+		repaint();
+	}
+
 	@Override
 	protected void paintComponent(java.awt.Graphics g) {
 		super.paintComponent(g);

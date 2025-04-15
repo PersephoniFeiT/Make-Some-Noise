@@ -253,6 +253,8 @@ public class MakeSomeNoiseWindow extends JFrame {
         if (currentPanel != null) {
             remove(currentPanel);
         }
+
+        editorPanel.renderNoise();
         currentPanel = editorPanel;
         add(currentPanel);
         revalidate();
