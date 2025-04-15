@@ -86,9 +86,9 @@ public class LayerPanelList extends JScrollPane {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (layerIsVisible.isSelected()) {
-						proj.addLayer(nl);
+						proj.addLayer(noiseLayer);
 					} else {
-						proj.removeLayer(nl);
+						proj.removeLayer(noiseLayer);
 					}
 					updateLayer();
 				}
@@ -96,13 +96,13 @@ public class LayerPanelList extends JScrollPane {
 
 			layerName = new JTextField("New Layer", 6);
 
-			String[] layerOptions = {"Random Noise", "Perlin Noise", "Simplex2 Noise", "Simplex3 Noise"};
+			String[] layerOptions = {"Random Noise", /*"Perlin Noise",*/ "Simplex2 Noise", "Simplex3 Noise"};
 			layerType = new JComboBox<String>(layerOptions);
 			layerType.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 				
-					project.removeLayer(noiseLayer);
+					proj.removeLayer(noiseLayer);
 
 					Object choice = layerType.getSelectedItem();
 					if (choice.equals("Simplex2 Noise")) {
@@ -114,7 +114,7 @@ public class LayerPanelList extends JScrollPane {
 							Double.parseDouble(freq.text.getText())
 						);
 					} else if (choice.equals("Perlin Noise")) {
-						project.addLayer(new PerlinNoiseLayer());
+						noiseLayer = new PerlinNoiseLayer();
 					} else if (choice.equals("Random Noise")) {
 						noiseLayer = new RandomNoiseLayer(
 							Integer.parseInt(seed.text.getText()),
@@ -132,9 +132,11 @@ public class LayerPanelList extends JScrollPane {
 							Double.parseDouble(freq.text.getText())
 						);
 					}
+
 					if (layerIsVisible.isSelected()) {
-						project.addLayer(noiseLayer);
+						proj.addLayer(noiseLayer);
 					}
+
 					hostEditorPanel.renderNoise();
 				}
 			});
