@@ -142,7 +142,9 @@ public class ProjectThumbnailList extends JScrollPane {
 				// Construct a single string containing every tag on this project
 				StringBuilder tagsString = new StringBuilder();
 				for(int i=0; i < tags.size(); i++) {
-					tagsString.append("#").append(tags.get(i)).append(", ");
+					tagsString.append("#").append(tags.get(i));
+					if (i != tags.size()-1)
+						tagsString.append(", ");
 				}
 				add(new JLabel(tagsString.toString()));
 
