@@ -305,13 +305,13 @@ public class MakeSomeNoiseWindow extends JFrame {
     public void signIn(String username, String password) throws IncorrectPasswordException, NoSuchAccountException, InvalidInputException {
         currentSession.SignIn(username, password);
 
-        menuBar.getMenu(1).getItem(1).setName("Sign Out");
+        menuBar.getMenu(0).getItem(0).setText("Sign Out");
     }
 
     public void signOut() {
         currentSession.SignOut();
 
-        menuBar.getMenu(1).getItem(1).setName("Sign In");
+        menuBar.getMenu(0).getItem(0).setText("Sign In");
     }
 
     public void createAccount(String username, String password, String email) {
