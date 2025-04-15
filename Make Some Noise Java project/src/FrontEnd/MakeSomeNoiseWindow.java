@@ -254,9 +254,9 @@ public class MakeSomeNoiseWindow extends JFrame {
     }
 
     public void goToAccountPanel() {
-        if (!this.hasAccountPanel()) {
+        //if (!this.hasAccountPanel()) {
             addAccountPanel();
-        }
+        /* }
 
         // Check if the user has changed accounts; if they have then update the AccountPanel
         try {
@@ -265,7 +265,7 @@ public class MakeSomeNoiseWindow extends JFrame {
             }
         } catch (NotSignedInException e) {
             addAccountPanel();
-        }
+        } */
 
         if (currentPanel != null) {
             remove(currentPanel);
