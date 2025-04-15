@@ -224,6 +224,10 @@ public class MakeSomeNoiseWindow extends JFrame {
         fileChooser.showOpenDialog(this);
     }
 
+    public void signInErrorMessage() {
+        JOptionPane.showMessageDialog(this, "Sign in to use this feature!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     public boolean hasEditorPanel() {
         return editorPanel != null;
     }

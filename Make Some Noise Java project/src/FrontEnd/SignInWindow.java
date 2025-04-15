@@ -3,6 +3,7 @@ package FrontEnd;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 
+import java.awt.Color;
 // import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -60,20 +61,32 @@ public class SignInWindow extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
+
+				// Reset any error messages
+				userNameFieldLabel.setText("Username:");
+				userNameFieldLabel.setForeground(Color.BLACK);
+				passwordFieldLabel.setText("Password:");
+				passwordFieldLabel.setForeground(Color.BLACK);
+
 				char[] passwordChars = passwordField.getPassword();
 				String password = new String(passwordChars);
 				// Securely wipe the password
 				Arrays.fill(passwordChars, '\0');
 				try {
-					hostWindow.signIn(userNameField.getText(), password);
+          hostWindow.signIn(userNameField.getText(), password);
+					setVisible(false);
+					dispose();
 				} catch (IncorrectPasswordException e) {
 				} catch (NoSuchAccountException e) {
+					userNameFieldLabel.setText("Unrecognized username, try again");
+					userNameFieldLabel.setForeground(Color.RED);
+				} catch (IncorrectPasswordException e) {
+					passwordFieldLabel.setText("Incorrect password, try again");
+					passwordFieldLabel.setForeground(Color.RED);
 				} catch (InvalidInputException e) {
 				} catch (Exception e) {
 					ExceptionHandler.handleException(e);
 				}
-				setVisible(false);
-				dispose();
 			}
 		});
 		add(submitButton);
