@@ -34,12 +34,13 @@ class EditorPanel extends JPanel {
     private int noisePanelHeight = 463;
 	// private JButton renderButton;
     private LayerPanelList layers;
+    private GradientPanel gradientPanel;
     
     private Project project;
 
 	public EditorPanel(MakeSomeNoiseWindow parentWindow, Project p, CurrentSession currentSession) {
         setLayout(new BorderLayout());                            // using BorderLayout layout managers
-        setSize(1000, 600);                                       // width and height
+        setSize(1000, 700);                                       // width and height
 
         project = p;
 
@@ -158,6 +159,8 @@ class EditorPanel extends JPanel {
         layers = new LayerPanelList(project, this);
         layers.setPreferredSize(new Dimension(550, 100));
         add(layers, BorderLayout.EAST);
+        gradientPanel = new GradientPanel(1000, 40, 0x000000, 0xFFFFFF);
+        add(gradientPanel, BorderLayout.SOUTH);
 	}
 
     public void renderNoise() {
