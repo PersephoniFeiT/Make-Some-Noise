@@ -51,6 +51,7 @@ public class GradientPanel extends JPanel{
                     Color newColor = colorChooser.getColor();
                     button.setBackground(newColor);
                     updateSample(); // Expensive call
+                    source.renderNoise();
                 },
                 null // Cancel Listener (no action needed)
             );
@@ -62,8 +63,10 @@ public class GradientPanel extends JPanel{
     private BufferedImage gradientSample;
     private JButton color1Button;
     private JButton color2Button;
+    private EditorPanel source;
 
-    public GradientPanel(int width, int height, int color1, int color2){
+    public GradientPanel(int width, int height, int color1, int color2, EditorPanel source){
+        this.source = source;
         this.setPreferredSize(new Dimension(width + 10, height + 20));
         color1Button = new JButton();
         color1Button.setPreferredSize(new Dimension(30, 30));

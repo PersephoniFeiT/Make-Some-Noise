@@ -21,6 +21,8 @@ public class Project {
     public String thumbnail;
     public List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
+    private int color1 = 0x000000;
+    private int color2 = 0xFFFFFF;
 
     public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
@@ -65,6 +67,23 @@ public class Project {
     public void clearLayers(){
         this.layers.clear();
     }
+
+    public int getColor1(){
+        return color1;
+    }
+
+    public int getColor2(){
+        return color2;
+    }
+
+    public void setColor1(int hexCode){
+        this.color1 = hexCode;
+    }
+
+    public void SetColor2(int hexCode){
+        this.color2 = hexCode;
+    }
+
 
     public static Project fromJSONtoProject(String JSON){
         try {

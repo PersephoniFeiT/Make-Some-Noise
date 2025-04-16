@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
+import BackEnd.Editor.GradientFunction;
 import Exceptions.NotSignedInException;
 
 class EditorPanel extends JPanel {
@@ -35,6 +36,7 @@ class EditorPanel extends JPanel {
 	// private JButton renderButton;
     private LayerPanelList layers;
     private GradientPanel gradientPanel;
+    private GradientFunction gradientFunction;
     
     private Project project;
 
@@ -159,22 +161,25 @@ class EditorPanel extends JPanel {
         layers = new LayerPanelList(project, this);
         layers.setPreferredSize(new Dimension(550, 100));
         add(layers, BorderLayout.EAST);
-        gradientPanel = new GradientPanel(1000, 40, 0x000000, 0xFFFFFF);
+        gradientPanel = new GradientPanel(1000, 40, project.getColor1(), project.getColor2(), this);
         add(gradientPanel, BorderLayout.SOUTH);
+        gradientFunction = new GradientFunction(project.getColor1(), project.getColor2());
 	}
 
     public void renderNoise() {
         int width = noisePanelWidth;
         int height = noisePanelHeight;
         double[][] values = BackEnd.Editor.LayerManager.multiplyLayers(width, height, project.getLayerList());
-
-        BufferedImage newBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        
+        gradientFunction.SetColor1(gradientPanel.getColor1());
+        gradientFunction.SetColor2(gradientPanel.getColor2());
+        BufferedImage newBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                float h = (float) values[x][y];
-                int color = Color.HSBtoRGB(h, 0.5f, 1.0f);
-                newBitmap.setRGB(x, y, color);
+                float val = (float) values[x][y];
+                //int color = Color.HSBtoRGB(h, 0.5f, 1.0f);
+                newBitmap.setRGB(x, y, gradientFunction.interpolate(val));
             }
         }
         noisePanel.setBitmap(newBitmap); // 👉 Add this method to NoisePanel
