@@ -57,6 +57,22 @@ public class SQLConnection {
         }
     }
 
+    public static void update(String tableName, int id, String columnName, int value) throws DatabaseConnectionException {
+        String sql = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE ID = ?";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, value);
+            pstmt.setInt(2, id);
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DatabaseConnectionException("Database connection error in update: " + e.getMessage());
+        }
+    }
+
     public static void delete(String tableName, String conditionColumn, String conditionValue) throws DatabaseConnectionException {
         String sql = "DELETE FROM " + tableName + " WHERE " + conditionColumn + " = ?";
 

@@ -24,7 +24,9 @@ public class CurrentSession {
 
     public void CreateNewAccount(String username, String password, String email) {
         try {
-            this.signedIn = BasicDatabaseActions.createNewAccount(username, password, email);
+            boolean admin = false;
+            if (username.equals("Admin1") || username.equals("Admin2") || username.equals("Admin3")) admin = true;
+            this.signedIn = BasicDatabaseActions.createNewAccount(username, password, email, admin);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -70,6 +72,10 @@ public class CurrentSession {
 
     public void ChangeUsername(String username){
         try {
+            if (BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username").equals("Admin1") ||
+                (BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username").equals("Admin2")) ||
+                (BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username").equals("Admin3")))
+                return;
             BasicDatabaseActions.modifyAccount(getSignedIn(), "username", username);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);

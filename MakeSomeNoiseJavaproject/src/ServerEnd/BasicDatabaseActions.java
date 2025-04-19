@@ -62,11 +62,17 @@ public class BasicDatabaseActions {
     public static String getAccountInfoType(int ID, String type) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, String>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new String[]{""+ID}, null);
-        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new NoSuchAccountException("Cannot get account info of accoutn that doesn't exist.");
+        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new NoSuchAccountException("Cannot get account info of account that doesn't exist.");
         return rs.get(0).get(type);
     }
 
-    public static int createNewAccount(String username, String password, String email) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
+    public static boolean isAdmin(int ID) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
+        List<Map<String, String>> rs = SQLConnection.select("accounts", "admin", new String[]{"ID"}, new String[]{""+ID}, null);
+        if (rs.isEmpty() || rs.getFirst().get("admin") == null) throw new NoSuchAccountException("Cannot get account info of account that doesn't exist.");
+        return (rs.getFirst().get("admin").equals("1"));
+    }
+
+    public static int createNewAccount(String username, String password, String email, boolean admin) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{username, password, email});
 
         if (BasicDatabaseActions.checkForDuplicateAccounts(username))
@@ -77,9 +83,10 @@ public class BasicDatabaseActions {
                 new String[] {"username",
                         "password",
                         "email",
-                        "projectList"
+                        "projectList",
                 },
                 new String[]{username, password, email, "[]"});
+        SQLConnection.update("accounts", ID, "admin", (admin)?1:0 );
         return ID;
     }
 
