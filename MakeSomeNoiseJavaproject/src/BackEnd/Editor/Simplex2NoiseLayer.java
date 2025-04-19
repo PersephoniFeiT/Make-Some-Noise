@@ -1,24 +1,38 @@
 package BackEnd.Editor;
 
 public class Simplex2NoiseLayer implements NoiseLayer{
-    int seed;
-    double floor;
-    double ceiling;
-    double amplitude;
-    double frequency;
+    private int seed;
+    private double floor;
+    private double ceiling;
+    private double amplitude;
+    private double frequency;
+    private BlendMode blendMode;
+    private double gain;
 
-    public Simplex2NoiseLayer(int seed, double floor, double ceiling, double amplitude, double frequency){
+    public Simplex2NoiseLayer(int seed, double floor, double ceiling, double gain, double amplitude, double frequency, BlendMode blendMode){
         this.seed = seed;
         this.floor = (floor < 0 || floor > 1 )? 0 : (floor > ceiling)? ceiling : floor;
         this.ceiling = (ceiling > 1 || ceiling < 0)? 1 : (ceiling < floor)? floor : ceiling;
         this.amplitude = (amplitude >= 1)? 1 : (amplitude <= 0)? 0 : amplitude;
+        this.gain = (gain >= 1)? 0.999 : (gain <= -1)? -0.999 : gain;
         this.frequency = frequency;
+        this.blendMode = blendMode;
     }
 
     @Override
     public double evaluate(int x, int y) {
-        double val = (amplitude * SimplexNoise.noise(((double) x + Double.valueOf(getSeed()).hashCode())/100.0, ((double) y + Double.valueOf(getSeed()).hashCode())/100.0) + 1) / 2;
+        double val = (amplitude * SimplexNoise.noise(((double) x + Double.valueOf(getSeed()).hashCode())/100.0, ((double) y + Double.valueOf(getSeed()).hashCode())/100.0) + 1) / 2 + gain;
         return (val > ceiling)? ceiling : (val < floor)? floor : val;
+    }
+
+    @Override
+    public BlendMode getBlendMode() {
+        return blendMode;
+    }
+
+    @Override
+    public void setBlendMode(BlendMode blendMode){
+        this.blendMode = blendMode;
     }
 
     @Override
@@ -67,9 +81,12 @@ public class Simplex2NoiseLayer implements NoiseLayer{
     }
 
     @Override
-    public double getGain() {return -1;}
+    public double getGain() {return gain;}
+
 
     @Override
-    public void setGain(double newGain) {;}
+    public void setGain(double newGain) {
+        this.gain = (newGain > 0.999)? 0.999 : (newGain < 0.999)? -0.999 : newGain;
+    }
 
 }

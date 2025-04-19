@@ -2,8 +2,19 @@ package BackEnd.Editor;
 
 
 public class PerlinNoiseLayer implements NoiseLayer {
+    private BlendMode blendMode;
     public double[][] getValues(){
         return null;
+    }
+
+    @Override
+    public BlendMode getBlendMode(){
+        return this.blendMode;
+    }
+
+    @Override
+    public void setBlendMode(BlendMode blendMode){
+        this.blendMode = blendMode;
     }
 
     @Override

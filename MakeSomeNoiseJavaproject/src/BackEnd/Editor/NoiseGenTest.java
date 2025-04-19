@@ -8,9 +8,9 @@ import java.util.Random;
 public class NoiseGenTest {
     @Test
     public void NL1(){
-        NoiseLayer rnoise = new RandomNoiseLayer(0, 0.5, 1, 1, 1);
-        NoiseLayer s2noise = new Simplex2NoiseLayer(0, 0.5, 1, 1, 1);
-        NoiseLayer s3noise = new Simplex3NoiseLayer(0, 0.5, 1, 1, 1);
+        NoiseLayer rnoise = new RandomNoiseLayer(0, 0.5, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        NoiseLayer s2noise = new Simplex2NoiseLayer(0, 0.5, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        NoiseLayer s3noise = new Simplex3NoiseLayer(0, 0.5, 1, 0, 1, 1, BlendMode.MULTIPLY);
         for(int i = 0; i <= 1000; i++){ //statistically exhaustive NL.1.0 case
             assertTrue(rnoise.evaluate(i % 500, (1000 - i) % 250) >= 0.5);
             assertTrue(s2noise.evaluate(i % 500, (1000 - i) % 250) >= 0.5);
@@ -59,12 +59,12 @@ public class NoiseGenTest {
         Random r = new Random();
         int seed1 = r.nextInt(10000);
         int seed2 = seed1;
-        NoiseLayer rn1 = new RandomNoiseLayer(seed1, 0, 1, 1, 1);
-        NoiseLayer rn2 = new RandomNoiseLayer(seed2, 0, 1, 1, 1);
-        NoiseLayer s2n1 = new Simplex2NoiseLayer(seed1, 0, 1, 1,1);
-        NoiseLayer s2n2 = new Simplex2NoiseLayer(seed2, 0, 1, 1, 1);
-        NoiseLayer s3n1 = new Simplex3NoiseLayer(seed1, 0, 1, 1, 1);
-        NoiseLayer s3n2 = new Simplex3NoiseLayer(seed2, 0, 1, 1, 1); //TODO: Test on Simplex2 noise once it's seed-dependant
+        NoiseLayer rn1 = new RandomNoiseLayer(seed1, 0, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        NoiseLayer rn2 = new RandomNoiseLayer(seed2, 0, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        NoiseLayer s2n1 = new Simplex2NoiseLayer(seed1, 0, 1, 0, 1,1, BlendMode.MULTIPLY);
+        NoiseLayer s2n2 = new Simplex2NoiseLayer(seed2, 0, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        NoiseLayer s3n1 = new Simplex3NoiseLayer(seed1, 0, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        NoiseLayer s3n2 = new Simplex3NoiseLayer(seed2, 0, 1, 0, 1, 1, BlendMode.MULTIPLY); //TODO: Test on Simplex2 noise once it's seed-dependant
 
         for(int i = 0; i < 1000; i++){ //statistically exhaustive  NL.2.0 cases
             assertTrue(rn1.evaluate(i % 500, (1000 - i % 500) % 250) == rn2.evaluate(i % 500, (1000 - i % 500) % 250));
@@ -73,8 +73,8 @@ public class NoiseGenTest {
         }
 
         seed2 = r.nextInt(10000);
-        rn2 = new RandomNoiseLayer(seed2, 0, 1, 1, 1);
-        s3n2 = new Simplex3NoiseLayer(seed2, 0, 1, 1, 1); //TODO: Test on Simplex2 noise once it's seed-dependant
+        rn2 = new RandomNoiseLayer(seed2, 0, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        s3n2 = new Simplex3NoiseLayer(seed2, 0, 1, 0, 1, 1, BlendMode.MULTIPLY); //TODO: Test on Simplex2 noise once it's seed-dependant
         
         int rUniquenessScore = 1000;
         int s3UniquenessScore = 1000;
@@ -123,12 +123,12 @@ public class NoiseGenTest {
     @Test
     public void NL3(){
         double k = 4;
-        RandomNoiseLayer rOracle = new RandomNoiseLayer(0, 0, 1, 1, 1);
-        RandomNoiseLayer rAmpl = new RandomNoiseLayer(0, 0, 1, 1/k, 1);
-        Simplex2NoiseLayer s2Oracle = new Simplex2NoiseLayer(0, 0, 1, 1, 0);
-        Simplex2NoiseLayer s2Ampl = new Simplex2NoiseLayer(0, 0, 1, 1/k, 1);
-        Simplex3NoiseLayer s3Oracle = new Simplex3NoiseLayer(0, 0, 1, 1, 1);
-        Simplex3NoiseLayer s3Ampl = new Simplex3NoiseLayer(0, 0, 1, 1/k, 1);
+        RandomNoiseLayer rOracle = new RandomNoiseLayer(0, 0, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        RandomNoiseLayer rAmpl = new RandomNoiseLayer(0, 0, 1, 0, 1/k, 1, BlendMode.MULTIPLY);
+        Simplex2NoiseLayer s2Oracle = new Simplex2NoiseLayer(0, 0, 1, 0, 1, 0, BlendMode.MULTIPLY);
+        Simplex2NoiseLayer s2Ampl = new Simplex2NoiseLayer(0, 0, 1, 0, 1/k, 1, BlendMode.MULTIPLY);
+        Simplex3NoiseLayer s3Oracle = new Simplex3NoiseLayer(0, 0, 1, 0, 1, 1, BlendMode.MULTIPLY);
+        Simplex3NoiseLayer s3Ampl = new Simplex3NoiseLayer(0, 0, 1, 0, 1/k, 1, BlendMode.MULTIPLY);
         for (int i = 0; i < 1000; i++){ //statistically exhaustive  NL.3.0 case
             double rOrVal = rOracle.evaluate(i % 500, (1000 - i % 500) % 250);
             double rval = rAmpl.evaluate(i % 500, (1000 - i % 500) % 250);
@@ -185,6 +185,10 @@ public class NoiseGenTest {
             public void setCeiling(double newCeiling) {}
             @Override
             public void setGain(double newGain) {}
+            @Override
+            public void setBlendMode(BlendMode m){}
+            @Override
+            public BlendMode getBlendMode(){return null;}
         });
         layerList.add(new NoiseLayer(){ //anonymous noiselayer mock for evaluating to n
             @Override
@@ -212,6 +216,10 @@ public class NoiseGenTest {
             public void setCeiling(double newCeiling) {}
             @Override
             public void setGain(double newGain) {}
+            @Override
+            public void setBlendMode(BlendMode m){}
+            @Override
+            public BlendMode getBlendMode(){return null;}
         });
 
         double[][] vals = LayerManager.multiplyLayers(100, 100, layerList);
