@@ -92,7 +92,7 @@ class EditorPanel extends JPanel {
         });
         sharingInfo.add(isVisible);
 
-        JTextField tagsList = new JTextField(String.join(", ", project.tags), 30);
+        JTextField tagsList = new JTextField(String.join(", ", project.tags), 50);
         tagsList.setEditable(false);
         JButton editTagsButton = new JButton("Change");
         editTagsButton.addActionListener(new ActionListener() {
@@ -100,7 +100,7 @@ class EditorPanel extends JPanel {
             public void actionPerformed(ActionEvent ev) {
                 if (tagsList.isEditable()) {
                     tagsList.setEditable(false);
-                    List<String> tags = Arrays.stream(tagsList.getText().split("[^A-Za-z]+"))
+                    List<String> tags = Arrays.stream(tagsList.getText().split("[^A-Za-z0-9_-]+"))
                             .filter(s -> !s.isEmpty())
                             .collect(Collectors.toList());
                     CurrentSession.ChangeTags(project, tags);
