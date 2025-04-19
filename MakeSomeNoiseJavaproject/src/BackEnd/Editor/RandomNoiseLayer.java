@@ -7,20 +7,32 @@ public class RandomNoiseLayer implements NoiseLayer{
     double ceiling;
     double amplitude;
     double frequency;
+    BlendMode blendMode;
 
-    public RandomNoiseLayer(int seed, double floor, double ceiling, double amplitude, double frequency){
+    public RandomNoiseLayer(int seed, double floor, double ceiling, double amplitude, double frequency, BlendMode blendMode){
         this.seed = seed;
         this.rng = new Random(seed);
         this.floor = (floor <= 0)? 0 : (floor > ceiling)? ceiling : floor;
         this.ceiling = (ceiling >= 1)? 1 : (ceiling < floor)? floor : ceiling;
         this.amplitude = (amplitude >= 1)? 1 : (amplitude <= 0)? 0 : amplitude;
         this.frequency = frequency;
+        this.blendMode = blendMode;
     }
 
     @Override
+    public BlendMode getBlendMode(){
+        return this.blendMode;
+    }
+
+    @Override
+    public void setBlendMode(BlendMode blendMode){
+        this.blendMode = blendMode;
+    }
+    
+    @Override
     public double evaluate(int x, int y) {
-        double val = rng.nextDouble();
-        val = ((val < floor )? floor : (val > ceiling)? ceiling : val) * amplitude + (1 - amplitude)/2;
+        double val = rng.nextDouble() * amplitude + (1 - amplitude)/2;
+        val = ((val < floor )? floor : (val > ceiling)? ceiling : val);
         return val;
     }
 
