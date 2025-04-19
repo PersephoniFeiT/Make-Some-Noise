@@ -162,7 +162,7 @@ public class CurrentSession {
     public static List<String> getProjectTags(int ID) {
         try {
             String taglistString = BasicDatabaseActions.getProjectInfoType(ID, "tags");
-            return Arrays.stream(taglistString.split("[^A-Za-z]+"))
+            return Arrays.stream(taglistString.split("[^A-Za-z0-9_-]+"))
                     .filter(s -> !s.isEmpty())
                     .collect(Collectors.toList());
         } catch (Exception e) {

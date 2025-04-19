@@ -114,7 +114,7 @@ public class Project {
             String thumbnail = projectNode.get("thumbnail").asText();
             // Extract tags from array in JSON
             String tagString = projectNode.get("tags").asText();
-            List<String> tags = Arrays.stream(tagString.split("[^A-Za-z]+"))
+            List<String> tags = Arrays.stream(tagString.split("[^A-Za-z0-9_-]+"))
                     .filter(s -> !s.isEmpty())
                     .toList();
             int c1 = projectNode.get("color1").asInt();
