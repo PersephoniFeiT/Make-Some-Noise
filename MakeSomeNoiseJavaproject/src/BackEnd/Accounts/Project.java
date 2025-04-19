@@ -17,7 +17,7 @@ public class Project {
 
     public String title = "New Project";
     public final LocalDate dateCreated;
-    public String status;
+    public String status = "private";
     public String thumbnail;
     public List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
@@ -26,7 +26,6 @@ public class Project {
 
     public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
-        this.status = "private";
         this.thumbnail = "MakeSomeNoiseJavaproject/src/ImageSources/stockThumbnail.png";
         this.title = title;
         this.dateCreated = dateCreated;
@@ -34,7 +33,6 @@ public class Project {
 
     public Project(String title){
         this.ID = null;
-        this.status = "private";
         this.thumbnail = "MakeSomeNoiseJavaproject/src/ImageSources/stockThumbnail.png";
         this.title = title;
         this.dateCreated = LocalDate.now();
@@ -113,10 +111,13 @@ public class Project {
             String status = projectNode.get("status").asText();
             String thumbnail = projectNode.get("thumbnail").asText();
             // Extract tags from array in JSON
-            String tagString = projectNode.get("tags").asText();
-            List<String> tags = Arrays.stream(tagString.split("[^A-Za-z]+"))
-                    .filter(s -> !s.isEmpty())
-                    .toList();
+            JsonNode tagsNode = projectNode.get("tags");
+            List<String> tagString = new ArrayList<>();
+            if (tagsNode != null && tagsNode.isArray()) {
+                for (JsonNode tag : tagsNode) {
+                    tagString.add(tag.asText());
+                }
+            }
             int c1 = projectNode.get("color1").asInt();
             int c2 = projectNode.get("color2").asInt();
 
@@ -124,7 +125,7 @@ public class Project {
             Project project = new Project(projectId, title, dateCreated);
             project.status = status;
             project.thumbnail = thumbnail;
-            project.tags.addAll(tags);
+            project.tags.addAll(tagString);
             project.setColor1(c1);
             project.setColor2(c2);
 
