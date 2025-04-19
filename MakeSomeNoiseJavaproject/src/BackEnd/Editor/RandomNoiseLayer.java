@@ -1,20 +1,22 @@
 package BackEnd.Editor;
 import java.util.Random;
 public class RandomNoiseLayer implements NoiseLayer{
-    int seed;
-    Random rng;
-    double floor;
-    double ceiling;
-    double amplitude;
-    double frequency;
-    BlendMode blendMode;
+    private int seed;
+    private Random rng;
+    private double floor;
+    private double ceiling;
+    private double amplitude;
+    private double frequency;
+    private BlendMode blendMode;
+    private double gain;
 
-    public RandomNoiseLayer(int seed, double floor, double ceiling, double amplitude, double frequency, BlendMode blendMode){
+    public RandomNoiseLayer(int seed, double floor, double ceiling, double gain, double amplitude, double frequency, BlendMode blendMode){
         this.seed = seed;
         this.rng = new Random(seed);
         this.floor = (floor <= 0)? 0 : (floor > ceiling)? ceiling : floor;
         this.ceiling = (ceiling >= 1)? 1 : (ceiling < floor)? floor : ceiling;
         this.amplitude = (amplitude >= 1)? 1 : (amplitude <= 0)? 0 : amplitude;
+        this.gain = (gain >= 1)? 0.999 : (gain <= -1)?  -0.999: gain;
         this.frequency = frequency;
         this.blendMode = blendMode;
     }
@@ -31,7 +33,7 @@ public class RandomNoiseLayer implements NoiseLayer{
     
     @Override
     public double evaluate(int x, int y) {
-        double val = rng.nextDouble() * amplitude + (1 - amplitude)/2;
+        double val = (rng.nextDouble() * amplitude + (1 - amplitude)/2) + gain;
         val = ((val < floor )? floor : (val > ceiling)? ceiling : val);
         return val;
     }

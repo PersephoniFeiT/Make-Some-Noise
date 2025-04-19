@@ -19,7 +19,7 @@ public class LayerManager {
                 for(int y = 0; y < height; y++){
                     int virtualx = (int) ((int) x/l.getFreq());
                     int virtualy = (int) ((int) y/l.getFreq());
-                    double blendVal =  blend(raster[x][y], l.evaluate(virtualx, virtualy), l.getBlendMode())
+                    double blendVal =  blend(raster[x][y], l.evaluate(virtualx, virtualy), l.getBlendMode());
                     raster[x][y] = blendVal < 0? 0 : blendVal > 1? 1 : blendVal;
                 }
             }

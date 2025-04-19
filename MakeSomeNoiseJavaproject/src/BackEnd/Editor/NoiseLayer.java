@@ -4,12 +4,7 @@ package BackEnd.Editor;
 //import org.apache.commons.math4.*;
 
 public interface NoiseLayer {
-    public enum BlendMode{
-        ADD,
-        SUBTRACT,
-        MULTIPLY,
-        DIVIDE
-    }
+
     public double evaluate(int x, int y);
     public int getSeed();
     public double getFreq();
