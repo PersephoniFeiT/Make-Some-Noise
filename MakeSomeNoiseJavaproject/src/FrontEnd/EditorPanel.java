@@ -145,6 +145,17 @@ class EditorPanel extends JPanel {
         noisePanel.setPreferredSize(new Dimension(width, height));
 		add(noisePanel, BorderLayout.CENTER);
 
+        gradientPanel = new GradientPanel(1000, 40, project.getColor1(), project.getColor2(), this);
+        gradientFunction = new GradientFunction(project.getColor1(), project.getColor2());
+
+        // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
+        layers = new LayerPanelList(project, this);
+        layers.setPreferredSize(new Dimension(550, 100));
+        add(layers, BorderLayout.EAST);
+        
+        add(gradientPanel, BorderLayout.SOUTH);
+
+
         // Create JButton that will render the Noise pattern on the NoisePanel np
         // renderButton = new JButton("Show Noise");
         // // renderButton.setBounds(20, 410, 130, 40);                  // x axis, y axis, width, height
@@ -156,14 +167,6 @@ class EditorPanel extends JPanel {
         // });
         // renderButton.setMaximumSize(new Dimension(130, 40));
 		// add(renderButton, BorderLayout.WEST);
-
-        // Add a LayerPanelList, the visual list of noise layers that the user has created in this project
-        layers = new LayerPanelList(project, this);
-        layers.setPreferredSize(new Dimension(550, 100));
-        add(layers, BorderLayout.EAST);
-        gradientPanel = new GradientPanel(1000, 40, project.getColor1(), project.getColor2(), this);
-        add(gradientPanel, BorderLayout.SOUTH);
-        gradientFunction = new GradientFunction(project.getColor1(), project.getColor2());
 	}
 
     public void renderNoise() {
@@ -171,8 +174,8 @@ class EditorPanel extends JPanel {
         int height = noisePanelHeight;
         double[][] values = BackEnd.Editor.LayerManager.multiplyLayers(width, height, project.getLayerList());
         
-        gradientFunction.SetColor1(gradientPanel.getColor1());
-        gradientFunction.SetColor2(gradientPanel.getColor2());
+        gradientFunction.SetColor1(project.getColor1());
+        gradientFunction.SetColor2(project.getColor2());
         BufferedImage newBitmap = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         for (int x = 0; x < width; x++) {

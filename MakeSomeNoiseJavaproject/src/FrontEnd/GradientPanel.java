@@ -113,6 +113,8 @@ public class GradientPanel extends JPanel{
 
     public void updateSample(){
         GradientFunction gradient = new GradientFunction(getColor1(), getColor2());
+        source.getProject().setColor1(getColor1());
+        source.getProject().setColor2(getColor2());
         for(int x = 0; x < gradientSample.getWidth(); x++){
             double location = (double)x/(double)gradientSample.getWidth();
             for(int y = 0; y < gradientSample.getHeight(); y++){

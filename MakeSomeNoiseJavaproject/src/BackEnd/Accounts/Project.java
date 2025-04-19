@@ -21,8 +21,8 @@ public class Project {
     public String thumbnail;
     public List<String> tags = new ArrayList<>();
     private final List<NoiseLayer> layers = new ArrayList<>();
-    private int color1 = 0x000000;
-    private int color2 = 0xFFFFFF;
+    public int color1 = 0x000000;
+    public int color2 = 0xFFFFFF;
 
     public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
@@ -80,7 +80,7 @@ public class Project {
         this.color1 = hexCode;
     }
 
-    public void SetColor2(int hexCode){
+    public void setColor2(int hexCode){
         this.color2 = hexCode;
     }
 
@@ -117,12 +117,16 @@ public class Project {
             List<String> tags = Arrays.stream(tagString.split("[^A-Za-z]+"))
                     .filter(s -> !s.isEmpty())
                     .toList();
+            int c1 = projectNode.get("color1").asInt();
+            int c2 = projectNode.get("color2").asInt();
 
             // Create a new project instance
             Project project = new Project(projectId, title, dateCreated);
             project.status = status;
             project.thumbnail = thumbnail;
             project.tags.addAll(tags);
+            project.setColor1(c1);
+            project.setColor2(c2);
 
             // Extract NoiseLayer objects
             int layerIndex = 1;
@@ -189,7 +193,8 @@ public class Project {
         s.append("\"dateCreated\": \"").append(this.dateCreated.toString()).append("\",");
         s.append("\"status\": \"").append(this.status).append("\",");
         s.append("\"thumbnail\": \"").append(this.thumbnail).append("\",");
-
+        s.append("\"color1\": \"").append(this.getColor1()).append("\",");
+        s.append("\"color2\": \"").append(this.getColor2()).append("\",");
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonTags = objectMapper.writeValueAsString(this.tags);
