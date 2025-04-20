@@ -242,4 +242,23 @@ public class CurrentSession {
         }
         return false;
     }
+
+    public static Integer getProjectAccountID(Integer projectID){
+        try {
+            String IDstring = BasicDatabaseActions.getProjectInfoType(projectID, "accountID");
+            return Integer.parseInt(IDstring);
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+        return null;
+    }
+
+    public static boolean isAdmin(Integer accountID){
+        try {
+            return BasicDatabaseActions.isAdmin(accountID);
+        }catch (Exception e){
+            ExceptionHandler.handleException(e);
+        }
+        return false;
+    }
 }

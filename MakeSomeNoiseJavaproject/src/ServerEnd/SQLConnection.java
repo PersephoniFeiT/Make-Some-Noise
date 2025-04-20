@@ -12,7 +12,7 @@ public class SQLConnection {
     private static final String USER = "appUser";
     private static final String PASSWORD = "make some noise";
 
-    public static int insert(String tableName, String[] columns, String[] values) throws DatabaseConnectionException {
+    public static int insert(String tableName, String[] columns, Object[] values) throws DatabaseConnectionException {
         if (columns.length != values.length) {
             throw new IllegalArgumentException("Columns and values must have the same length.");
         }
@@ -25,7 +25,12 @@ public class SQLConnection {
              PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             for (int i = 0; i < values.length; i++) {
-                pstmt.setString(i + 1, values[i]);
+                if (values[i] instanceof String)
+                    pstmt.setString(i + 1, (String)values[i]);
+                else if (values[i] instanceof Integer)
+                    pstmt.setInt(i + 1, (Integer) values[i]);
+                else
+                    pstmt.setObject(i + 1, values[i]); // fallback for other types
             }
 
             pstmt.executeUpdate();
@@ -87,12 +92,12 @@ public class SQLConnection {
         }
     }
 
-    public static List<Map<String, String>> select(String tableName, String column, String[] conditionColumn, String[] conditionValue, String[] groupBy) throws DatabaseConnectionException {
+    public static List<Map<String, Object>> select(String tableName, String column, String[] conditionColumn, Object[] conditionValue, String[] groupBy) throws DatabaseConnectionException {
         if (conditionColumn.length != conditionValue.length) {
             throw new IllegalArgumentException("Condition columns and values must have the same length.");
         }
 
-        List<Map<String, String>> resultList = new ArrayList<>();
+        List<Map<String, Object>> resultList = new ArrayList<>();
 
         // Start building SQL query
         StringBuilder sqlBuilder = new StringBuilder("SELECT " + column + " FROM " + tableName);
@@ -125,10 +130,12 @@ public class SQLConnection {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             for (int i = 0; i < conditionValue.length; i++) {
-                if (isInteger(conditionValue[i])) {
-                    pstmt.setInt(i + 1, Integer.parseInt(conditionValue[i]));
-                } else {
-                    pstmt.setString(i + 1, conditionValue[i]);
+                if (conditionValue[i] instanceof Integer) {
+                    pstmt.setInt(i + 1, (Integer)conditionValue[i]);
+                } else if (conditionValue[i] instanceof String) {
+                    pstmt.setString(i + 1, (String)conditionValue[i]);
+                }else {
+                    pstmt.setObject(i+1, conditionValue[i]);
                 }
             }
 
@@ -137,9 +144,9 @@ public class SQLConnection {
                 int columnCount = meta.getColumnCount();
 
                 while (rs.next()) {
-                    Map<String, String> row = new HashMap<>();
+                    Map<String, Object> row = new HashMap<>();
                     for (int i = 1; i <= columnCount; i++) {
-                        row.put(meta.getColumnLabel(i), rs.getString(i));
+                        row.put(meta.getColumnLabel(i), rs.getObject(i));
                     }
                     resultList.add(row);
                 }
@@ -152,14 +159,15 @@ public class SQLConnection {
         return resultList;
     }
 
-    public static List<Map<String, String>> selectLike(String tableName, String column, String[] conditionColumn, String[] conditionValue, String[] groupBy) throws DatabaseConnectionException {
+
+    public static List<Map<String, Object>> selectLike(String tableName, String column, String[] conditionColumn, Object[] conditionValue, String[] groupBy) throws DatabaseConnectionException {
         if (conditionColumn.length != conditionValue.length) {
             throw new IllegalArgumentException("Condition columns and values must have the same length.");
         }
 
-        List<Map<String, String>> resultList = new ArrayList<>();
+        List<Map<String, Object>> resultList = new ArrayList<>();
 
-        // Build SQL query
+        // Start building SQL query
         StringBuilder sqlBuilder = new StringBuilder("SELECT " + column + " FROM " + tableName);
 
         // WHERE clause using LIKE for substring matching
@@ -190,7 +198,13 @@ public class SQLConnection {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             for (int i = 0; i < conditionValue.length; i++) {
-                pstmt.setString(i + 1, "%" + conditionValue[i] + "%");
+                if (conditionValue[i] instanceof Integer) {
+                    pstmt.setInt(i + 1, (Integer)conditionValue[i]);
+                } else if (conditionValue[i] instanceof String) {
+                    pstmt.setString(i + 1, "%"+(String)conditionValue[i]+"%");
+                }else {
+                    pstmt.setObject(i+1, conditionValue[i]);
+                }
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -198,9 +212,9 @@ public class SQLConnection {
                 int columnCount = meta.getColumnCount();
 
                 while (rs.next()) {
-                    Map<String, String> row = new HashMap<>();
+                    Map<String, Object> row = new HashMap<>();
                     for (int i = 1; i <= columnCount; i++) {
-                        row.put(meta.getColumnLabel(i), rs.getString(i));
+                        row.put(meta.getColumnLabel(i), rs.getObject(i));
                     }
                     resultList.add(row);
                 }
@@ -210,6 +224,7 @@ public class SQLConnection {
             throw new DatabaseConnectionException("Database connection error in select: " + e.getMessage());
         }
 
+        System.out.println(resultList.toString());
         return resultList;
     }
 
