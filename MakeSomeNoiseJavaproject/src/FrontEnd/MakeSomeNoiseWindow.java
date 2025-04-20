@@ -324,6 +324,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     public void signOut() {
         currentSession.SignOut();
         menuBar.getMenu(0).getItem(0).setText("Sign In");
+        if (currentPanel == accountPanel) goToAccountPanel();
     }
 
     public void createAccount(String username, String password, String email) {

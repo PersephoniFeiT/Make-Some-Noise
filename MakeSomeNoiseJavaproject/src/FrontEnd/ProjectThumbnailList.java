@@ -132,11 +132,9 @@ public class ProjectThumbnailList extends JScrollPane {
 				}
 				add(new JLabel(tagsString.toString()));
 
-				System.out.println(accountID);
-				System.out.println("is admin:"+ ProjectThumbnailList.this.mainWindow.isAdmin());
 				if (accountID != null || ProjectThumbnailList.this.mainWindow.isAdmin()
 						|| (CurrentSession.getProjectAccountID(projectID).equals(ProjectThumbnailList.this.mainWindow.getSignedIn()))
-				){
+					){
 					JButton deleteButton = new JButton("DELETE");
 					deleteButton.addActionListener(new ActionListener() {
 						@Override
@@ -150,6 +148,7 @@ public class ProjectThumbnailList extends JScrollPane {
 					});
 					this.add(deleteButton);
 				}
+				add(new JLabel("Status: " + projectInfo.get("status")));
 				
 			}
 		}

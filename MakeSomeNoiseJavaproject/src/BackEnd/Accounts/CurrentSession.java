@@ -131,9 +131,12 @@ public class CurrentSession {
         List<Integer> IDList = new ArrayList<>();
         try {
             String projectStringList = BasicDatabaseActions.getAccountInfoType(getSignedIn(), "projectList");
-            String trimmed = projectStringList.substring(1, projectStringList.length() - 1).trim();
-            List<String> IDStringList = new ArrayList<String>(Arrays.asList(trimmed.split(",")));
-            for (int i = 0; i < IDStringList.size(); i++) IDList.add(i, Integer.parseInt(IDStringList.get(i).trim()));
+            List<String> IDStringList = Arrays.stream(projectStringList.split("[\\[\\],\\s]"))
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+            //String trimmed = projectStringList.substring(1, projectStringList.length() - 1).trim();
+            //List<String> IDStringList = new ArrayList<String>(Arrays.asList(trimmed.split(",")));
+            for (int i = 0; i < IDStringList.size(); i++) IDList.add(i, Integer.parseInt(IDStringList.get(i)));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
