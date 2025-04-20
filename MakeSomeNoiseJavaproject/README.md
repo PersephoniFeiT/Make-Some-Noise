@@ -18,9 +18,9 @@ Please ensure you have MySQL downloaded. Run the server on localhost, and ensure
 
 `accounts:`
 
-| ID  | username    | password    | email       | projectList |
-|-----|-------------|-------------|-------------|-------------|
-| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | JSON        |
+| ID  | username    | password    | email       | projectList | admin      |
+|-----|-------------|-------------|-------------|-------------|------------|
+| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | JSON        | TINYINT(1) |
 
 `projects:`
 

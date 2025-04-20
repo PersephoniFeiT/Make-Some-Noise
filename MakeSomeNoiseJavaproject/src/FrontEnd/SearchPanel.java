@@ -23,7 +23,10 @@ public class SearchPanel extends JPanel {
 
 	public SearchPanel(MakeSomeNoiseWindow mainWindow) {
 		this.mainWindow = mainWindow;
-		searchResults = new ProjectThumbnailList(this.mainWindow, null, new ArrayList<>());
+
+		Integer ID = null;
+		if (this.mainWindow.isAdmin()) ID = this.mainWindow.getSignedIn();
+		searchResults = new ProjectThumbnailList(this.mainWindow, ID, new ArrayList<>());
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -55,7 +58,9 @@ public class SearchPanel extends JPanel {
 				remove(searchResults);
 
 				// Add new results
-				searchResults = new ProjectThumbnailList(SearchPanel.this.mainWindow, null, searchByList);
+				Integer ID = null;
+				if (SearchPanel.this.mainWindow.isAdmin()) ID = SearchPanel.this.mainWindow.getSignedIn();
+				searchResults = new ProjectThumbnailList(SearchPanel.this.mainWindow, ID, searchByList);
 				add(searchResults);
 
 				// Refresh UI

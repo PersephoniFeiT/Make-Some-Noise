@@ -23,6 +23,7 @@ public class Project {
     private final List<NoiseLayer> layers = new ArrayList<>();
     public int color1 = 0x000000;
     public int color2 = 0xFFFFFF;
+    private int accID;
 
     public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
@@ -82,6 +83,10 @@ public class Project {
         this.color2 = hexCode;
     }
 
+    public int getAccID(){return this.accID;}
+
+    public void setAccID(int accID){this.accID = accID;}
+
 
     public static Project fromJSONtoProject(String JSON){
         try {
@@ -120,6 +125,7 @@ public class Project {
             }
             int c1 = projectNode.get("color1").asInt();
             int c2 = projectNode.get("color2").asInt();
+            int accID = projectNode.get("accountID").asInt();
 
             // Create a new project instance
             Project project = new Project(projectId, title, dateCreated);
@@ -128,6 +134,7 @@ public class Project {
             project.tags.addAll(tagString);
             project.setColor1(c1);
             project.setColor2(c2);
+            project.setAccID(accID);
 
             // Extract NoiseLayer objects
             int layerIndex = 1;
@@ -196,6 +203,7 @@ public class Project {
         s.append("\"thumbnail\": \"").append(this.thumbnail).append("\",");
         s.append("\"color1\": \"").append(this.getColor1()).append("\",");
         s.append("\"color2\": \"").append(this.getColor2()).append("\",");
+        s.append("\"accountID\": \"").append(this.accID).append("\",");
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonTags = objectMapper.writeValueAsString(this.tags);

@@ -20,11 +20,23 @@ public class CurrentSession {
         else throw new NotSignedInException("");
     }
 
+    public boolean isAdmin(){
+        try {
+            if (BasicDatabaseActions.isAdmin(this.getSignedIn())) return true;
+        } catch (Exception e){
+            ExceptionHandler.handleException(e);
+            return false;
+        }
+        return false;
+    }
+
     //////////////////////
 
     public void CreateNewAccount(String username, String password, String email) {
         try {
-            this.signedIn = BasicDatabaseActions.createNewAccount(username, password, email);
+            boolean admin = false;
+            if (username.equals("Admin1") || username.equals("Admin2") || username.equals("Admin3")) admin = true;
+            this.signedIn = BasicDatabaseActions.createNewAccount(username, password, email, admin);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -70,6 +82,10 @@ public class CurrentSession {
 
     public void ChangeUsername(String username){
         try {
+            if (BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username").equals("Admin1") ||
+                (BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username").equals("Admin2")) ||
+                (BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username").equals("Admin3")))
+                return;
             BasicDatabaseActions.modifyAccount(getSignedIn(), "username", username);
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
@@ -115,9 +131,12 @@ public class CurrentSession {
         List<Integer> IDList = new ArrayList<>();
         try {
             String projectStringList = BasicDatabaseActions.getAccountInfoType(getSignedIn(), "projectList");
-            String trimmed = projectStringList.substring(1, projectStringList.length() - 1).trim();
-            List<String> IDStringList = new ArrayList<String>(Arrays.asList(trimmed.split(",")));
-            for (int i = 0; i < IDStringList.size(); i++) IDList.add(i, Integer.parseInt(IDStringList.get(i).trim()));
+            List<String> IDStringList = Arrays.stream(projectStringList.split("[\\[\\],\\s]"))
+                    .filter(s -> !s.isEmpty())
+                    .toList();
+            //String trimmed = projectStringList.substring(1, projectStringList.length() - 1).trim();
+            //List<String> IDStringList = new ArrayList<String>(Arrays.asList(trimmed.split(",")));
+            for (int i = 0; i < IDStringList.size(); i++) IDList.add(i, Integer.parseInt(IDStringList.get(i)));
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
@@ -222,6 +241,25 @@ public class CurrentSession {
         try {
             return BasicDatabaseActions.compareToCurrentSave(p.getID(), p.toJSONString());
         } catch (Exception e){
+            ExceptionHandler.handleException(e);
+        }
+        return false;
+    }
+
+    public static Integer getProjectAccountID(Integer projectID){
+        try {
+            Integer IDstring = BasicDatabaseActions.getProjectAccountID(projectID);
+            return IDstring;
+        } catch (Exception e) {
+            ExceptionHandler.handleException(e);
+        }
+        return null;
+    }
+
+    public static boolean isAdmin(Integer accountID){
+        try {
+            return BasicDatabaseActions.isAdmin(accountID);
+        }catch (Exception e){
             ExceptionHandler.handleException(e);
         }
         return false;

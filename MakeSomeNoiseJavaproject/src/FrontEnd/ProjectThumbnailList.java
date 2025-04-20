@@ -23,22 +23,8 @@ import java.util.Map;
 public class ProjectThumbnailList extends JScrollPane {
 
 	private ContentPanel contents;
-	private Integer accountID = null;
+	private Integer accountID;
 	private MakeSomeNoiseWindow mainWindow;
-
-	// constructor
-	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow) {
-		this.mainWindow = mainWindow;
-		contents = new ContentPanel();
-		setViewportView(contents);
-	}
-
-	// constructor
-	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, List<Integer> projectIDs) {
-		this.mainWindow = mainWindow;
-		contents = new ContentPanel(projectIDs);
-		setViewportView(contents);
-	}
 
 	// constructor
 	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, Integer accountID, List<Integer> projectIDs) {
@@ -114,7 +100,7 @@ public class ProjectThumbnailList extends JScrollPane {
 				this.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(final MouseEvent e) {
-						if (accountID == null){ // if it's null, it's not your project or you're on share
+						if (accountID == null || !ProjectThumbnailList.this.mainWindow.getSignedIn().equals(CurrentSession.getProjectAccountID(projectID))){ // if it's null, it's not your project or you're on share
 							//so download the file.
 							ProjectThumbnailList.this.mainWindow.saveProjectLocal(Project.fromJSONtoProject(projectInfo.get("projectInfoStruct")));
 						} else {
@@ -124,8 +110,6 @@ public class ProjectThumbnailList extends JScrollPane {
 				});
 
 				BufferedImage tn;
-				System.out.println("Working directory: " + System.getProperty("user.dir"));
-				System.out.println(projectInfo.get("thumbnail"));
 				try {
 					tn = ImageIO.read(new File(projectInfo.get("thumbnail")));
 					Image scaled = tn.getScaledInstance(90, 50, Image.SCALE_SMOOTH);
@@ -148,18 +132,23 @@ public class ProjectThumbnailList extends JScrollPane {
 				}
 				add(new JLabel(tagsString.toString()));
 
-				if (accountID != null) {
+				if (accountID != null || ProjectThumbnailList.this.mainWindow.isAdmin()
+						|| (CurrentSession.getProjectAccountID(projectID).equals(ProjectThumbnailList.this.mainWindow.getSignedIn()))
+					){
 					JButton deleteButton = new JButton("DELETE");
 					deleteButton.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							CurrentSession.DeleteProject(accountID, projectID);
+							Integer accID = accountID;
+							if (ProjectThumbnailList.this.mainWindow.isAdmin()) accID = CurrentSession.getProjectAccountID(projectID);
+							CurrentSession.DeleteProject(accID, projectID);
 							ContentPanel.this.removeThumbnail(projectID);
 							ProjectThumbnailList.this.reloadThumbnails();
 						}
 					});
 					this.add(deleteButton);
 				}
+				add(new JLabel("Status: " + projectInfo.get("status")));
 				
 			}
 		}

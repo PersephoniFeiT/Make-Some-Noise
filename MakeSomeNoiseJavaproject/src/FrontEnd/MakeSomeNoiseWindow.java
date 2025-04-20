@@ -26,7 +26,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     private EditorPanel editorPanel = null;
     private AccountPanel accountPanel = null;
     private SearchPanel searchPanel = null;
-
+    private boolean adminOn = false;
     private JPanel currentPanel = null;
 
     private JMenuBar menuBar;
@@ -158,9 +158,16 @@ public class MakeSomeNoiseWindow extends JFrame {
         setVisible(true);
     }
 
-    public static void reloadPanel(JPanel panel){
-        panel.revalidate();
-        panel.repaint();
+    public boolean isAdmin(){
+        return this.adminOn;
+    }
+
+    public Integer getSignedIn(){
+        try {
+            return this.currentSession.getSignedIn();
+        } catch (Exception e){
+            return null;
+        }
     }
 
     public void saveProjectLocal(Project p) {
@@ -309,6 +316,7 @@ public class MakeSomeNoiseWindow extends JFrame {
 
     public void signIn(String username, String password) throws IncorrectPasswordException, NoSuchAccountException, InvalidInputException {
         currentSession.SignIn(username, password);
+        this.adminOn = currentSession.isAdmin();
         menuBar.getMenu(0).getItem(0).setText("Sign Out");
         if (currentPanel == accountPanel) goToAccountPanel();
     }
@@ -316,6 +324,7 @@ public class MakeSomeNoiseWindow extends JFrame {
     public void signOut() {
         currentSession.SignOut();
         menuBar.getMenu(0).getItem(0).setText("Sign In");
+        if (currentPanel == accountPanel) goToAccountPanel();
     }
 
     public void createAccount(String username, String password, String email) {

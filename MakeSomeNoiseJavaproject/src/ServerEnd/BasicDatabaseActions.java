@@ -35,13 +35,13 @@ public class BasicDatabaseActions {
 
     private static boolean checkForDuplicateAccounts(String value) throws SQLException, DatabaseConnectionException {
         // Check if duplicate account
-        List<Map<String, String>> rs = SQLConnection.select("accounts",
+        List<Map<String, Object>> rs = SQLConnection.select("accounts",
                 "username, COUNT(*) as count",
                 new String[]{"username"},                 // WHERE username = ?
                 new String[]{value},                      // value = "test", etc.
                 new String[]{"username"} );
-        for (Map<String,String> m : rs){
-            int count = Integer.parseInt(m.get("count"));
+        for (Map<String,Object> m : rs){
+            int count = (int) m.get("count");
             if (count > 0) return true;
         }
         return false;
@@ -61,12 +61,23 @@ public class BasicDatabaseActions {
      * biographical field. */
     public static String getAccountInfoType(int ID, String type) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{type});
-        List<Map<String, String>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new String[]{""+ID}, null);
-        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new NoSuchAccountException("Cannot get account info of accoutn that doesn't exist.");
-        return rs.get(0).get(type);
+        List<Map<String, Object>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new Object[]{ID}, null);
+        Object result = rs.get(0).get(type);
+        if (rs.isEmpty() || result == null) throw new NoSuchAccountException("Cannot get account info of account that doesn't exist.");
+        if (result instanceof String)
+            return (String)rs.get(0).get(type);
+        else throw new InvalidInputException("Error in finding string information for type " + type);
     }
 
-    public static int createNewAccount(String username, String password, String email) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
+    public static boolean isAdmin(int ID) throws DatabaseConnectionException, NoSuchAccountException, InvalidInputException {
+        List<Map<String, Object>> rs = SQLConnection.select("accounts", "admin", new String[]{"ID"}, new Object[]{ID}, null);
+        if (rs.isEmpty() || rs.getFirst().get("admin") == null) throw new NoSuchAccountException("Cannot get account info of account that doesn't exist.");
+        if (rs.get(0).get("admin") instanceof Boolean)
+            return ((Boolean)rs.get(0).get("admin"));
+        else throw new InvalidInputException("Error in finding string information for admin.");
+    }
+
+    public static int createNewAccount(String username, String password, String email, boolean admin) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{username, password, email});
 
         if (BasicDatabaseActions.checkForDuplicateAccounts(username))
@@ -77,20 +88,21 @@ public class BasicDatabaseActions {
                 new String[] {"username",
                         "password",
                         "email",
-                        "projectList"
+                        "projectList",
                 },
                 new String[]{username, password, email, "[]"});
+        SQLConnection.update("accounts", ID, "admin", (admin)?1:0 );
         return ID;
     }
 
-    public static int signIn(String username, String password) throws DatabaseConnectionException, NoSuchAccountException, IncorrectPasswordException, InvalidInputException {
+    public static Integer signIn(String username, String password) throws DatabaseConnectionException, NoSuchAccountException, IncorrectPasswordException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{username, password});
 
-        List<Map<String, String>> rs = SQLConnection.select("accounts", "*", new String[]{"username"}, new String[]{username}, null);
+        List<Map<String, Object>> rs = SQLConnection.select("accounts", "*", new String[]{"username"}, new Object[]{username}, null);
         if (rs.isEmpty() || rs.get(0).isEmpty()) throw new NoSuchAccountException("There is no account with username " + username);
-        for (Map<String, String> m : rs){
+        for (Map<String, Object> m : rs){
             //assuming 1st col is ID, 2nd is username, 3rd is pwd
-            if (m.get("password").equals(password)) return Integer.parseInt(m.get("ID"));
+            if (m.get("password").equals(password)) return (Integer) m.get("ID");
         }
         throw new IncorrectPasswordException("Your username or password is incorrect.");
     }
@@ -134,9 +146,21 @@ public class BasicDatabaseActions {
     /** Open project: Get project info */
     public static String getProjectInfoType(int ID, String type) throws InvalidInputException, SQLException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{type});
-        List<Map<String, String>> rs = SQLConnection.select("projects", type, new String[]{"ID"},new String[]{""+ID}, null);
-        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
-        return rs.get(0).get(type);
+        List<Map<String, Object>> rs = SQLConnection.select("projects", type, new String[]{"ID"},new Object[]{ID}, null);
+        Object result = rs.get(0).get(type);
+        if (rs.isEmpty() || result == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
+        if (result instanceof String)
+            return (String)result;
+        else throw new InvalidInputException("Error in finding string information for type " + type);
+    }
+
+    public static Integer getProjectAccountID(int ID) throws InvalidInputException, SQLException, DatabaseConnectionException{
+        List<Map<String, Object>> rs = SQLConnection.select("projects", "accountID", new String[]{"ID"},new Object[]{ID}, null);
+        Object result = rs.get(0).get("accountID");
+        if (rs.isEmpty() || result == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
+        if (result instanceof Integer)
+            return (Integer)result;
+        else throw new InvalidInputException("Error in finding string information for accountID.");
     }
 
     public static int createNewProject(int accountID, String JSON) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
@@ -153,16 +177,18 @@ public class BasicDatabaseActions {
                     "status",
                     "projectInfoStruct",
                     "thumbnail",
-                    "tags"
+                    "tags",
+                    "accountID"
             },
-            new String[] {
+            new Object[] {
                     p.title,
                     BasicDatabaseActions.getAccountInfoType(accountID, "username"),
                     p.dateCreated.toString(),
                     "private",
                     JSON,
                     "MakeSomeNoiseJavaproject/src/ImageSources/stockThumbnail.png",
-                    p.tags.toString()
+                    p.tags.toString(),
+                    accountID
             });
 
         //update the JSON ID
@@ -189,13 +215,13 @@ public class BasicDatabaseActions {
         ////////////////////////////
         // update account list
         // Step 2: Fetch the existing projects list from the 'accounts' table
-        List<Map<String, String>> existingProjectsRs = SQLConnection.select("accounts", "projectList", new String[]{"ID"}, new String[]{""+accountID}, null);
+        List<Map<String, Object>> existingProjectsRs = SQLConnection.select("accounts", "projectList", new String[]{"ID"}, new Object[]{accountID}, null);
 
         // Step 3: Prepare the updated projects list (including the new project ID)
         String updatedProjects = "[]";
         //for (Map<String, String> m : existingProjectsRs) {
         if (!existingProjectsRs.isEmpty() && existingProjectsRs.get(0).get("projectList") != null) {
-            String currentProjects = existingProjectsRs.get(0).get("projectList"); // Assuming 'projects' is a string field or JSON
+            String currentProjects = (String)existingProjectsRs.get(0).get("projectList"); // Assuming 'projects' is a string field or JSON
             updatedProjects = addIDToStringList(currentProjects, ID);
         }
 
@@ -267,16 +293,10 @@ public class BasicDatabaseActions {
     public static boolean compareToCurrentSave(int projectID, String currentData) throws SQLException, InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{currentData});
 
-        // Check if duplicate account
-        /* SELECT ID, projectStruct, COUNT(*) as count
-            FROM projects
-            WHERE ID = ? AND projectStruct = ?
-            GROUP BY ID, projectStruct;
-            */
-        List<Map<String, String>> rs = SQLConnection.select("projects", "ID, projectInfoStruct, COUNT(*) as count",
-                new String[]{"ID", "projectStruct"}, new String[]{""+projectID, currentData}, new String[]{"ID", "projectInfoStruct"});
-        for (Map<String, String> m : rs){
-            int count = Integer.parseInt(m.get("count"));
+        List<Map<String, Object>> rs = SQLConnection.select("projects", "ID, projectInfoStruct, COUNT(*) as count",
+                new String[]{"ID", "projectStruct"}, new Object[]{projectID, currentData}, new String[]{"ID", "projectInfoStruct"});
+        for (Map<String, Object> m : rs){
+            int count = (Integer)m.get("count");
             if (count > 0) return true;
         }
         return false;
@@ -316,13 +336,12 @@ public class BasicDatabaseActions {
      * If a user is logged in and connected to the internet, they may search the server for posts. They will be
      * prompted to enter search terms. The application will show the user a list of public posts with tags and
      * titles that match the search terms. */
-    public static List<Integer> searchBy(String[] toSearchBy, String[] value) throws InvalidInputException, DatabaseConnectionException{
+    public static List<Integer> searchBy(String[] toSearchBy, Object[] value) throws InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(toSearchBy);
-        BasicDatabaseActions.assertFormat(value);
-        List<Map<String, String>> rs = SQLConnection.selectLike("projects", "ID", toSearchBy, value, null);
+        List<Map<String, Object>> rs = SQLConnection.selectLike("projects", "ID", toSearchBy, value, null);
         List<Integer> projectIDs = new ArrayList<>();
-        for (Map<String, String> m : rs){
-            projectIDs.add(Integer.parseInt(m.get("ID")));
+        for (Map<String, Object> m : rs){
+            projectIDs.add((Integer)(m.get("ID")));
         }
         return projectIDs;
     }

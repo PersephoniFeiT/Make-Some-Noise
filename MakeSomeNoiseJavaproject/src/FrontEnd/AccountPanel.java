@@ -17,7 +17,7 @@ public class AccountPanel extends JPanel {
 		this.mainWindow = mainWindow;
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		String projectListText;
+		String projectListText = "";
 		try {
 			accountId = currentSession.getSignedIn();
 			projectListText = "Your projects:";
@@ -25,7 +25,6 @@ public class AccountPanel extends JPanel {
 			accountId = null;
 			projectListText = "You are not signed in.";
 		}
-
 		header = new AccountHeader(accountInfo, currentSession);
 		projectList = new ProjectThumbnailList(mainWindow, accountId, currentSession.GetProjectsInAccount());
 
