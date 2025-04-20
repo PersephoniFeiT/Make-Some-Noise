@@ -23,22 +23,8 @@ import java.util.Map;
 public class ProjectThumbnailList extends JScrollPane {
 
 	private ContentPanel contents;
-	private Integer accountID = null;
+	private Integer accountID;
 	private MakeSomeNoiseWindow mainWindow;
-
-	// constructor
-	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow) {
-		this.mainWindow = mainWindow;
-		contents = new ContentPanel();
-		setViewportView(contents);
-	}
-
-	// constructor
-	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, List<Integer> projectIDs) {
-		this.mainWindow = mainWindow;
-		contents = new ContentPanel(projectIDs);
-		setViewportView(contents);
-	}
 
 	// constructor
 	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, Integer accountID, List<Integer> projectIDs) {
@@ -124,8 +110,6 @@ public class ProjectThumbnailList extends JScrollPane {
 				});
 
 				BufferedImage tn;
-				System.out.println("Working directory: " + System.getProperty("user.dir"));
-				System.out.println(projectInfo.get("thumbnail"));
 				try {
 					tn = ImageIO.read(new File(projectInfo.get("thumbnail")));
 					Image scaled = tn.getScaledInstance(90, 50, Image.SCALE_SMOOTH);

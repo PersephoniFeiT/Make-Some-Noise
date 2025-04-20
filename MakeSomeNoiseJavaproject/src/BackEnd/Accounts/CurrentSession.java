@@ -20,6 +20,16 @@ public class CurrentSession {
         else throw new NotSignedInException("");
     }
 
+    public boolean isAdmin(){
+        try {
+            if (BasicDatabaseActions.isAdmin(this.getSignedIn())) return true;
+        } catch (Exception e){
+            ExceptionHandler.handleException(e);
+            return false;
+        }
+        return false;
+    }
+
     //////////////////////
 
     public void CreateNewAccount(String username, String password, String email) {
