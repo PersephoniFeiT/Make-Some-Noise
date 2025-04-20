@@ -61,15 +61,20 @@ public class BasicDatabaseActions {
      * biographical field. */
     public static String getAccountInfoType(int ID, String type) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{type});
-        List<Map<String, Object>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new String[]{""+ID}, null);
-        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new NoSuchAccountException("Cannot get account info of account that doesn't exist.");
-        return (String)rs.get(0).get(type);
+        List<Map<String, Object>> rs = SQLConnection.select("accounts", type, new String[]{"ID"}, new Object[]{ID}, null);
+        Object result = rs.get(0).get(type);
+        if (rs.isEmpty() || result == null) throw new NoSuchAccountException("Cannot get account info of account that doesn't exist.");
+        if (result instanceof String)
+            return (String)rs.get(0).get(type);
+        else throw new InvalidInputException("Error in finding string information for type " + type);
     }
 
-    public static boolean isAdmin(int ID) throws DatabaseConnectionException, NoSuchAccountException {
+    public static boolean isAdmin(int ID) throws DatabaseConnectionException, NoSuchAccountException, InvalidInputException {
         List<Map<String, Object>> rs = SQLConnection.select("accounts", "admin", new String[]{"ID"}, new Object[]{ID}, null);
         if (rs.isEmpty() || rs.getFirst().get("admin") == null) throw new NoSuchAccountException("Cannot get account info of account that doesn't exist.");
-        return (rs.getFirst().get("admin").equals(1));
+        if (rs.get(0).get("admin") instanceof Boolean)
+            return ((Boolean)rs.get(0).get("admin"));
+        else throw new InvalidInputException("Error in finding string information for admin.");
     }
 
     public static int createNewAccount(String username, String password, String email, boolean admin) throws SQLException, DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
@@ -142,8 +147,20 @@ public class BasicDatabaseActions {
     public static String getProjectInfoType(int ID, String type) throws InvalidInputException, SQLException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{type});
         List<Map<String, Object>> rs = SQLConnection.select("projects", type, new String[]{"ID"},new Object[]{ID}, null);
-        if (rs.isEmpty() || rs.get(0).get(type) == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
-        return (String)rs.get(0).get(type);
+        Object result = rs.get(0).get(type);
+        if (rs.isEmpty() || result == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
+        if (result instanceof String)
+            return (String)result;
+        else throw new InvalidInputException("Error in finding string information for type " + type);
+    }
+
+    public static Integer getProjectAccountID(int ID) throws InvalidInputException, SQLException, DatabaseConnectionException{
+        List<Map<String, Object>> rs = SQLConnection.select("projects", "accountID", new String[]{"ID"},new Object[]{ID}, null);
+        Object result = rs.get(0).get("accountID");
+        if (rs.isEmpty() || result == null) throw new InvalidInputException("Cannot get project info of project that doesn't exist.");
+        if (result instanceof Integer)
+            return (Integer)result;
+        else throw new InvalidInputException("Error in finding string information for accountID.");
     }
 
     public static int createNewProject(int accountID, String JSON) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {

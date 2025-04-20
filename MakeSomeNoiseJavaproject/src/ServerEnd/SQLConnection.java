@@ -223,8 +223,6 @@ public class SQLConnection {
         } catch (SQLException e) {
             throw new DatabaseConnectionException("Database connection error in select: " + e.getMessage());
         }
-
-        System.out.println(resultList.toString());
         return resultList;
     }
 

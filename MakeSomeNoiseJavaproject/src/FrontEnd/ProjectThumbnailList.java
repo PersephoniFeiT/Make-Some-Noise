@@ -100,7 +100,7 @@ public class ProjectThumbnailList extends JScrollPane {
 				this.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(final MouseEvent e) {
-						if (accountID == null || CurrentSession.isAdmin(accountID)){ // if it's null, it's not your project or you're on share
+						if (accountID == null || !ProjectThumbnailList.this.mainWindow.getSignedIn().equals(CurrentSession.getProjectAccountID(projectID))){ // if it's null, it's not your project or you're on share
 							//so download the file.
 							ProjectThumbnailList.this.mainWindow.saveProjectLocal(Project.fromJSONtoProject(projectInfo.get("projectInfoStruct")));
 						} else {
@@ -132,7 +132,11 @@ public class ProjectThumbnailList extends JScrollPane {
 				}
 				add(new JLabel(tagsString.toString()));
 
-				if (accountID != null) {
+				System.out.println(accountID);
+				System.out.println("is admin:"+ ProjectThumbnailList.this.mainWindow.isAdmin());
+				if (accountID != null || ProjectThumbnailList.this.mainWindow.isAdmin()
+						|| (CurrentSession.getProjectAccountID(projectID).equals(ProjectThumbnailList.this.mainWindow.getSignedIn()))
+				){
 					JButton deleteButton = new JButton("DELETE");
 					deleteButton.addActionListener(new ActionListener() {
 						@Override

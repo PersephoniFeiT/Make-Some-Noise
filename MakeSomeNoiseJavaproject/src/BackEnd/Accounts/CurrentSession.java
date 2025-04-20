@@ -245,8 +245,8 @@ public class CurrentSession {
 
     public static Integer getProjectAccountID(Integer projectID){
         try {
-            String IDstring = BasicDatabaseActions.getProjectInfoType(projectID, "accountID");
-            return Integer.parseInt(IDstring);
+            Integer IDstring = BasicDatabaseActions.getProjectAccountID(projectID);
+            return IDstring;
         } catch (Exception e) {
             ExceptionHandler.handleException(e);
         }
