@@ -28,4 +28,13 @@ public enum BlendMode {
     public String toString() {
         return this.name();
     }
+
+    public static BlendMode fromInt(int i){
+        for(BlendMode blendmode : values()){
+            if(i == blendmode.mode){
+                return blendmode;
+            }
+        }
+        return MULTIPLY;
+    }
 }
