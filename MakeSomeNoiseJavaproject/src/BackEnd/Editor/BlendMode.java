@@ -9,4 +9,13 @@ public enum BlendMode {
     private BlendMode(int mode){
         this.mode = mode;
     }
+
+    public static BlendMode fromInt(int i){
+        for(BlendMode blendmode : values()){
+            if(i == blendmode.mode){
+                return blendmode;
+            }
+        }
+        return MULTIPLY;
+    }
 }

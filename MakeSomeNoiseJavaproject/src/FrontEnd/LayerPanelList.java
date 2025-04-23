@@ -2,6 +2,7 @@ package FrontEnd;
 
 import BackEnd.Editor.Simplex2NoiseLayer;
 import BackEnd.Editor.Simplex3NoiseLayer;
+import BackEnd.Editor.BlendMode;
 import BackEnd.Editor.NoiseLayer;
 import BackEnd.Editor.PerlinNoiseLayer;
 import BackEnd.Editor.RandomNoiseLayer;
@@ -49,6 +50,7 @@ public class LayerPanelList extends JScrollPane {
 		private LabeledTextField freq;
 		private LabeledTextField amp;
 		private LabeledTextField gain;
+		private JComboBox<String> blendMode;
 		private LabeledTextField floor;
 		private LabeledTextField ceiling;
 
@@ -110,8 +112,10 @@ public class LayerPanelList extends JScrollPane {
 							Integer.parseInt(seed.text.getText()),
 							Double.parseDouble(floor.text.getText()),
 							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(gain.text.getText()),
 							Double.parseDouble(amp.text.getText()),
-							Double.parseDouble(freq.text.getText())
+							Double.parseDouble(freq.text.getText()),
+							BlendMode.fromInt(blendMode.getSelectedIndex())
 						);
 					} else if (choice.equals("Perlin Noise")) {
 						noiseLayer = new PerlinNoiseLayer();
@@ -120,16 +124,20 @@ public class LayerPanelList extends JScrollPane {
 							Integer.parseInt(seed.text.getText()),
 							Double.parseDouble(floor.text.getText()),
 							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(gain.text.getText()),
 							Double.parseDouble(amp.text.getText()),
-							Double.parseDouble(freq.text.getText())
+							Double.parseDouble(freq.text.getText()),
+							BlendMode.fromInt(blendMode.getSelectedIndex())
 						);
 					} else if (choice.equals("Simplex3 Noise")) {
 						noiseLayer = new Simplex3NoiseLayer(
 							Integer.parseInt(seed.text.getText()),
 							Double.parseDouble(floor.text.getText()),
 							Double.parseDouble(ceiling.text.getText()),
+							Double.parseDouble(gain.text.getText()),
 							Double.parseDouble(amp.text.getText()),
-							Double.parseDouble(freq.text.getText())
+							Double.parseDouble(freq.text.getText()),
+							BlendMode.fromInt(blendMode.getSelectedIndex())
 						);
 					}
 
@@ -146,9 +154,11 @@ public class LayerPanelList extends JScrollPane {
 			layerNameAndType.add(layerType);
 
 			int columnNumber = 3;
+			String[] blendModeOptions = {"Multiply","Divide","Add","Subtract"};
 			seed =	new LabeledTextField("Seed", ""+nl.getSeed(), columnNumber);
 			freq =	new LabeledTextField("Freq", ""+nl.getFreq(), columnNumber);
 			amp =	new LabeledTextField("Amp", ""+nl.getAmp(), columnNumber);
+			blendMode = new JComboBox<>(blendModeOptions);
 			gain =	new LabeledTextField("Gain", ""+nl.getGain(), columnNumber);
 			floor =	new LabeledTextField("Floor", ""+nl.getFloor(), columnNumber);
 			ceiling =	new LabeledTextField("Ceil", ""+nl.getCeiling(), columnNumber);
@@ -196,6 +206,12 @@ public class LayerPanelList extends JScrollPane {
 				}
 			});
 
+			blendMode.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					updateLayer();
+				}
+			});
+
 			JButton deleteButton = new JButton("Delete");
 			deleteButton.addActionListener(new ActionListener() {
 				@Override
@@ -216,8 +232,9 @@ public class LayerPanelList extends JScrollPane {
 			add(gain);
 			add(floor);
 			add(ceiling);
+			add(blendMode);
 			add(deleteButton);
-
+			
 			setMaximumSize(new Dimension(10000, 60));
 
 			hostEditorPanel.renderNoise();
@@ -336,7 +353,7 @@ public class LayerPanelList extends JScrollPane {
 		}
 
 		public void addLayer() {
-			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 1.0, 1.0);
+			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 1.0, 1.0, 1.0, BlendMode.MULTIPLY);
 			LayerPanel lp = new LayerPanel(newLayer, project, hostEditorPanel);
 			project.addLayer(newLayer);
 			this.add(lp);
