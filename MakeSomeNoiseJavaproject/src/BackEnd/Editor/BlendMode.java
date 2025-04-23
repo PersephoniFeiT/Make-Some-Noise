@@ -6,7 +6,26 @@ public enum BlendMode {
     ADD(2),
     SUBTRACT(3);
     private int mode;
+
     private BlendMode(int mode){
         this.mode = mode;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public static BlendMode fromString(String name) {
+        for (BlendMode bm : BlendMode.values()) {
+            if (bm.name().equalsIgnoreCase(name)) {
+                return bm;
+            }
+        }
+        throw new IllegalArgumentException("Unknown blend mode: " + name);
+    }
+
+    @Override
+    public String toString() {
+        return this.name();
     }
 }

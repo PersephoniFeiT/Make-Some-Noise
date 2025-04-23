@@ -24,6 +24,7 @@ public class Project {
     public int color1 = 0x000000;
     public int color2 = 0xFFFFFF;
     private int accID;
+    private BlendMode bm = BlendMode.MULTIPLY;
 
     public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
@@ -86,6 +87,11 @@ public class Project {
     public int getAccID(){return this.accID;}
 
     public void setAccID(int accID){this.accID = accID;}
+
+    public BlendMode getBlendMode(){return this.bm;}
+
+    public void setBlendMode(String bmString){this.bm = BlendMode.fromString(bmString);}
+    public void setBlendMode(BlendMode bm){this.bm = bm;}
 
 
     public static Project fromJSONtoProject(String JSON){
@@ -151,6 +157,8 @@ public class Project {
                 double floor = layerNode.get("floor").asDouble();
                 double ceiling = layerNode.get("ceiling").asDouble();
                 double gain = layerNode.get("gain").asDouble();
+                String bmString = layerNode.get("blendmode").asText();
+                BlendMode bm = BlendMode.fromString(bmString);
 
                 String type = layerNode.get("type").asText();
                 switch (type) {
@@ -159,20 +167,20 @@ public class Project {
                         break;
                     case "RandomNoiseLayer":
                         //int seed, double floor, double ceiling, double amplitude, double frequency
-                        layer =  new RandomNoiseLayer(seed, floor, ceiling, amp, freq);
+                        layer =  new RandomNoiseLayer(seed, floor, ceiling, gain, amp, freq, bm);
                         break;
                     case "Simplex2NoiseLayer":
                         //int seed, double floor, double ceiling, double amplitude, double frequency
-                        layer =  new Simplex2NoiseLayer(seed, floor, ceiling, amp, freq);
+                        layer =  new Simplex2NoiseLayer(seed, floor, ceiling, gain, amp, freq, bm);
                         break;
                     case "Simplex3NoiseLayer":
-                        layer =  new Simplex3NoiseLayer(seed, floor, ceiling, amp, freq);
+                        layer =  new Simplex3NoiseLayer(seed, floor, ceiling, gain, amp, freq, bm);
                         break;
                     case "SimplexNoise":
                         layer =  null;//new SimplexNoise();
                         break;
                     default: 
-                        layer = new RandomNoiseLayer(seed, floor, ceiling, amp, freq); //not a known type?
+                        layer = new RandomNoiseLayer(seed, floor, ceiling, gain, amp, freq, bm); //not a known type?
                         break;
                 };
 
@@ -222,7 +230,8 @@ public class Project {
             s.append("\"amp\": ").append(l.getAmp()).append(",");
             s.append("\"floor\": ").append(l.getFloor()).append(",");
             s.append("\"ceiling\": ").append(l.getCeiling()).append(",");
-            s.append("\"gain\": ").append(l.getGain());
+            s.append("\"gain\": ").append(l.getGain()).append(",");
+            s.append("\"blendmode\": ").append(l.getBlendMode().toString());
             s.append("}");
             if (i<this.layers.size()) s.append(",");
             i++;
