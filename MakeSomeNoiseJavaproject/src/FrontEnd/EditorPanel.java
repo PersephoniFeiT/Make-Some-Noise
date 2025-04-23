@@ -40,6 +40,13 @@ class EditorPanel extends JPanel {
     
     private Project project;
 
+    /**
+     * @author Ryan Shipp
+     * @author Fei Triolo - {@link GradientPanel} integration, {@link BlendMode} integration
+     * @param parentWindow
+     * @param p
+     * @param currentSession
+     */
 	public EditorPanel(MakeSomeNoiseWindow parentWindow, Project p, CurrentSession currentSession) {
         setLayout(new BorderLayout());                            // using BorderLayout layout managers
         setSize(1000, 700);                                       // width and height
@@ -169,6 +176,10 @@ class EditorPanel extends JPanel {
 		// add(renderButton, BorderLayout.WEST);
 	}
 
+    /**
+     * @author Ryan Shipp
+     * @author Fei Triolo - {@Link GradientPanel integration}
+     */
     public void renderNoise() {
         int width = noisePanelWidth;
         int height = noisePanelHeight;

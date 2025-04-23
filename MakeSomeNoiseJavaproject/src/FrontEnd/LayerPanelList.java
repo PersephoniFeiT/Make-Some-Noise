@@ -73,6 +73,10 @@ public class LayerPanelList extends JScrollPane {
 			}
 		}
 		
+	    /**
+    	* @author Ryan Shipp
+    	* @author Fei Triolo - {@link BlendMode} integration
+	 	*/
 		public LayerPanel(NoiseLayer nl, Project proj, EditorPanel host) {
 			setLayout(new FlowLayout());
 			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -159,6 +163,7 @@ public class LayerPanelList extends JScrollPane {
 			freq =	new LabeledTextField("Freq", ""+nl.getFreq(), columnNumber);
 			amp =	new LabeledTextField("Amp", ""+nl.getAmp(), columnNumber);
 			blendMode = new JComboBox<>(blendModeOptions);
+			blendMode.setSelectedIndex(0);
 			gain =	new LabeledTextField("Gain", ""+nl.getGain(), columnNumber);
 			floor =	new LabeledTextField("Floor", ""+nl.getFloor(), columnNumber);
 			ceiling =	new LabeledTextField("Ceil", ""+nl.getCeiling(), columnNumber);
@@ -207,6 +212,7 @@ public class LayerPanelList extends JScrollPane {
 			});
 
 			blendMode.addActionListener(new ActionListener(){
+				@Override
 				public void actionPerformed(ActionEvent e){
 					updateLayer();
 				}
@@ -268,7 +274,14 @@ public class LayerPanelList extends JScrollPane {
 
 			try {
 				gain.setBackground(Color.white);
-				noiseLayer.setGain(Double.parseDouble(gain.text.getText()));
+				double g = Double.parseDouble(gain.text.getText());
+				if(g < -0.999){
+					g = -0.999;
+				}
+				if(g > 0.999){
+					g = 0.999;
+				}
+				noiseLayer.setGain(g);
 			} catch (NumberFormatException e) {
 				gain.setBackground(Color.pink);
 			}
@@ -308,6 +321,9 @@ public class LayerPanelList extends JScrollPane {
 			} catch (NumberFormatException e) {
 				ceiling.setBackground(Color.pink);
 			}
+
+			int mode = blendMode.getSelectedIndex();
+			noiseLayer.setBlendMode(BlendMode.fromInt(mode));
 
 			this.hostEditorPanel.renderNoise();
 		}
@@ -353,7 +369,7 @@ public class LayerPanelList extends JScrollPane {
 		}
 
 		public void addLayer() {
-			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 1.0, 1.0, 1.0, BlendMode.MULTIPLY);
+			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 0, 1.0, 1.0, BlendMode.MULTIPLY);
 			LayerPanel lp = new LayerPanel(newLayer, project, hostEditorPanel);
 			project.addLayer(newLayer);
 			this.add(lp);
