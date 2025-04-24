@@ -14,7 +14,8 @@ import java.util.List;
 
 /**
  * @author Maya Malavasi, Ryan Shipp
- *
+ * SearchPanel is a JPanel window for the search functionality of our application. It contains a search bar, drop down
+ * for the search type, and an area to display a ProjectThumbnailList of the resulting projects from the search.
  */
 public class SearchPanel extends JPanel {
 
@@ -25,6 +26,10 @@ public class SearchPanel extends JPanel {
 	private String searchBy = "title";
 	//Sharing.SearchByTitle()
 
+	/** Constructor creates the different components of the page (search bar, drop down menu, search button, and display
+	 * area for thumbnails) and adds them to the panel page to display.
+	 * @param mainWindow the main window/graphics controller Jpanel of the overall project
+	 */
 	public SearchPanel(MakeSomeNoiseWindow mainWindow) {
 		this.mainWindow = mainWindow;
 
