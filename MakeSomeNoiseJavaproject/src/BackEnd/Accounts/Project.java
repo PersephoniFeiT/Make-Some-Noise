@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Maya Malavasi
-/** Project represents a single project instance in the editor. It can translate itself to and from JSON to be stored in
+ * Project represents a single project instance in the editor. It can translate itself to and from JSON to be stored in
  * the database, and stored a list of NoiseLayers, as well as metadata like title, username of creator, and status for
  * sharing purposes.
  */

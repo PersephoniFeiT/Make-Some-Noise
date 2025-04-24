@@ -8,18 +8,33 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * @author Maya Malavasi
+ * CurrentSession stores all the data required for data persistence in the current window and current editor, such as
+ * signing in, unsaved changes in the window, etc. Interfaces directly with the panels and windows.
+ */
 public class CurrentSession {
     private Integer signedIn;
 
+    /**
+     * Initializes the current session information upon opening a new window. Signed in state starts as null
+     */
     public CurrentSession(){
         signedIn = null;
     }
 
+    /** Checks whether the user is signed in, and if so returns the account ID
+     * @return Integer account ID of signed-in user.
+     * @throws NotSignedInException if user is not signed in
+     */
     public Integer getSignedIn() throws NotSignedInException {
         if (this.signedIn != null) return signedIn;
         else throw new NotSignedInException("");
     }
 
+    /** Check whether teh signed in user is an admin
+     * @return true if an admin, false if not signed in or not an admin
+     */
     public boolean isAdmin(){
         try {
             if (BasicDatabaseActions.isAdmin(this.getSignedIn())) return true;
@@ -32,6 +47,11 @@ public class CurrentSession {
 
     //////////////////////
 
+    /** Creates a new account and stores new account data in database
+     * @param username String username
+     * @param password String password
+     * @param email String email
+     */
     public void CreateNewAccount(String username, String password, String email) {
         try {
             boolean admin = false;
@@ -42,6 +62,13 @@ public class CurrentSession {
         }
     }
 
+    /** Attempts a sign in for current session. If successful, saves the account ID to the currentSession variables.
+     * @param username String username
+     * @param password String password
+     * @throws IncorrectPasswordException if password is incorrect
+     * @throws NoSuchAccountException if username is not connected to any existing account
+     * @throws InvalidInputException if username or password are empty, null, or " "
+     */
     public void SignIn(String username, String password) throws IncorrectPasswordException, NoSuchAccountException, InvalidInputException {
         Integer ID = null;
         try {
@@ -62,6 +89,8 @@ public class CurrentSession {
         System.out.println("You have successfully signed in as: " + username);
     }
 
+    /** Signs out of current session. Reverts stored signIn data in CurrentSession instance to null.
+     */
     public void SignOut(){
         try {
             BasicDatabaseActions.signOut(getSignedIn());
@@ -71,6 +100,8 @@ public class CurrentSession {
         }
     }
 
+    /** Deletes the account entirely from the database. Must be signed in.
+     */
     public void DeleteAccount(){
         try {
             BasicDatabaseActions.deleteAccount(getSignedIn());
@@ -80,6 +111,9 @@ public class CurrentSession {
         }
     }
 
+    /** Changes the username associated with the account ID
+     * @param username String new username
+     */
     public void ChangeUsername(String username){
         try {
             if (BasicDatabaseActions.getAccountInfoType(getSignedIn(), "username").equals("Admin1") ||
@@ -92,6 +126,9 @@ public class CurrentSession {
         }
     }
 
+    /** Changes the password associated with the account ID
+     * @param password String new password
+     */
     public void ChangePassword(String password){
         try {
             BasicDatabaseActions.modifyAccount(getSignedIn(), "password", password);
@@ -101,6 +138,9 @@ public class CurrentSession {
         }
     }
 
+    /** Changes the email associated with the account ID
+     * @param email String new email. Must be in the format x@x.xxx
+     */
     public void ChangeEmail(String email){
         try {
             Pattern pattern = Pattern.compile(".+@.+\\.(?:com|net|org|edu|gov|io|ai|xyz|site|me)", Pattern.CASE_INSENSITIVE);
@@ -116,6 +156,9 @@ public class CurrentSession {
         }
     }
 
+    /** Retrieves the account information to display in the account profile page
+     * @return HashMap of <String, String> pairs where the key is the name of the info and the object is the String value
+     */
     public HashMap<String, String> GetAccountInfo() {
         HashMap<String, String> accountInfo = new HashMap<>();
         try {
@@ -127,6 +170,8 @@ public class CurrentSession {
         return accountInfo;
     }
 
+    /** Retrieves a List of project IDs associated with current account
+     * @return List of Integer project IDs, or empty List [] */
     public List<Integer> GetProjectsInAccount(){
         List<Integer> IDList = new ArrayList<>();
         try {
@@ -145,11 +190,20 @@ public class CurrentSession {
 
     //////////////////////////////////////////////////////////////////
 
+    /** Creates a new project instance. Does not automatically save to database.
+     * @return new Project instance with default settings
+     * */
     public Project CreateNewProject() {
         Project p = new Project("New Project");
         return p;
     }
 
+    /**
+     * Saves the project to database. Checks if signed in, makes sure all metadata is up to date
+     * @param p Project instance to save to database
+     * @return true if successfully saved
+     * @throws NotSignedInException if not signed in to account
+     * */
     public boolean SaveProject(Project p) throws NotSignedInException {
         try {
             Integer accountID = this.getSignedIn();
@@ -178,6 +232,10 @@ public class CurrentSession {
 
 
     ///////////////////////////
+    /** Static function, retrieves all project tags associated with the project, as a List of Strings. A single tag can only be comprised
+     * of letters, numbers, dashes, or underscores.
+     * @param ID the project ID
+     * @return List of Strings with each tag*/
     public static List<String> getProjectTags(int ID) {
         try {
             String taglistString = BasicDatabaseActions.getProjectInfoType(ID, "tags");
@@ -190,6 +248,11 @@ public class CurrentSession {
         return new ArrayList<>();
     }
 
+    /** Static function, retrieves all project tags associated with the project, as a List of Strings. A single tag can only be comprised
+     * of letters, numbers, dashes, or underscores.
+     * @param projectID the project ID
+     * @return Map of <String, String> pairs where the keys are the column names of the info
+     * */
     public static Map<String, String> GetProjectInfo(int projectID) {
         Map<String, String> projectInfo = new HashMap<>();
         try {
@@ -204,12 +267,17 @@ public class CurrentSession {
         return projectInfo;
     }
 
+    /** Static function, changes the Project instance title. Does not store in database yet.
+     * @param p Project instance to modify
+     * @param title String new title to change to */
     public static void ChangeTitle(Project p, String title){
         p.title = title;
             //BasicDatabaseActions.modifyProject(ID, "title", title);
     }
 
-
+    /** Changes the Project instance status, either "public" or "private". Does not store in database yet.
+     * @param p Project instance to modify
+     * @param status String new status to change to, either "public" or "private" */
     public void ChangeStatus(Project p, String status){
         try {
             this.getSignedIn();
@@ -221,14 +289,23 @@ public class CurrentSession {
         }
     }
 
+    /** Changes the Project instance tags to a given list. Does not store in database yet.
+     * @param p Project instance to modify
+     * @param tags List of String tags to replace existing list */
     public static void ChangeTags(Project p, List<String> tags){
         p.tags = new ArrayList<String>(tags);
     }
 
+    /** Changes the Project instance thumbnail. Does not store in database yet.
+     * @param p Project instance to modify
+     * @param tn the String path where the thumbnail image is stored */
     public static void ChangeThumbnail(Project p, String tn){
         p.thumbnail = tn;
     }
 
+    /** Deletes project from account and from database.
+     * @param accountID account ID associated with project (or if admin any account ID)
+     * @param projectID project ID of project to delete */
     public static void DeleteProject(Integer accountID, int projectID){
         try {
             BasicDatabaseActions.deleteProject(accountID, projectID);
@@ -237,6 +314,9 @@ public class CurrentSession {
         }
     }
 
+    /** Checks whether the project data in the database is up to date with an existing Project instance
+     * @param p Project instance
+     * @return true if up to date */
     public static boolean isSaved(Project p){
         try {
             return BasicDatabaseActions.compareToCurrentSave(p.getID(), p.toJSONString());
@@ -246,6 +326,9 @@ public class CurrentSession {
         return false;
     }
 
+    /** Returns the Integer account ID associated with the given project
+     * @param projectID the ID of the project
+     * @return an Integer value of account ID that created the project. Null if created by a guest */
     public static Integer getProjectAccountID(Integer projectID){
         try {
             Integer IDstring = BasicDatabaseActions.getProjectAccountID(projectID);
@@ -256,6 +339,9 @@ public class CurrentSession {
         return null;
     }
 
+    /** checks whether the current account is an admin account
+     * @param accountID account ID
+     * @return true if the given account is an Admin */
     public static boolean isAdmin(Integer accountID){
         try {
             return BasicDatabaseActions.isAdmin(accountID);
