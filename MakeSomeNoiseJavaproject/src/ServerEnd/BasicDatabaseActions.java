@@ -17,7 +17,9 @@ the list of project ids is stored in the string form: '23, 234, 1324, 1232'*/
 ID, Title, username, date created, status, struct with project info, thumbnail, list of tags */
 
 
-/** Back-end class that interfaces with the SQLConnection script, using the building blocks defined in that script to perform
+/**
+ * @author Maya Malavasi
+ * Back-end class that interfaces with the SQLConnection script, using the building blocks defined in that script to perform
  * more complex actions.*/
 
 public class BasicDatabaseActions {

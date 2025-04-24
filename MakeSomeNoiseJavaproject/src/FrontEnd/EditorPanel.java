@@ -42,7 +42,7 @@ class EditorPanel extends JPanel {
 
     /**
      * @author Ryan Shipp
-     * @author Fei Triolo - {@link GradientPanel} integration, {@link BlendMode} integration
+     * @author Fei Triolo - {@link GradientPanel} integration, {@link BackEnd.Editor.BlendMode} integration
      * @param parentWindow
      * @param p
      * @param currentSession
@@ -196,7 +196,7 @@ class EditorPanel extends JPanel {
                 newBitmap.setRGB(x, y, gradientFunction.interpolate(val));
             }
         }
-        noisePanel.setBitmap(newBitmap); // 👉 Add this method to NoisePanel
+        noisePanel.setBitmap(newBitmap); // Add this method to NoisePanel
     }
 
     public void writeImage() {

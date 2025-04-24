@@ -46,11 +46,11 @@ public class NoisePanel extends JPanel{
 		g.drawImage(bitmap, 0, 0, null);
 	}
 
-	public int getHeight() {
+	public int getBitmapHeight() {
 		return bitmap.getHeight();
 	}
 
-	public int getWidth() {
+	public int getBitmapWidth() {
 		return bitmap.getWidth();
 	}
 

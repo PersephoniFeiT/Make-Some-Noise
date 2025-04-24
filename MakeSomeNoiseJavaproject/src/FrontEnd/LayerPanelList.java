@@ -20,6 +20,8 @@ import javax.swing.event.CaretListener;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -169,45 +171,93 @@ public class LayerPanelList extends JScrollPane {
 			ceiling =	new LabeledTextField("Ceil", ""+nl.getCeiling(), columnNumber);
 
 			// Add listeners to each field so their NoiseLayer objects can be updated with them
-			seed.text.addCaretListener(new CaretListener() {
-				@Override
-				public void caretUpdate(CaretEvent e) {
-					updateLayer();
+			seed.text.getDocument().addDocumentListener(new DocumentListener() {
+				public void insertUpdate(DocumentEvent e) { updateIfValid(); }
+				public void removeUpdate(DocumentEvent e) { updateIfValid(); }
+				public void changedUpdate(DocumentEvent e) { updateIfValid(); }
+
+				private void updateIfValid() {
+					try {
+						Double.parseDouble(seed.text.getText()); // test only
+						updateLayer();
+					} catch (NumberFormatException ignored) {
+						// Don't call updateLayer yet — user may still be typing
+					}
 				}
 			});
 
-			freq.text.addCaretListener(new CaretListener() {
-				@Override
-				public void caretUpdate(CaretEvent e) {
-					updateLayer();
+			freq.text.getDocument().addDocumentListener(new DocumentListener() {
+				public void insertUpdate(DocumentEvent e) { updateIfValid(); }
+				public void removeUpdate(DocumentEvent e) { updateIfValid(); }
+				public void changedUpdate(DocumentEvent e) { updateIfValid(); }
+
+				private void updateIfValid() {
+					try {
+						Double.parseDouble(seed.text.getText()); // test only
+						updateLayer();
+					} catch (NumberFormatException ignored) {
+						// Don't call updateLayer yet — user may still be typing
+					}
 				}
 			});
 
-			amp.text.addCaretListener(new CaretListener() {
-				@Override
-				public void caretUpdate(CaretEvent e) {
-					updateLayer();
+			amp.text.getDocument().addDocumentListener(new DocumentListener() {
+				public void insertUpdate(DocumentEvent e) { updateIfValid(); }
+				public void removeUpdate(DocumentEvent e) { updateIfValid(); }
+				public void changedUpdate(DocumentEvent e) { updateIfValid(); }
+
+				private void updateIfValid() {
+					try {
+						Double.parseDouble(seed.text.getText()); // test only
+						updateLayer();
+					} catch (NumberFormatException ignored) {
+						// Don't call updateLayer yet — user may still be typing
+					}
 				}
 			});
 
-			gain.text.addCaretListener(new CaretListener() {
-				@Override
-				public void caretUpdate(CaretEvent e) {
-					updateLayer();
+			gain.text.getDocument().addDocumentListener(new DocumentListener() {
+				public void insertUpdate(DocumentEvent e) { updateIfValid(); }
+				public void removeUpdate(DocumentEvent e) { updateIfValid(); }
+				public void changedUpdate(DocumentEvent e) { updateIfValid(); }
+
+				private void updateIfValid() {
+					try {
+						Double.parseDouble(seed.text.getText()); // test only
+						updateLayer();
+					} catch (NumberFormatException ignored) {
+						// Don't call updateLayer yet — user may still be typing
+					}
 				}
 			});
 
-			floor.text.addCaretListener(new CaretListener() {
-				@Override
-				public void caretUpdate(CaretEvent e) {
-					updateLayer();
+			floor.text.getDocument().addDocumentListener(new DocumentListener() {
+				public void insertUpdate(DocumentEvent e) { updateIfValid(); }
+				public void removeUpdate(DocumentEvent e) { updateIfValid(); }
+				public void changedUpdate(DocumentEvent e) { updateIfValid(); }
+
+				private void updateIfValid() {
+					try {
+						Double.parseDouble(seed.text.getText()); // test only
+						updateLayer();
+					} catch (NumberFormatException ignored) {
+						// Don't call updateLayer yet — user may still be typing
+					}
 				}
 			});
 
-			ceiling.text.addCaretListener(new CaretListener() {
-				@Override
-				public void caretUpdate(CaretEvent e) {
-					updateLayer();
+			ceiling.text.getDocument().addDocumentListener(new DocumentListener() {
+				public void insertUpdate(DocumentEvent e) { updateIfValid(); }
+				public void removeUpdate(DocumentEvent e) { updateIfValid(); }
+				public void changedUpdate(DocumentEvent e) { updateIfValid(); }
+
+				private void updateIfValid() {
+					try {
+						Double.parseDouble(seed.text.getText()); // test only
+						updateLayer();
+					} catch (NumberFormatException ignored) {
+						// Don't call updateLayer yet — user may still be typing
+					}
 				}
 			});
 
@@ -250,7 +300,7 @@ public class LayerPanelList extends JScrollPane {
 
 			try {
 				freq.setBackground(Color.white);
-				noiseLayer.setFreq(Double.parseDouble(freq.text.getText()));
+				this.noiseLayer.setFreq(Double.parseDouble(freq.text.getText()));
 			} catch (NumberFormatException e) {
 				freq.setBackground(Color.pink);
 			}

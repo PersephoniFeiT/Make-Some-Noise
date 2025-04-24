@@ -7,9 +7,12 @@ import Exceptions.DatabaseConnectionException;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * @author Maya Malavasi
 /** SQLConnection handles the basic MySQL connection and actions. This is the only script in the system that connects
  * directly to the server at any given point. Handles opening and closing connections, validating arguments, safe SQL
- * queries, insertions, deletions, etc, and stores the connection information. */
+ * queries, insertions, deletions, etc, and stores the connection information.
+ */
 public class SQLConnection {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/makesomenoise";
     private static final String USER = "appUser";
