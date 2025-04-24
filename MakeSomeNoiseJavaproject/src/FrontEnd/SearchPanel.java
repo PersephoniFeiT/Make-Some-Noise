@@ -5,6 +5,7 @@ import BackEnd.Accounts.Sharing;
 import ServerEnd.BasicDatabaseActions;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -96,5 +97,14 @@ public class SearchPanel extends JPanel {
 
 		this.add(searchBarPanel);
 		add(searchResults);
+	}
+
+	/** Class that represents a single search bar with text input. */
+	public static class SearchBar extends JTextField {
+
+		public SearchBar() {
+			setMaximumSize(new Dimension(10000, 10));
+			setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		}
 	}
 }
