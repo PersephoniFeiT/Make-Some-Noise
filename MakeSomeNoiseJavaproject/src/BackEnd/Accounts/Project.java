@@ -12,6 +12,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author Maya Malavasi
+/** Project represents a single project instance in the editor. It can translate itself to and from JSON to be stored in
+ * the database, and stored a list of NoiseLayers, as well as metadata like title, username of creator, and status for
+ * sharing purposes.
+ */
 public class Project {
     private Integer ID;
 
@@ -23,9 +29,15 @@ public class Project {
     private final List<NoiseLayer> layers = new ArrayList<>();
     public int color1 = 0x000000;
     public int color2 = 0xFFFFFF;
-    private int accID;
+    private Integer accID;
     private BlendMode bm = BlendMode.MULTIPLY;
 
+    /**
+     * Constructs a new Project object with initial attribute values set
+     * @param ID Account ID of creator
+     * @param title String title of project
+     * @param dateCreated The date the project was created
+     */
     public Project(Integer ID, String title, LocalDate dateCreated){
         this.ID = ID;
         this.thumbnail = "MakeSomeNoiseJavaproject/src/ImageSources/stockThumbnail.png";
@@ -33,6 +45,10 @@ public class Project {
         this.dateCreated = dateCreated;
     }
 
+    /**
+     * Constructs a new Project object with only the title set. For use when working as a guest with no account ID
+     * @param title String title of project
+     */
     public Project(String title){
         this.ID = null;
         this.thumbnail = "MakeSomeNoiseJavaproject/src/ImageSources/stockThumbnail.png";
@@ -40,60 +56,115 @@ public class Project {
         this.dateCreated = LocalDate.now();
     }
 
+    /** Returns the unique project ID as an Integer.
+     * @return the Integer project ID -- null if has not been saved to data base (i.e. editing as guest)
+     */
     public Integer getID(){return this.ID;}
 
+    /** Sets the unique project ID.
+     * @param ID the Integer ID of the project
+     */
     public void setID(Integer ID){this.ID = ID;}
 
+    /** Removes a NoiseLayer from the project's List of NoiseLayers
+     * @param index the index position of the NoiseLayer to remove
+     */
     public void removeLayer(int index){
         this.layers.remove(index);
     }
 
+    /** Removes a NoiseLayer from the project's List of NoiseLayers
+     * @param nl the NoiseLayer object to find and remove from List
+     * */
     public void removeLayer(NoiseLayer nl) {
         this.layers.remove(nl);
     }
 
+    /** Returns a safe copy of the NoiseLayer List that nonetheless contains the actual NoiseLayer objects
+     * @return a new ArrayList that contains the project's NoiseLayer objects
+     */
     public ArrayList<NoiseLayer> getLayerList(){
         return new ArrayList<>(this.layers);
     }
 
+    /** Returns the NoiseLayer object at an index in the NoiseLayer List.
+     * @param index the int index of the NoiseLayer
+     * @return the requested NoiseLayer
+     */
     public NoiseLayer getLayer(int index){
         return this.layers.get(index);
     }
 
+    /** Adds NoiseLayer object to NoiseLayer List.
+     * @param layer the NoiseLayer to add
+     */
     public void addLayer(NoiseLayer layer){
         this.layers.add(layer);
     }
 
+    /** Clears NoiseLayer List of all objects
+     */
     public void clearLayers(){
         this.layers.clear();
     }
 
+    /** Get first color of gradient
+     * @return int for hex code of color1
+     */
     public int getColor1(){
         return color1;
     }
 
+    /** Get second color of gradient
+     * @return int for hex code of color2
+     */
     public int getColor2(){
         return color2;
     }
 
+    /** Set first color of gradient
+     * @param hexCode int for hex code of color1
+     */
     public void setColor1(int hexCode){
         this.color1 = hexCode;
     }
 
+    /** Set second color of gradient
+     * @param hexCode int for hex code of color2
+     */
     public void setColor2(int hexCode){
         this.color2 = hexCode;
     }
 
-    public int getAccID(){return this.accID;}
+    /** Get account ID associated with the project
+     * @return account ID of project creator
+     */
+    public Integer getAccID(){return this.accID;}
 
-    public void setAccID(int accID){this.accID = accID;}
+    /** Set account ID associated with project
+     * @param accID Integer account ID associated with project
+     */
+    public void setAccID(Integer accID){this.accID = accID;}
 
+    /** Get blend mode of project
+     * @return BlendMode blendmode
+     */
     public BlendMode getBlendMode(){return this.bm;}
 
+    /** Set blend mode of project
+     * @param bmString String of blend mode (i.e. "MULTIPLY", "DIVIDE", etc.)
+     */
     public void setBlendMode(String bmString){this.bm = BlendMode.fromString(bmString);}
+    /** Set blend mode of project
+     * @param bm BlendMode object (i.e. BlendMode.MULTIPLY, BlendMode.DIVIDE, etc.)
+     */
     public void setBlendMode(BlendMode bm){this.bm = bm;}
 
 
+    /** Creates, constructs, and returns a new Project instance from a given JSON String.
+     * @param JSON JSON String containing all project metadata and NoiseLayer parameters
+     * @return a new Project instance constructed from JSON String
+     */
     public static Project fromJSONtoProject(String JSON){
         try {
             // mapper to map string names to object fields
@@ -195,6 +266,8 @@ public class Project {
         return new Project("");
     }
 
+    /** Reads a project instance and creates a JSON string from the project data and metadata
+     * @return a String JSON containing all project data and metadata */
     public String toJSONString(){
         StringBuilder s = new StringBuilder();
 
