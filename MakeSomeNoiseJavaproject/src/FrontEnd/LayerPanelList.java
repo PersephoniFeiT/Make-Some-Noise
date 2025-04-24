@@ -264,6 +264,8 @@ public class LayerPanelList extends JScrollPane {
 			blendMode.addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e){
+					String selectedItem = (String) blendMode.getSelectedItem();
+					project.setBlendMode(selectedItem);
 					updateLayer();
 				}
 			});
