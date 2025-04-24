@@ -180,9 +180,7 @@ public class LayerPanelList extends JScrollPane {
 					try {
 						Double.parseDouble(seed.text.getText()); // test only
 						updateLayer();
-					} catch (NumberFormatException ignored) {
-						// Don't call updateLayer yet — user may still be typing
-					}
+					} catch (NumberFormatException ignored) {}
 				}
 			});
 

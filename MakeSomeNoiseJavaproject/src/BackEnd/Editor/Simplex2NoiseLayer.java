@@ -134,7 +134,7 @@ public class Simplex2NoiseLayer implements NoiseLayer{
      */
     @Override
     public void setGain(double newGain) {
-        this.gain = (newGain > 0.999)? 0.999 : (newGain < 0.999)? -0.999 : newGain;
+        this.gain = Math.max(-0.999, Math.min(0.999, newGain));
     }
 
 }

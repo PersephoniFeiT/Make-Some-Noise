@@ -52,7 +52,7 @@ public class Simplex3NoiseLayer implements NoiseLayer{
     }
     /**
      * {@inheritDoc}
-     * @implNote Like {@link Simplex2Noise}, virtual space is scaled by a factor of 100 to account for the granularity of Gustavson's implementation and results are normalized from -1 to 1 to the expected range of values between 0 and 1.
+     * @implNote Like {@link Simplex2NoiseLayer}, virtual space is scaled by a factor of 100 to account for the granularity of Gustavson's implementation and results are normalized from -1 to 1 to the expected range of values between 0 and 1.
      */
     @Override
     public double evaluate(int x, int y) {
@@ -111,7 +111,7 @@ public class Simplex3NoiseLayer implements NoiseLayer{
      */
     @Override
     public void setGain(double newGain) {
-        this.gain = (newGain > 0.999)? 0.999 : (newGain < 0.999)? -0.999 : newGain;
+        this.gain = Math.max(-0.999, Math.min(0.999, newGain));
     }
 
 

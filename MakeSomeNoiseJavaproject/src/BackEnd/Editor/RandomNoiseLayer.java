@@ -1,4 +1,5 @@
 package BackEnd.Editor;
+import java.util.Objects;
 import java.util.Random;
 /**
  * RandomNoiseLayer represents a static noise function which generates a completely random value on each pixel
@@ -57,8 +58,9 @@ public class RandomNoiseLayer implements NoiseLayer{
      */
     @Override
     public double evaluate(int x, int y) {
+        //Scales that value to [0, amplitude), recenter it around 0.5, add a bias/offset
         double val = (rng.nextDouble() * amplitude + (1 - amplitude)/2) + gain;
-        val = ((val < floor )? floor : (val > ceiling)? ceiling : val);
+        val = ((val < floor )? floor : Math.min(val, ceiling));
         return val;
     }
 
@@ -150,5 +152,7 @@ public class RandomNoiseLayer implements NoiseLayer{
      * {@inheritDoc}
      */
     @Override
-    public void setGain(double newGain) {this.gain = (newGain > 0.999)? 0.999 : (newGain < 0.999)? -0.999 : newGain;}
+    public void setGain(double newGain) {
+        this.gain = Math.max(-0.999, Math.min(0.999, newGain));
+    }
 }
