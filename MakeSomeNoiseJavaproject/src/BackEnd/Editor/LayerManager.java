@@ -26,8 +26,8 @@ public class LayerManager {
         layerList.forEach(l -> {
             for(int x = 0; x < width; x++){
                 for(int y = 0; y < height; y++){
-                    int virtualx = (int) ((int) x/l.getFreq());
-                    int virtualy = (int) ((int) y/l.getFreq());
+                    int virtualx = (int) (x/l.getFreq());
+                    int virtualy = (int) (y/l.getFreq());
                     double blendVal =  blend(raster[x][y], l.evaluate(virtualx, virtualy), l.getBlendMode());
                     raster[x][y] = blendVal < 0? 0 : (blendVal > 1? 1 : blendVal);
                 }
@@ -44,7 +44,7 @@ public class LayerManager {
      * @return the updated raster value after being combined with the current layer value using its BlendMode
      */
     private static double blend(double rasterVal, double layerVal, BlendMode layerBlendMode){
-        switch(layerBlendMode){
+        switch (layerBlendMode){
             case MULTIPLY:
                 return rasterVal *= layerVal;
             case ADD:

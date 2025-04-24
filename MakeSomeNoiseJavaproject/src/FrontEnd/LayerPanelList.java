@@ -428,6 +428,7 @@ public class LayerPanelList extends JScrollPane {
 			lp.updateLayer();
 			revalidate();
 			repaint();
+			hostEditorPanel.renderNoise();
 		}
 
 		public void addLayer(NoiseLayer nl) {
@@ -436,6 +437,7 @@ public class LayerPanelList extends JScrollPane {
 			lp.updateLayer();
 			revalidate();
 			repaint();
+			hostEditorPanel.renderNoise();
 		}
 
 		public void removeLayer(LayerPanel lp) {

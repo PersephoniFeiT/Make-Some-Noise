@@ -191,6 +191,7 @@ class EditorPanel extends JPanel {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
+                //System.out.println("Value at (" + x + ", " + y + "): " + values[x][y]);
                 float val = (float) values[x][y];
                 //int color = Color.HSBtoRGB(h, 0.5f, 1.0f);
                 newBitmap.setRGB(x, y, gradientFunction.interpolate(val));

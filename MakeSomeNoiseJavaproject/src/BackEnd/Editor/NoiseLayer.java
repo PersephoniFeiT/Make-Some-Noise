@@ -10,7 +10,7 @@ public interface NoiseLayer {
      * Evaluates the noise function at a given (x,y) position in virtual-space
      * @param x The x position where this function is evaluated in virtual-space
      * @param y The y position where this function is evaluated in virtual-space
-     * @return
+     * @return a value between 0 and 1 or floor and ceiling
      */
     public double evaluate(int x, int y);
     /**
