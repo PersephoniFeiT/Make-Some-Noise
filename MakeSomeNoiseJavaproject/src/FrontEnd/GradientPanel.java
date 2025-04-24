@@ -24,7 +24,16 @@ import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+/**
+ * JFrame panel for selecting and previewing color gradients with HSV colorpickers and gradient preview raster.
+ * This frame contains a color picker button on the far left which selects the gradient starting color a horizontal gradient preview bar raster that renders the full gradient, and a second color picker on the right which represents the ending gradient color.
+ * @package FrontEnd
+ * @author Fei Triolo
+ */
 public class GradientPanel extends JPanel{
+    /**
+     * Internal ColorPicker ActionListener class which instantiates an HSV default colorpicker, updates the gradient preview bar, and calls renderNoise() from {@link EditorPanel} to apply the new gradient on confirmation.
+     */
     private class ColorPickerListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -111,6 +120,9 @@ public class GradientPanel extends JPanel{
         add(sampleContainer, BorderLayout.SOUTH);
     }
 
+    /**
+     * updates the preview raster using the {@link GradientFunction} to set the RGB value of accross x position normalized between 0 and 1
+     */
     public void updateSample(){
         GradientFunction gradient = new GradientFunction(getColor1(), getColor2());
         source.getProject().setColor1(getColor1());
@@ -124,10 +136,18 @@ public class GradientPanel extends JPanel{
         repaint();
     }
     
+    /**
+     * Gets the hexcode value of the starting gradient color
+     * @return the color selected on the left color picker button
+     */
     public int getColor1(){
         return color1Button.getBackground().getRGB();
     }
 
+    /**
+     * Gets the hexcode value of the ending gradient color
+     * @return the color selected on the right color picker button
+     */
     public int getColor2(){
         return color2Button.getBackground().getRGB();
     }

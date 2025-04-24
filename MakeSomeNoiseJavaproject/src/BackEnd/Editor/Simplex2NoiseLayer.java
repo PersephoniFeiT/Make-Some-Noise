@@ -2,8 +2,8 @@ package BackEnd.Editor;
 
 /**
  * Implementation of NoiseLayer using 2D Simplex Noise. Simplex noise algorithms offer a more coherent, gradient noise pattern than {@link RandomNoiseLayer} static noise. 
- * This class is dependant on a public domain general implementation of {@link SimplexNoise} by Stefan Gustavson (stegu@itn.liu.se), optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
- * Version 2012-03-09 accessed from Steven Rombauts' Simplex noise C++ Repository at https://github.com/SRombauts/SimplexNoise/blob/master/references/SimplexNoise.java
+ * @apiNote This class is dependant on a public domain general implementation of {@link SimplexNoise} by Stefan Gustavson (stegu@itn.liu.se), optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
+ * @apiNote Version 2012-03-09 accessed from Steven Rombauts' Simplex noise C++ Repository at https://github.com/SRombauts/SimplexNoise/blob/master/references/SimplexNoise.java
  * @author Fei Triolo
  */
 public class Simplex2NoiseLayer implements NoiseLayer{

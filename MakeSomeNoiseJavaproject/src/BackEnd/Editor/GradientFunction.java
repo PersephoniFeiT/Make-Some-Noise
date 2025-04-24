@@ -3,6 +3,7 @@ package BackEnd.Editor;
 /**
  * GradientFunction represents a linear gradient between 2 colors in RGB Colorspace
  * @author Fei Triolo
+ * @package BackEnd.Editor
  */
 public class GradientFunction {
     /**

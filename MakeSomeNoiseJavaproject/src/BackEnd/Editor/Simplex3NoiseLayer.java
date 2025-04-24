@@ -2,8 +2,8 @@ package BackEnd.Editor;
 
 /**
  * Implementation of NoiseLayer using 2D slices of 3D Simplex Noise. Simplex noise algorithms offer a more coherent, gradient noise pattern than purely random static noise. 
- * This class is dependant on a public domain general implementation of Simplex Noise fby Stefan Gustavson (stegu@itn.liu.se), optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
- * Version 2012-03-09 accessed from Steven Rombauts' Simplex noise C++ Repository at https://github.com/SRombauts/SimplexNoise/blob/master/references/SimplexNoise.java
+ * @apiNote This class is dependant on a public domain general implementation of Simplex Noise fby Stefan Gustavson (stegu@itn.liu.se), optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
+ * @apiNote Version 2012-03-09 accessed from Steven Rombauts' Simplex noise C++ Repository at https://github.com/SRombauts/SimplexNoise/blob/master/references/SimplexNoise.java
  * This class uses Gustavson's API to generate 3D slices with the x coordinates in virtual space and the z coordinate determined by the seed value
  * @author Fei Triolo
  */

@@ -150,5 +150,5 @@ public class RandomNoiseLayer implements NoiseLayer{
      * {@inheritDoc}
      */
     @Override
-    public void setGain(double newGain) {;}
+    public void setGain(double newGain) {this.gain = (newGain > 0.999)? 0.999 : (newGain < 0.999)? -0.999 : newGain;}
 }

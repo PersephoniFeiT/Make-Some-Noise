@@ -13,7 +13,6 @@ package BackEnd.Editor;
  * This code was placed in the public domain by its original author,
  * Stefan Gustavson. You may use it as you see fit, but
  * attribution is appreciated.
- *
  */
 
 public class SimplexNoise {  // Simplex noise in 2D, 3D and 4D
