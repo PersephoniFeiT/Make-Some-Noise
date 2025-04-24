@@ -1,5 +1,11 @@
 package FrontEnd;
 
+/**
+ * @author Maya Malavasi, Ryan Shipp
+ * Class that arranges JPanels to form a visual representation of a list of projects. ProjectThumbnailList serves as a
+ * container class for subclass {@ContentPanel}, which contains the order and arrangement of the thumbnails and in turn
+ * contains subclass {@ProjectThumbnail}. Each project in the ProjectThumbnailList has its own ProjectThumbnail.
+ */
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
 
@@ -26,6 +32,12 @@ public class ProjectThumbnailList extends JScrollPane {
 	private Integer accountID;
 	private MakeSomeNoiseWindow mainWindow;
 
+	/**
+	 * Constructs a new ProjectThumbnailList container panel
+	 * @param mainWindow the main window/graphics controller Jpanel of the overall project
+	 * @param accountID current account ID, null if not logged in
+	 * @param projectIDs A List of Integer project IDs to display
+	 */
 	// constructor
 	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, Integer accountID, List<Integer> projectIDs) {
 		this.mainWindow = mainWindow;
@@ -35,7 +47,10 @@ public class ProjectThumbnailList extends JScrollPane {
 	}
 
 
-	public void reloadThumbnails(){
+	/** Reloads/repaints the current panel to update it. Works by removing all contents and re-adding the projects as
+	 * new thumbnails.
+	 */
+	private void reloadThumbnails(){
 		// Clear existing contents
 		this.contents.removeAll();
 		// Re-add thumbnails
@@ -47,29 +62,46 @@ public class ProjectThumbnailList extends JScrollPane {
 		this.repaint();
 	}
 
-	public void goToEditorPanel(String projectInfo){
+	/** Indicates to the main window to switch to the editor panel, opening and editing the given selected project.
+	 * @param projectInfo the project's JSON string
+	 */
+	private void goToEditorPanel(String projectInfo){
 		this.mainWindow.addEditorPanel(Project.fromJSONtoProject(projectInfo));
 		this.mainWindow.goToEditorPanel();
 	}
 
+	/** Add another project to the Thumbnail display list.
+	 * @param projectID the Integer ID of the project to add
+	 */
 	public void addProject(Integer projectID) {
 		contents.addThumbnail(accountID, projectID);
 	}
 
+	/** Add list of projects to the Thumbnail display list
+	 * @param projectIDs List of Integer IDs of the projects to add
+	 */
 	public void addProjectList(List<Integer> projectIDs) {
 		projectIDs.forEach(this::addProject);
 	}
 
 
 	/////////////////////
+	/**
+	 * Class that arranges and contains the ProjectThumbnail objects in a designated layout format.
+	 */
 	private class ContentPanel extends JPanel {
 		List<Integer> projectIDs;
 
 		//constructor
+		/** Constructor specifies the layout as a JPanel FlowLayout, with an empty list of projects. */
 		public ContentPanel() {
 			setLayout(new FlowLayout());
 		}
 
+		/** Constructor specifies the layout as a JPanel FlowLayout, and adds a ProjectThumbnail for each project in the
+		 * given list. 
+		 * @param projectIDs the list of Integer project IDs to display
+		 * */
 		public ContentPanel(List<Integer> projectIDs) {
 			super();
 			this.projectIDs = projectIDs; // <-- store for reloads
@@ -77,17 +109,31 @@ public class ProjectThumbnailList extends JScrollPane {
 			projectIDs.forEach(i -> this.addThumbnail(accountID, i));
 		}
 
+		/** Creates a ProjectThumbnail display and adds it to the contents.
+		 * @param accountID the ID of the current signed-in account. Null if guest.
+		 * @param projectID the ID of the project to display */
 		public void addThumbnail(Integer accountID, Integer projectID) {
 			add(new ProjectThumbnail(accountID, projectID));
 		}
 
+		/** Removes a ProjectThumbnail display from the contents.
+		 * @param projectID the ID of the project to display */
 		public void removeThumbnail(Integer projectID) {
 			this.projectIDs.remove(projectID);
 		}
 
 		//////////////////
+		/** ProjectThumbnail is a template for any project thumbnail display. Each ProjectThumbnail contains a thumbnail
+		 * image and basic project information, and will perform certain actions when clicked, depending on sign-in. Can
+		 * be used for personal project lists, lists of shared projects, or any other functionality that requires a display of
+		 * several projects. */
 		private class ProjectThumbnail extends JPanel {
 
+			/** Constructor collects the project information to display, the different text, link, and button components
+			 * of the Thumbnail square object, and then displays them as a smaller panel.
+			 * @param accountID the ID of the current signed-in account. Null if guest.
+			 * @param projectID the ID of the project for the current thumbnail instance
+			 * */
 			public ProjectThumbnail(Integer accountID, Integer projectID) {
 				Map<String, String> projectInfo =  CurrentSession.GetProjectInfo(projectID);
 				List<String> tags = CurrentSession.getProjectTags(projectID);

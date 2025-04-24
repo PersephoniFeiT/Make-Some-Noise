@@ -12,6 +12,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Maya Malavasi, Ryan Shipp
+ *
+ */
 public class SearchPanel extends JPanel {
 
 	private MakeSomeNoiseWindow mainWindow;
