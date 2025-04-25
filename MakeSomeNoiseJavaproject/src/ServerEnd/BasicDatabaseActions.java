@@ -10,22 +10,22 @@ import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /* Accounts table layout:
-ID, username, password, email, list of project ids
-the list of project ids is stored in the string form: '23, 234, 1324, 1232'*/
+ID, username, password, email, {@link List} of project ids
+the {@link List} of project ids is stored in the {@link String} form: '23, 234, 1324, 1232'*/
 
 /* Project table layout:
-ID, Title, username, date created, status, struct with project info, thumbnail, list of tags */
+ID, Title, username, date created, status, struct with project info, thumbnail, {@link List} of tags */
 
 
 /**
  * @author Maya Malavasi
- * Back-end class that interfaces with the SQLConnection script, using the building blocks defined in that script to perform
+ * Back-end class that interfaces with the {@link  SQLConnection} script, using the building blocks defined in that script to perform
  * more complex actions.*/
 
 public class BasicDatabaseActions {
 
-    /** Private helper function to assert the correct format of string inputs.
-     * @param values String array of values to check the format of
+    /** Private helper function to assert the correct format of {@link String} inputs.
+     * @param values {@link String} array of values to check the format of
      * @throws InvalidInputException if any of the values is null, empty, or " "*/
     private static void assertFormat(String[] values) throws InvalidInputException {
         try {
@@ -40,7 +40,7 @@ public class BasicDatabaseActions {
     }
 
     /** Private helper function to check whether the username of an account has already been taken.
-     * @param value String username to check for.
+     * @param value {@link String} username to check for.
      * @return true if account username has a duplicate
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database*/
     private static boolean checkForDuplicateAccounts(String value) throws DatabaseConnectionException {
@@ -71,8 +71,8 @@ public class BasicDatabaseActions {
      * biographical field.*/
     /** Function that allows other scripts to query for specific data stored in the accounts table in the database.
      * @param ID the unique int ID number for an account
-     * @param type the String name of the column to query
-     * @return the String value of the requested information.
+     * @param type the {@link String} name of the column to query
+     * @return the {@link String} value of the requested information.
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
      * @throws InvalidInputException if there is an error in the type name
      * @throws NoSuchAccountException if the ID entered is invalid */
@@ -90,7 +90,7 @@ public class BasicDatabaseActions {
      * @param ID the unique int ID number for an account
      * @return true if the account associated with the ID is an admin
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error in finding the string information for admin.
+     * @throws InvalidInputException if there is an error in finding the {@link String} information for admin.
      * @throws NoSuchAccountException if the ID entered is invalid */
     public static boolean isAdmin(int ID) throws DatabaseConnectionException, NoSuchAccountException, InvalidInputException {
         List<Map<String, Object>> rs = SQLConnection.select("accounts", "admin", new String[]{"ID"}, new Object[]{ID}, null);
@@ -101,13 +101,13 @@ public class BasicDatabaseActions {
     }
 
     /** Creates a new account and stores it in the database.
-     * @param username String username
-     * @param password String password
-     * @param email String email
+     * @param username {@link String} username
+     * @param password {@link String} password
+     * @param email {@link String} email
      * @param admin boolean, true if account is an admin
      * @return the int ID associated with the new account.
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the string information
+     * @throws InvalidInputException if there is an error finding the {@link String} information
      * @throws NoSuchAccountException if the ID entered is invalid */
     public static int createNewAccount(String username, String password, String email, boolean admin) throws DatabaseConnectionException, DuplicateAccountException, InvalidInputException {
         BasicDatabaseActions.assertFormat(new String[]{username, password, email});
@@ -128,11 +128,11 @@ public class BasicDatabaseActions {
     }
 
     /** Sign in to account, provides checks for whether the entered information is correct
-     * @param username String
-     * @param password String
-     * @return the Integer ID of the account, null if impossible.
+     * @param username {@link String}
+     * @param password {@link String}
+     * @return the {@link Integer} ID of the account, null if impossible.
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the String information
+     * @throws InvalidInputException if there is an error finding the {@link String} information
      * @throws NoSuchAccountException if the username entered is invalid
      * @throws IncorrectPasswordException if the password entered is incorrect */
     public static Integer signIn(String username, String password) throws DatabaseConnectionException, NoSuchAccountException, IncorrectPasswordException, InvalidInputException {
@@ -152,12 +152,12 @@ public class BasicDatabaseActions {
         // whatever keeps track of the current sign-in
     }
 
-    /** Edit the String values of the account info specified. Can currently only be used for username, password, and email
+    /** Edit the {@link String} values of the account info specified. Can currently only be used for username, password, and email
      * @param ID the unique int ID number for an account
-     * @param fieldToEdit the String value of the column name to modify
-     * @param value the new String value to change that entry to
+     * @param fieldToEdit the {@link String} value of the column name to modify
+     * @param value the new {@link String} value to change that entry to
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the String information
+     * @throws InvalidInputException if there is an error finding the {@link String} information
      * @throws DuplicateAccountException if the user wishes to change the username to an existing username */
     public static void modifyAccount(int ID, String fieldToEdit, String value) throws InvalidInputException, DatabaseConnectionException, DuplicateAccountException {
         BasicDatabaseActions.assertFormat(new String[]{fieldToEdit, value});
@@ -190,11 +190,11 @@ public class BasicDatabaseActions {
     /* -------------------------------------------------------------------------------------- */
     /* -------------------------------------------------------------------------------------- */
 
-    //Title, username, date created, status, struct with project info, thumbnail, list of tags
+    //Title, username, date created, status, struct with project info, thumbnail, {@link List} of tags
     /** Function that allows other scripts to query for specific data stored in the projects table in the database.
      * @param ID the unique int ID number for a project
-     * @param type the String name of the column to query
-     * @return the String value of the requested information.
+     * @param type the {@link String} name of the column to query
+     * @return the {@link String} value of the requested information.
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
      * @throws InvalidInputException if there is an error in the type name */
     public static String getProjectInfoType(int ID, String type) throws InvalidInputException, DatabaseConnectionException{
@@ -209,7 +209,7 @@ public class BasicDatabaseActions {
 
     /** Get the ID of the account associated with that project.
      * @param ID the unique int ID number for the project
-     * @return an Integer value of the account that created the project, null if impossible or a guest project.
+     * @return an {@link Integer} value of the account that created the project, null if impossible or a guest project.
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
      * @throws InvalidInputException if there is an error in the type name*/
     public static Integer getProjectAccountID(int ID) throws InvalidInputException, DatabaseConnectionException{
@@ -223,10 +223,10 @@ public class BasicDatabaseActions {
 
     /** Creates a new project and stores it in the database.
      * @param accountID the unique int ID of the account that created the project
-     * @param JSON the JSON String that stores the project info
+     * @param JSON the JSON {@link String} that stores the project info
      * @return the int ID associated with the new project.
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the string information
+     * @throws InvalidInputException if there is an error finding the {@link String} information
      * @throws NoSuchAccountException if the ID entered is invalid */
     public static int createNewProject(int accountID, String JSON) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         BasicDatabaseActions.assertFormat(new String[]{JSON});
@@ -257,19 +257,19 @@ public class BasicDatabaseActions {
             });
 
         //update the JSON ID
-        // update new project list
+        // update new project {@link List}
         String updatedJson;
         try {
-            // Your original JSON string with "" as the key
+            // Your original JSON {@link String} with "" as the key
             // Create Jackson ObjectMapper
             ObjectMapper mapper = new ObjectMapper();
-            // Convert JSON string to Map
+            // Convert JSON {@link String} to Map
             Map<String, Object> jsonMap = mapper.readValue(JSON, Map.class);
             // Get the only entry with key ""
             Object value = jsonMap.remove("");  // remove the "" key
             // Put the new entry with actual project ID
             jsonMap.put(String.valueOf(ID), value);
-            // Convert back to JSON string
+            // Convert back to JSON {@link String}
             updatedJson = mapper.writeValueAsString(jsonMap);
         } catch (Exception e){
             updatedJson = JSON;
@@ -278,32 +278,32 @@ public class BasicDatabaseActions {
         SQLConnection.update("projects", ID, "projectInfoStruct", updatedJson);
 
         ////////////////////////////
-        // update account list
-        // Step 2: Fetch the existing projects list from the 'accounts' table
+        // update account {@link List}
+        // Step 2: Fetch the existing projects {@link List} from the 'accounts' table
         List<Map<String, Object>> existingProjectsRs = SQLConnection.select("accounts", "projectList", new String[]{"ID"}, new Object[]{accountID}, null);
 
-        // Step 3: Prepare the updated projects list (including the new project ID)
+        // Step 3: Prepare the updated projects {@link List} (including the new project ID)
         String updatedProjects = "[]";
-        //for (Map<String, String> m : existingProjectsRs) {
+        //for (Map<{@link String}, {@link String}> m : existingProjectsRs) {
         if (!existingProjectsRs.isEmpty() && existingProjectsRs.get(0).get("projectList") != null) {
-            String currentProjects = (String)existingProjectsRs.get(0).get("projectList"); // Assuming 'projects' is a string field or JSON
+            String currentProjects = (String)existingProjectsRs.get(0).get("projectList"); // Assuming 'projects' is a {@link String} field or JSON
             updatedProjects = addIDToStringList(currentProjects, ID);
         }
 
-        // update new project list
+        // update new project {@link List}
         SQLConnection.update("accounts", accountID, "projectList", updatedProjects);
         return ID;
     }
 
-    /** Private helper function that adds an ID to a string list to store in the database.
-     * @param prevList String of the original list of IDs, in the format "[1, 2, 3]"
-     * @param ID the Integer value of the new ID to add.
-     * @return the new String list in the format "[1, 2, 3, 4]"
+    /** Private helper function that adds an ID to a {@link String} {@link List} to store in the database.
+     * @param prevList {@link String} of the original {@link List} of IDs, in the format "[1, 2, 3]"
+     * @param ID the {@link Integer} value of the new ID to add.
+     * @return the new {@link String} {@link List} in the format "[1, 2, 3, 4]"
      */
     private static String addIDToStringList(String prevList, Integer ID){
         String updatedProjects = "[]";
         if (prevList != null && !prevList.isEmpty()) {
-            // If there are existing projects, append the new project ID to the list
+            // If there are existing projects, append the new project ID to the {@link List}
             // Remove brackets and whitespace
             String trimmed = prevList.substring(1, prevList.length() - 1).trim();
             // Append the new ID correctly
@@ -313,19 +313,19 @@ public class BasicDatabaseActions {
                 updatedProjects = "[" + trimmed + ", " + ID + "]";
             }
         } else {
-            // If no existing projects, start the list with the new project ID
+            // If no existing projects, start the {@link List} with the new project ID
             updatedProjects = "[" + String.valueOf(ID) + "]";
         }
         return updatedProjects;
     }
 
-    /** Private helper function that removes an ID to a string list to store in the database.
-     * @param prevList String of the original list of IDs, in the format "[1, 2, 3, 4]"
-     * @param ID the Integer value of the ID to remove.
-     * @return the new String list in the format "[1, 2, 3]"
+    /** Private helper function that removes an ID to a {@link String} {@link List} to store in the database.
+     * @param prevList {@link String} of the original {@link List} of IDs, in the format "[1, 2, 3, 4]"
+     * @param ID the {@link Integer} value of the ID to remove.
+     * @return the new {@link String} {@link List} in the format "[1, 2, 3]"
      */
     private static String removeIDFromStringList(String prevList, Integer ID){
-        //String updatedProjects = "[]";
+        //{@link String} updatedProjects = "[]";
         if (prevList != null && !prevList.isEmpty()) {
             String trimmed = prevList.substring(1, prevList.length() - 1).trim();
             String[] IDListStrings = trimmed.split(", ");
@@ -340,12 +340,12 @@ public class BasicDatabaseActions {
         }
     }
 
-    /** Edit the String values of the account info specified. Can currently only be used with status, thumbnail, and tags
+    /** Edit the {@link String} values of the account info specified. Can currently only be used with status, thumbnail, and tags
      * @param ID the unique int ID number for a project
-     * @param fieldToEdit the String value of the column name to modify
-     * @param value the new String value to change that entry to
+     * @param fieldToEdit the {@link String} value of the column name to modify
+     * @param value the new {@link String} value to change that entry to
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the String information */
+     * @throws InvalidInputException if there is an error finding the {@link String} information */
     public static void modifyProject(int ID, String fieldToEdit, String value) throws InvalidInputException, DatabaseConnectionException {
         BasicDatabaseActions.assertFormat(new String[]{fieldToEdit, value});
         try {
@@ -358,16 +358,16 @@ public class BasicDatabaseActions {
         SQLConnection.update("projects", ID, fieldToEdit, value);
     }
 
-    /** Deletes a project from the database and from the list of projects under the associated account
+    /** Deletes a project from the database and from the {@link List} of projects under the associated account
      * @param accountID the unique int ID of the account associated with the project
      * @param projectID the unique int ID of the project to be deleted
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the String information
+     * @throws InvalidInputException if there is an error finding the {@link String} information
      * @throws NoSuchAccountException if the accountID entered is invalid */
     public static void deleteProject(int accountID, int projectID) throws DatabaseConnectionException, InvalidInputException, NoSuchAccountException {
         SQLConnection.delete("projects", "ID", ""+projectID);
 
-        // update new project list
+        // update new project {@link List}
         String prevProjects = BasicDatabaseActions.getAccountInfoType(accountID, "projectList");
         String updatedProjects = removeIDFromStringList(prevProjects, projectID);
         SQLConnection.update("accounts", accountID, "projectList", updatedProjects);
@@ -376,10 +376,10 @@ public class BasicDatabaseActions {
 
     /** Compares current state of project to the JSON stored in the database.
      * @param projectID the int ID of the project
-     * @param currentData the JSON string of the current data
+     * @param currentData the JSON {@link String} of the current data
      * @return Returns true if currentData and the JSON stored in the database are identical.
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the String information */
+     * @throws InvalidInputException if there is an error finding the {@link String} information */
     public static boolean compareToCurrentSave(int projectID, String currentData) throws InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(new String[]{currentData});
 
@@ -396,9 +396,9 @@ public class BasicDatabaseActions {
      * and all project-related information
      * @param accountID the unique int ID number for an account
      * @param projectID the unique int ID number for the open project
-     * @param currentData the JSON String that stores the current project data
+     * @param currentData the JSON {@link String} that stores the current project data
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the String information
+     * @throws InvalidInputException if there is an error finding the {@link String} information
      * @throws NotSignedInException if the accountID does not match the project's stored accountID
      * @throws NoSuchAccountException if the accountID does not exist in the database */
     public static void saveProject(Integer accountID, Integer projectID, String currentData) throws InvalidInputException, DatabaseConnectionException, NotSignedInException, NoSuchAccountException {
@@ -432,14 +432,14 @@ public class BasicDatabaseActions {
 
 
     /* If a user is logged in and connected to the internet, they may search the server for posts. They will be
-     * prompted to enter search terms. The application will show the user a list of public posts with tags and
+     * prompted to enter search terms. The application will show the user a {@link List} of public posts with tags and
      * titles that match the search terms. */
-    /** Searches the database and returns a list of Integer IDs of projects that match the inputted conditions.
-     * @param toSearchBy the String array of columns to search the values of
-     * @param value the String array of values to search within the columns, in column order
-     * @return a List of Integers of projects that roughly match the search conditions
+    /** Searches the database and returns a {@link List} of {@link Integer} IDs of projects that match the inputted conditions.
+     * @param toSearchBy the {@link String} array of columns to search the values of
+     * @param value the {@link String} array of values to search within the columns, in column order
+     * @return a {@link List} of {@link Integer}s of projects that roughly match the search conditions
      * @throws DatabaseConnectionException if there is a syntax or connection failure in the database
-     * @throws InvalidInputException if there is an error finding the String information
+     * @throws InvalidInputException if there is an error finding the {@link String} information
      * */
     public static List<Integer> searchBy(String[] toSearchBy, Object[] value) throws InvalidInputException, DatabaseConnectionException{
         BasicDatabaseActions.assertFormat(toSearchBy);

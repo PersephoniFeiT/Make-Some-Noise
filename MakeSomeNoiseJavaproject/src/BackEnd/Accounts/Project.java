@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author Maya Malavasi
- * Project represents a single project instance in the editor. It can translate itself to and from JSON to be stored in
- * the database, and stored a list of NoiseLayers, as well as metadata like title, username of creator, and status for
+ * Project represents a single Project instance in the editor. It can translate itself to and from JSON to be stored in
+ * the database, and stored a list of {@link NoiseLayer}s, as well as metadata like title, username of creator, and status for
  * sharing purposes.
  */
 public class Project {
@@ -35,7 +35,7 @@ public class Project {
     /**
      * Constructs a new Project object with initial attribute values set
      * @param ID Account ID of creator
-     * @param title String title of project
+     * @param title {@link String} title of project
      * @param dateCreated The date the project was created
      */
     public Project(Integer ID, String title, LocalDate dateCreated){
@@ -47,7 +47,7 @@ public class Project {
 
     /**
      * Constructs a new Project object with only the title set. For use when working as a guest with no account ID
-     * @param title String title of project
+     * @param title {@link String} title of project
      */
     public Project(String title){
         this.ID = null;
@@ -56,53 +56,53 @@ public class Project {
         this.dateCreated = LocalDate.now();
     }
 
-    /** Returns the unique project ID as an Integer.
-     * @return the Integer project ID -- null if has not been saved to data base (i.e. editing as guest)
+    /** Returns the unique project ID as an {@link Integer}.
+     * @return the {@link Integer} project ID -- null if has not been saved to data base (i.e. editing as guest)
      */
     public Integer getID(){return this.ID;}
 
     /** Sets the unique project ID.
-     * @param ID the Integer ID of the project
+     * @param ID the {@link Integer} ID of the project
      */
     public void setID(Integer ID){this.ID = ID;}
 
-    /** Removes a NoiseLayer from the project's List of NoiseLayers
-     * @param index the index position of the NoiseLayer to remove
+    /** Removes a {@link NoiseLayer} from the project's List of {@link NoiseLayer}s
+     * @param index the index position of the {@link NoiseLayer} to remove
      */
     public void removeLayer(int index){
         this.layers.remove(index);
     }
 
-    /** Removes a NoiseLayer from the project's List of NoiseLayers
-     * @param nl the NoiseLayer object to find and remove from List
+    /** Removes a {@link NoiseLayer} from the project's List of {@link NoiseLayer}s
+     * @param nl the {@link NoiseLayer} object to find and remove from List
      * */
     public void removeLayer(NoiseLayer nl) {
         this.layers.remove(nl);
     }
 
-    /** Returns a safe copy of the NoiseLayer List that nonetheless contains the actual NoiseLayer objects
-     * @return a new ArrayList that contains the project's NoiseLayer objects
+    /** Returns a safe copy of the {@link NoiseLayer} List that nonetheless contains the actual {@link NoiseLayer} objects
+     * @return a new ArrayList that contains the project's {@link NoiseLayer} objects
      */
     public ArrayList<NoiseLayer> getLayerList(){
         return new ArrayList<>(this.layers);
     }
 
-    /** Returns the NoiseLayer object at an index in the NoiseLayer List.
-     * @param index the int index of the NoiseLayer
-     * @return the requested NoiseLayer
+    /** Returns the {@link NoiseLayer} object at an index in the {@link NoiseLayer} List.
+     * @param index the int index of the {@link NoiseLayer}
+     * @return the requested {@link NoiseLayer}
      */
     public NoiseLayer getLayer(int index){
         return this.layers.get(index);
     }
 
-    /** Adds NoiseLayer object to NoiseLayer List.
-     * @param layer the NoiseLayer to add
+    /** Adds {@link NoiseLayer} object to {@link NoiseLayer} List.
+     * @param layer the {@link NoiseLayer} to add
      */
     public void addLayer(NoiseLayer layer){
         this.layers.add(layer);
     }
 
-    /** Clears NoiseLayer List of all objects
+    /** Clears {@link NoiseLayer} List of all objects
      */
     public void clearLayers(){
         this.layers.clear();
@@ -142,7 +142,7 @@ public class Project {
     public Integer getAccID(){return this.accID;}
 
     /** Set account ID associated with project
-     * @param accID Integer account ID associated with project
+     * @param accID {@link Integer} account ID associated with project
      */
     public void setAccID(Integer accID){this.accID = accID;}
 
@@ -152,7 +152,7 @@ public class Project {
     public BlendMode getBlendMode(){return this.bm;}
 
     /** Set blend mode of project
-     * @param bmString String of blend mode (i.e. "MULTIPLY", "DIVIDE", etc.)
+     * @param bmString {@link String} of blend mode (i.e. "MULTIPLY", "DIVIDE", etc.)
      */
     public void setBlendMode(String bmString){this.bm = BlendMode.fromString(bmString);}
     /** Set blend mode of project
@@ -161,13 +161,13 @@ public class Project {
     public void setBlendMode(BlendMode bm){this.bm = bm;}
 
 
-    /** Creates, constructs, and returns a new Project instance from a given JSON String.
-     * @param JSON JSON String containing all project metadata and NoiseLayer parameters
-     * @return a new Project instance constructed from JSON String
+    /** Creates, constructs, and returns a new Project instance from a given JSON {@link String}.
+     * @param JSON JSON {@link String} containing all project metadata and {@link NoiseLayer} parameters
+     * @return a new Project instance constructed from JSON {@link String}
      */
     public static Project fromJSONtoProject(String JSON){
         try {
-            // mapper to map string names to object fields
+            // mapper to map {@link String} names to object fields
             ObjectMapper objectMapper = new ObjectMapper();
             //root node is start of project tree
             JsonNode rootNode = objectMapper.readTree(JSON);
@@ -176,7 +176,7 @@ public class Project {
             Iterator<String> fieldNames = rootNode.fieldNames();
             // if it's an empty JSON file, we have a problem. Just return an empty project
             if (!fieldNames.hasNext()) return new Project("");
-            //otherwise the Project ID is the first string
+            //otherwise the Project ID is the first {@link String}
             String idString = fieldNames.next();
 
             Integer projectId;
@@ -204,7 +204,7 @@ public class Project {
             int c2 = projectNode.get("color2").asInt();
             int accID = projectNode.get("accountID").asInt();
 
-            // Create a new project instance
+            // Create a new Project instance
             Project project = new Project(projectId, title, dateCreated);
             project.status = status;
             project.thumbnail = thumbnail;
@@ -213,13 +213,13 @@ public class Project {
             project.setColor2(c2);
             project.setAccID(accID);
 
-            // Extract NoiseLayer objects
+            // Extract {@link NoiseLayer} objects
             int layerIndex = 1;
             while (projectNode.has("layer" + layerIndex)) {
                 //set root to layer name
                 JsonNode layerNode = projectNode.get("layer" + layerIndex);
 
-                // Assuming NoiseLayer has a constructor or a fromJson method
+                // Assuming {@link NoiseLayer} has a constructor or a fromJson method
                 NoiseLayer layer;
 
                 int seed = layerNode.get("seed").asInt();
@@ -266,8 +266,8 @@ public class Project {
         return new Project("");
     }
 
-    /** Reads a project instance and creates a JSON string from the project data and metadata
-     * @return a String JSON containing all project data and metadata */
+    /** Reads a Project instance and creates a JSON {@link String} from the project data and metadata
+     * @return a {@link String} JSON containing all project data and metadata */
     public String toJSONString(){
         StringBuilder s = new StringBuilder();
 

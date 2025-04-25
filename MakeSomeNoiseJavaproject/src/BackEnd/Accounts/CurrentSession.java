@@ -24,7 +24,7 @@ public class CurrentSession {
     }
 
     /** Checks whether the user is signed in, and if so returns the account ID
-     * @return Integer account ID of signed-in user.
+     * @return {@link Integer}  account ID of signed-in user.
      * @throws NotSignedInException if user is not signed in
      */
     public Integer getSignedIn() throws NotSignedInException {
@@ -48,9 +48,9 @@ public class CurrentSession {
     //////////////////////
 
     /** Creates a new account and stores new account data in database
-     * @param username String username
-     * @param password String password
-     * @param email String email
+     * @param username {@link String} username
+     * @param password {@link String} password
+     * @param email {@link String} email
      */
     public void CreateNewAccount(String username, String password, String email) {
         try {
@@ -63,8 +63,8 @@ public class CurrentSession {
     }
 
     /** Attempts a sign in for current session. If successful, saves the account ID to the currentSession variables.
-     * @param username String username
-     * @param password String password
+     * @param username {@link String} username
+     * @param password {@link String} password
      * @throws IncorrectPasswordException if password is incorrect
      * @throws NoSuchAccountException if username is not connected to any existing account
      * @throws InvalidInputException if username or password are empty, null, or " "
@@ -112,7 +112,7 @@ public class CurrentSession {
     }
 
     /** Changes the username associated with the account ID
-     * @param username String new username
+     * @param username {@link String} new username
      */
     public void ChangeUsername(String username){
         try {
@@ -127,7 +127,7 @@ public class CurrentSession {
     }
 
     /** Changes the password associated with the account ID
-     * @param password String new password
+     * @param password {@link String} new password
      */
     public void ChangePassword(String password){
         try {
@@ -139,7 +139,7 @@ public class CurrentSession {
     }
 
     /** Changes the email associated with the account ID
-     * @param email String new email. Must be in the format x@x.xxx
+     * @param email {@link String} new email. Must be in the format x@x.xxx
      */
     public void ChangeEmail(String email){
         try {
@@ -157,7 +157,7 @@ public class CurrentSession {
     }
 
     /** Retrieves the account information to display in the account profile page
-     * @return HashMap of <String, String> pairs where the key is the name of the info and the object is the String value
+     * @return {@link HashMap} of <{@link String}, {@link String}> pairs where the key is the name of the info and the object is the {@link String} value
      */
     public HashMap<String, String> GetAccountInfo() {
         HashMap<String, String> accountInfo = new HashMap<>();
@@ -171,7 +171,7 @@ public class CurrentSession {
     }
 
     /** Retrieves a List of project IDs associated with current account
-     * @return List of Integer project IDs, or empty List [] */
+     * @return List of {@link {@link Integer} }  project IDs, or empty List [] */
     public List<Integer> GetProjectsInAccount(){
         List<Integer> IDList = new ArrayList<>();
         try {
@@ -190,8 +190,8 @@ public class CurrentSession {
 
     //////////////////////////////////////////////////////////////////
 
-    /** Creates a new project instance. Does not automatically save to database.
-     * @return new Project instance with default settings
+    /** Creates a new {@link  Project} instance. Does not automatically save to database.
+     * @return new {@link  Project} instance with default settings
      * */
     public Project CreateNewProject() {
         Project p = new Project("New Project");
@@ -200,7 +200,7 @@ public class CurrentSession {
 
     /**
      * Saves the project to database. Checks if signed in, makes sure all metadata is up to date
-     * @param p Project instance to save to database
+     * @param p {@link  Project} instance to save to database
      * @return true if successfully saved
      * @throws NotSignedInException if not signed in to account
      * */
@@ -232,10 +232,10 @@ public class CurrentSession {
 
 
     ///////////////////////////
-    /** Static function, retrieves all project tags associated with the project, as a List of Strings. A single tag can only be comprised
+    /** Static function, retrieves all project tags associated with the project, as a List of {@link String}s. A single tag can only be comprised
      * of letters, numbers, dashes, or underscores.
      * @param ID the project ID
-     * @return List of Strings with each tag*/
+     * @return List of {@link String}s with each tag*/
     public static List<String> getProjectTags(int ID) {
         try {
             String taglistString = BasicDatabaseActions.getProjectInfoType(ID, "tags");
@@ -248,10 +248,10 @@ public class CurrentSession {
         return new ArrayList<>();
     }
 
-    /** Static function, retrieves all project tags associated with the project, as a List of Strings. A single tag can only be comprised
+    /** Static function, retrieves all project tags associated with the project, as a List of {@link String}s. A single tag can only be comprised
      * of letters, numbers, dashes, or underscores.
      * @param projectID the project ID
-     * @return Map of <String, String> pairs where the keys are the column names of the info
+     * @return {@link Map} of  <{@link String}, {@link String}> pairs where the keys are the column names of the info
      * */
     public static Map<String, String> GetProjectInfo(int projectID) {
         Map<String, String> projectInfo = new HashMap<>();
@@ -267,17 +267,17 @@ public class CurrentSession {
         return projectInfo;
     }
 
-    /** Static function, changes the Project instance title. Does not store in database yet.
-     * @param p Project instance to modify
-     * @param title String new title to change to */
+    /** Static function, changes the {@link  Project} instance title. Does not store in database yet.
+     * @param p {@link  Project} instance to modify
+     * @param title {@link String} new title to change to */
     public static void ChangeTitle(Project p, String title){
         p.title = title;
             //BasicDatabaseActions.modifyProject(ID, "title", title);
     }
 
-    /** Changes the Project instance status, either "public" or "private". Does not store in database yet.
-     * @param p Project instance to modify
-     * @param status String new status to change to, either "public" or "private" */
+    /** Changes the {@link  Project} instance status, either "public" or "private". Does not store in database yet.
+     * @param p {@link  Project} instance to modify
+     * @param status {@link String} new status to change to, either "public" or "private" */
     public void ChangeStatus(Project p, String status){
         try {
             this.getSignedIn();
@@ -289,16 +289,16 @@ public class CurrentSession {
         }
     }
 
-    /** Changes the Project instance tags to a given list. Does not store in database yet.
-     * @param p Project instance to modify
-     * @param tags List of String tags to replace existing list */
+    /** Changes the {@link  Project} instance tags to a given list. Does not store in database yet.
+     * @param p {@link  Project} instance to modify
+     * @param tags List of {@link String} tags to replace existing list */
     public static void ChangeTags(Project p, List<String> tags){
         p.tags = new ArrayList<String>(tags);
     }
 
-    /** Changes the Project instance thumbnail. Does not store in database yet.
-     * @param p Project instance to modify
-     * @param tn the String path where the thumbnail image is stored */
+    /** Changes the {@link  Project} instance thumbnail. Does not store in database yet.
+     * @param p {@link  Project} instance to modify
+     * @param tn the {@link String} path where the thumbnail image is stored */
     public static void ChangeThumbnail(Project p, String tn){
         p.thumbnail = tn;
     }
@@ -314,8 +314,8 @@ public class CurrentSession {
         }
     }
 
-    /** Checks whether the project data in the database is up to date with an existing Project instance
-     * @param p Project instance
+    /** Checks whether the project data in the database is up to date with an existing {@link  Project} instance
+     * @param p {@link  Project} instance
      * @return true if up to date */
     public static boolean isSaved(Project p){
         try {
@@ -326,9 +326,9 @@ public class CurrentSession {
         return false;
     }
 
-    /** Returns the Integer account ID associated with the given project
+    /** Returns the {@link Integer}  account ID associated with the given project
      * @param projectID the ID of the project
-     * @return an Integer value of account ID that created the project. Null if created by a guest */
+     * @return an {@link Integer}  value of account ID that created the project. Null if created by a guest */
     public static Integer getProjectAccountID(Integer projectID){
         try {
             Integer IDstring = BasicDatabaseActions.getProjectAccountID(projectID);

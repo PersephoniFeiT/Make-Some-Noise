@@ -14,7 +14,7 @@ import java.util.List;
 public class Sharing {
     /** Searches the database for projects whose titles contain the given substring.
      * @param title the substring to check for
-     * @return a List of Integer IDs of projects matching the search parameters. */
+     * @return a List of {@link Integer} IDs of projects matching the search parameters. */
     public static List<Integer> SearchByTitle(String title){
         List<Integer> projectInfo = new ArrayList<>();
         try {
@@ -27,7 +27,7 @@ public class Sharing {
 
     /** Searches the database for projects whose usernames contain the given substring.
      * @param username the substring to check for
-     * @return a List of Integer IDs of projects matching the search parameters. */
+     * @return a List of {@link Integer} IDs of projects matching the search parameters. */
     public static List<Integer> SearchByUsername(String username){
         List<Integer> projectInfo = new ArrayList<>();
         try {
@@ -40,7 +40,7 @@ public class Sharing {
 
     /** Searches the database for projects whose tags contain the given substring. Only matches one single tag at a time.
      * @param tag the tag substring to check for
-     * @return a List of Integer IDs of projects matching the search parameters. */
+     * @return a List of {@link Integer} IDs of projects matching the search parameters. */
     public static List<Integer> SearchByTag(String tag){
         List<Integer> projectInfo = new ArrayList<>();
         try {

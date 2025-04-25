@@ -2,9 +2,9 @@ package FrontEnd;
 
 /**
  * @author Maya Malavasi, Ryan Shipp
- * Class that arranges JPanels to form a visual representation of a list of projects. ProjectThumbnailList serves as a
+ * Class that arranges JPanels to form a visual representation of a {@link List} of projects. {@link ProjectThumbnailList} serves as a
  * container class for subclass {@ContentPanel}, which contains the order and arrangement of the thumbnails and in turn
- * contains subclass {@ProjectThumbnail}. Each project in the ProjectThumbnailList has its own ProjectThumbnail.
+ * contains subclass {@link ProjectThumbnail}. Each project in the {@link ProjectThumbnailList} has its own ProjectThumbnail.
  */
 import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /* 
- * Class to represent a visual list of projects, each containing a thumbnail and basic project information
+ * Class to represent a visual {@link List} of projects, each containing a thumbnail and basic project information
  */
 public class ProjectThumbnailList extends JScrollPane {
 
@@ -33,10 +33,10 @@ public class ProjectThumbnailList extends JScrollPane {
 	private MakeSomeNoiseWindow mainWindow;
 
 	/**
-	 * Constructs a new ProjectThumbnailList container panel
+	 * Constructs a new {@link ProjectThumbnailList} container panel
 	 * @param mainWindow the main window/graphics controller Jpanel of the overall project
 	 * @param accountID current account ID, null if not logged in
-	 * @param projectIDs A List of Integer project IDs to display
+	 * @param projectIDs A {@link List} of {@link Integer} project IDs to display
 	 */
 	// constructor
 	public ProjectThumbnailList(MakeSomeNoiseWindow mainWindow, Integer accountID, List<Integer> projectIDs) {
@@ -63,22 +63,22 @@ public class ProjectThumbnailList extends JScrollPane {
 	}
 
 	/** Indicates to the main window to switch to the editor panel, opening and editing the given selected project.
-	 * @param projectInfo the project's JSON string
+	 * @param projectInfo the project's JSON {@link String}
 	 */
 	private void goToEditorPanel(String projectInfo){
 		this.mainWindow.addEditorPanel(Project.fromJSONtoProject(projectInfo));
 		this.mainWindow.goToEditorPanel();
 	}
 
-	/** Add another project to the Thumbnail display list.
-	 * @param projectID the Integer ID of the project to add
+	/** Add another project to the Thumbnail display {@link List}.
+	 * @param projectID the {@link Integer} ID of the project to add
 	 */
 	public void addProject(Integer projectID) {
 		contents.addThumbnail(accountID, projectID);
 	}
 
-	/** Add list of projects to the Thumbnail display list
-	 * @param projectIDs List of Integer IDs of the projects to add
+	/** Add {@link List} of projects to the Thumbnail display {@link List}
+	 * @param projectIDs {@link List} of {@link Integer} IDs of the projects to add
 	 */
 	public void addProjectList(List<Integer> projectIDs) {
 		projectIDs.forEach(this::addProject);
@@ -87,20 +87,20 @@ public class ProjectThumbnailList extends JScrollPane {
 
 	/////////////////////
 	/**
-	 * Class that arranges and contains the ProjectThumbnail objects in a designated layout format.
+	 * Class that arranges and contains the {@link ProjectThumbnail} objects in a designated layout format.
 	 */
 	private class ContentPanel extends JPanel {
 		List<Integer> projectIDs;
 
 		//constructor
-		/** Constructor specifies the layout as a JPanel FlowLayout, with an empty list of projects. */
+		/** Constructor specifies the layout as a JPanel FlowLayout, with an empty {@link List} of projects. */
 		public ContentPanel() {
 			setLayout(new FlowLayout());
 		}
 
-		/** Constructor specifies the layout as a JPanel FlowLayout, and adds a ProjectThumbnail for each project in the
-		 * given list. 
-		 * @param projectIDs the list of Integer project IDs to display
+		/** Constructor specifies the layout as a JPanel FlowLayout, and adds a {@code ProjectThumbnail} for each project in the
+		 * given {@link List}. 
+		 * @param projectIDs the {@link List} of {@link Integer} project IDs to display
 		 * */
 		public ContentPanel(List<Integer> projectIDs) {
 			super();
@@ -109,23 +109,23 @@ public class ProjectThumbnailList extends JScrollPane {
 			projectIDs.forEach(i -> this.addThumbnail(accountID, i));
 		}
 
-		/** Creates a ProjectThumbnail display and adds it to the contents.
+		/** Creates a {@link ProjectThumbnail} display and adds it to the contents.
 		 * @param accountID the ID of the current signed-in account. Null if guest.
 		 * @param projectID the ID of the project to display */
 		public void addThumbnail(Integer accountID, Integer projectID) {
 			add(new ProjectThumbnail(accountID, projectID));
 		}
 
-		/** Removes a ProjectThumbnail display from the contents.
+		/** Removes a {@link ProjectThumbnail} display from the contents.
 		 * @param projectID the ID of the project to display */
 		public void removeThumbnail(Integer projectID) {
 			this.projectIDs.remove(projectID);
 		}
 
 		//////////////////
-		/** ProjectThumbnail is a template for any project thumbnail display. Each ProjectThumbnail contains a thumbnail
+		/** {@link ProjectThumbnail} is a template for any project thumbnail display. Each {@link ProjectThumbnail} contains a thumbnail
 		 * image and basic project information, and will perform certain actions when clicked, depending on sign-in. Can
-		 * be used for personal project lists, lists of shared projects, or any other functionality that requires a display of
+		 * be used for personal project {@link List}s, {@link List}s of shared projects, or any other functionality that requires a display of
 		 * several projects. */
 		private class ProjectThumbnail extends JPanel {
 
@@ -169,7 +169,7 @@ public class ProjectThumbnailList extends JScrollPane {
 				add(new JLabel("By " + projectInfo.get("username")));
 				add(new JLabel("Created " + projectInfo.get("dateCreated")));
 				
-				// Construct a single string containing every tag on this project
+				// Construct a single {@link String} containing every tag on this project
 				StringBuilder tagsString = new StringBuilder();
 				for(int i=0; i < tags.size(); i++) {
 					tagsString.append("#").append(tags.get(i));
