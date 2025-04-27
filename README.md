@@ -22,14 +22,48 @@ Launch MySQL Workbench and follow the instructions to create an account.
 Press the (+) button to create a new MySQL connection
 
 Use the ![image](https://github.com/user-attachments/assets/81229d84-3cd4-4288-b84f-8af9dacb4ace) button to create a new schema named `makesomenoise`
+Ensure that the server is running on local port 3306 (should be default).
 
-Select this schema and add two tables; one named `accounts` and one named `projects`
+Select this scheme and create a user called `appUser` with password `make some noise`
+
+In the schema and add two tables: one named `accounts` and one named `projects`
+
+
+`accounts:`
+
+| ID  | username    | password    | email       | projectList | admin      |
+|-----|-------------|-------------|-------------|-------------|------------|
+| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | JSON        | TINYINT(1) |
+
+`projects:`
+
+| ID  | title       | username    | dateCreated | status     | projectInfoStruct | thumbnail   | tags | accountID |
+|-----|-------------|-------------|-------------|------------|-------------------|-------------|------|-----------|
+| int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | VARCHAR(7) | VARCHAR(9999)     | VARCHAR(45) | JSON | INT       |
+
+
 
 Set up `accounts` like this: ![image](https://github.com/user-attachments/assets/4bc89455-d91d-4572-9432-8162c7e7a8c0)
 
 Set up `projects` like this: ![image](https://github.com/user-attachments/assets/f4a52105-5b21-4056-a21a-c499fb810947)
 
 Save all changes, and ensure that the server is running while you use the software. You are now ready to create your noise patterns!
+
+## Folder Structure
+
+The workspace contains two folders by default, where:
+
+- `src`: the folder to maintain sources
+- `lib`: the folder to maintain dependencies
+
+Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+
+> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+
+## Dependency Management
+
+The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+
 
 # Usage
 Begin the software by running the .jar file. You will see an Editor with an empty canvas. 
