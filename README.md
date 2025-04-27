@@ -1,10 +1,10 @@
-# Make-Some-Noise
+# Make Some Noise!
 2d noise design app for digital artists and game designers
 
 Create, customize, share, and find 2d noise texture patterns. Choose between multiple noise algorithms, customize the parameters, layer them over each other, and choose a color scheme. 
 
 # Architecture
-{Add image}
+![image](https://github.com/user-attachments/assets/8e3c835d-9d73-4195-bb84-0a7d0f895aa4)
 
 The software architecture is divided into a front-end, a back-end, and a server-end. The front-end is responsible for receiving user input, transmitting it to the back-end, and showing the user the back-end's output. The backend is responsible for running noise algorithms to create texture patterns, managing the user session, and communicating with the server-end. The server-end connects the rest of the application with the database and can save, load, or search for projects, as well as managing user accounts.
 
@@ -35,7 +35,8 @@ Save all changes, and ensure that the server is running while you use the softwa
 Begin the software by running the .jar file. You will see an Editor with an empty canvas. 
 
 ## Editor
-{Add image}
+![image](https://github.com/user-attachments/assets/a2e47e70-333e-4cd9-833e-967c21cd28dc)
+
 
 Create a noise layer by pushing the + button at the top on the right-hand side. This will add a new layer of random noise to the canvas with default parameters. You can create as many layers as you need and adjust each of their parameters to customize them
 
@@ -45,12 +46,20 @@ This software currently has four noise algorithms: Random noise, 2D Simplex Nois
 ### Layer Parameters
 Each layer has 6 parameters: Seed, Freq (frequency), Amp (amplitude), Gain, Floor, and Ceil (ceiling). By adjusting these, you can change the behavior of the noise algorithms. 
 
-- Seed: the seed value for random-number-generation. Changing this will subtly change the randomness of the algorithm
-- Frequency: {}
+- Seed: the seed value for random number generation. Changing this will subtly change the randomness of the algorithm
+- Frequency: controls the rate of change between areas of high and low intensity
 - Amplitude: determines the amount of contrast between the areas of high and low intensity
-- Gain: {}
+- Gain: controls the brightness of the layer
 - Floor: Cut-off value for areas of low intesity; set all pixels below this value to this value
 - Ceiling: Cut-off value for areas of high intesity; set all pixels above this value to this value
+
+### Layer Mixing
+Each layer can mix with the main canvas in 4 different ways: multiplication, division, addition, and subtraction. 
+
+- Multiplication:
+- Division:
+- Addition:
+- Subtraction: 
 
 ### Color Gradient
 The color gradient lies at the bottom of the Editor. By choosing the two endpoints, you can decide what color scale is used to render the pattern. 
@@ -73,10 +82,5 @@ The bottom section shows the your projects that are saved in the database. By cl
 {Add image}
 
 You can search the database for other user's projects. Navigate to the search panel by going to the drop-down menu and selecting Find -> Pattern Search. You can look at patterns saved to the database by searching for matching tags, or titles. After searching, select a project to open a copy of it in an editor window. 
-
-
-
-
-
 
 
