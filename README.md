@@ -45,12 +45,12 @@ This software currently has four noise algorithms: Random noise, 2D Simplex Nois
 ### Layer Parameters
 Each layer has 6 parameters: Seed, Freq (frequency), Amp (amplitude), Gain, Floor, and Ceil (ceiling). By adjusting these, you can change the behavior of the noise algorithms. 
 
-- Seed: {}
+- Seed: the seed value for random-number-generation. Changing this will subtly change the randomness of the algorithm
 - Frequency: {}
-- Amplitude: {}
+- Amplitude: determines the amount of contrast between the areas of high and low intensity
 - Gain: {}
-- Floor: {}
-- Ceiling: {}
+- Floor: Cut-off value for areas of low intesity; set all pixels below this value to this value
+- Ceiling: Cut-off value for areas of high intesity; set all pixels above this value to this value
 
 ### Color Gradient
 The color gradient lies at the bottom of the Editor. By choosing the two endpoints, you can decide what color scale is used to render the pattern. 
@@ -61,13 +61,18 @@ There are three ways to save a project. You can save the project into the databa
 ## Account Panel
 {Add image}
 
+To create an account, use the drop-down menu at the top of the window to select Account -> Sign In. At the bottom of the pop-up window, select "Make an account", then fill in each field. 
 
+To view account informatio, use the drop-down menu to select Account -> View Account. 
 
+The top section of the Account Panel shows your username, email, and password, and allows you to change them. 
 
-
+The bottom section shows the your projects that are saved in the database. By clicking one, you can open the project to edit it or delete it. 
 
 ## Sharing and Finding Panel
 {Add image}
+
+You can search the database for other user's projects. Navigate to the search panel by going to the drop-down menu and selecting Find -> Pattern Search. You can look at patterns saved to the database by searching for matching tags, or titles. After searching, select a project to open a copy of it in an editor window. 
 
 
 
