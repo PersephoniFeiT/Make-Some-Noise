@@ -29,17 +29,31 @@ import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.util.Iterator;
 
+/**
+ * A visual list of layers to show the properties of each {@link BackEnd.Editor.NoiseLayer} in a {@link BackEnd.Accounts.Project}. 
+ * @author Ryan Shipp
+ */
 public class LayerPanelList extends JScrollPane {
 
 	private ContentPanel contents;
 	private EditorPanel hostEditorPanel;
 
+	/**
+	 * Creates a new LayerPanelList populated with the layers in an existing project
+	 * @param p the project that this LayerPanelList will be associated with
+	 * @param ep the editor panel that this LayerPanelList will sit in
+	 */
 	public LayerPanelList(Project p, EditorPanel ep) {
 		hostEditorPanel = ep;
 		contents = new ContentPanel(p, ep);
 		setViewportView(contents);
 	}
 
+	/**
+	 * A panel that shows the properties for a single layer.
+	 * <P>
+	 * A single panel contains a checkbox for if the layer should be included, a drop-down menu for layer type, and text boxes for parameter editing
+	 */
 	private class LayerPanel extends JPanel {
 
 		private JTextField layerName;
@@ -60,6 +74,9 @@ public class LayerPanelList extends JScrollPane {
 		private Project project;
 		private EditorPanel hostEditorPanel;
 
+		/**
+		 * Component to represent a text field with a label above it
+		 */
 		private class LabeledTextField extends JPanel {
 			private JLabel label;
 			private JTextField text;
@@ -76,9 +93,10 @@ public class LayerPanelList extends JScrollPane {
 		}
 		
 	    /**
-    	* @author Ryan Shipp
-    	* @author Fei Triolo - {@link BlendMode} integration
-	 	*/
+	 	 * LayerPanel is a graphical panel that allows a user to edit a {@link BackEnd.Editor.NoiseLayer}
+    	 * @author Ryan Shipp
+    	 * @author Fei Triolo - {@link BlendMode} integration
+	 	 */
 		public LayerPanel(NoiseLayer nl, Project proj, EditorPanel host) {
 			setLayout(new FlowLayout());
 			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -296,6 +314,9 @@ public class LayerPanelList extends JScrollPane {
 			hostEditorPanel.renderNoise();
 		}
 	
+		/**
+		 * Change the layer object to match any changes that have been made to its LayerPanel
+		 */
 		private void updateLayer() {
 
 			try {
@@ -379,13 +400,22 @@ public class LayerPanelList extends JScrollPane {
 		}
 	}
 
+	/**
+	 * ContentPanel is the rigid panel that is made scrollable by placing it in the LayerPanelList
+	 * @author Ryan Shipp
+	 */
 	private class ContentPanel extends JPanel {
 
 		private Project project;
 		private EditorPanel hostEditorPanel;
 
+		/**
+		 * Header is the collection of compoenents that always lies at the top of the Panel, including the label and "Add New Layer" button
+		 */
 		private class Header extends JPanel {
-
+			/**
+			 * Create a new header object to be added into a ContentPanel
+			 */
 			public Header() {
 				setLayout(new FlowLayout());
 				setMaximumSize(new Dimension(1000, 50));
@@ -403,7 +433,11 @@ public class LayerPanelList extends JScrollPane {
 			}
 		}
 
-
+		/**
+		 * Create a new content panel and populate it with a header and any existing layers
+		 * @param p the project that this ContentPanel represents, which can be an empty project or an existing project with layers
+		 * @param host the EditorPanel that this LayerPanelList resides in
+		 */
 		public ContentPanel(Project p, EditorPanel host) {
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -418,6 +452,10 @@ public class LayerPanelList extends JScrollPane {
 			}
 		}
 
+		/**
+		 * Add a new layer to the LayerPanelList and to its project. 
+		 * By default, this is a Random Noise Layer with seed=123, floor=0.0, ceiling=1.0, gain=0, amp=1.0, freq=1.0, and BlendMode=Multiply
+		 */
 		public void addLayer() {
 			RandomNoiseLayer newLayer = new RandomNoiseLayer(123, 0.0, 1.0, 0, 1.0, 1.0, BlendMode.MULTIPLY);
 			LayerPanel lp = new LayerPanel(newLayer, project, hostEditorPanel);
@@ -429,6 +467,10 @@ public class LayerPanelList extends JScrollPane {
 			hostEditorPanel.renderNoise();
 		}
 
+		/**
+		 * Add a noise layer that has already been constructed to the LayerPanelList and its project
+		 * @param nl the noise layer to be added
+		 */
 		public void addLayer(NoiseLayer nl) {
 			LayerPanel lp = new LayerPanel(nl, project, hostEditorPanel);
 			this.add(lp);
@@ -438,8 +480,13 @@ public class LayerPanelList extends JScrollPane {
 			hostEditorPanel.renderNoise();
 		}
 
+		/**
+		 * Remove a LayerPanel from this LayerPanelList and from the project
+		 * @param lp the LayerPanel to be removed
+		 */
 		public void removeLayer(LayerPanel lp) {
 			this.remove(lp);
+			project.removeLayer(lp.noiseLayer);
 			revalidate();
 			repaint();
 		}

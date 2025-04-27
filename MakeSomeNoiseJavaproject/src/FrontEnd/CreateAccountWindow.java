@@ -16,11 +16,19 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
 
+/**
+ * CreateAccountWindow is a window that allows a user to create a new account. It is typically launched by a {@link MakeSomeNoiseWindow} when a user chooses to create an account or by a {@link SignInWindow}
+ * @author Ryan Shipp
+ */
 public class CreateAccountWindow extends JFrame {
 
+	/**
+	 * Creates and shows a new CreateAccountWindow
+	 * @param hostWindow the MakeSomeNoiseWindow that launched this CreateAccountWindow
+	 */
 	public CreateAccountWindow(MakeSomeNoiseWindow hostWindow) {
-		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));                           // using BorderLayout layout managers
-		setSize(300, 400);                                       // width and height
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));		// using BorderLayout layout managers
+		setSize(300, 400);                                       			// width and height
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		add(Box.createVerticalStrut(50));

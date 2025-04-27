@@ -28,12 +28,16 @@ import BackEnd.Accounts.Project;
 import BackEnd.Editor.GradientFunction;
 import Exceptions.NotSignedInException;
 
+/**
+ * EditorPanel is one of the three main user interfaces that a {@link MakeSomeNoiseWindow} might display. It shows all the information and interfaces needed to design a {@link Project}, including a {@link LayerPanelList}, a {@link NoisePanel}, and {@link GradientPanel}
+ * @author Ryan Shipp
+ * @author Fei Triolo
+ */
 class EditorPanel extends JPanel {
 
 	private NoisePanel noisePanel;
     private int noisePanelWidth = 700;
     private int noisePanelHeight = 463;
-	// private JButton renderButton;
     private LayerPanelList layers;
     private GradientPanel gradientPanel;
     private GradientFunction gradientFunction;
@@ -41,6 +45,7 @@ class EditorPanel extends JPanel {
     private Project project;
 
     /**
+     * Creates a new {@link EditorPanel} 
      * @author Ryan Shipp
      * @author Fei Triolo - {@link GradientPanel} integration, {@link BackEnd.Editor.BlendMode} integration
      * @param parentWindow
@@ -177,6 +182,7 @@ class EditorPanel extends JPanel {
 	}
 
     /**
+     * Re-draw the {@link EditorPanel}'s {@link NoisePanel} using the {@link BackEnd.Editor.NoiseLayer}s of the {@link LayerPanelList}
      * @author Ryan Shipp
      * @author Fei Triolo - {@Link GradientPanel integration}
      */
@@ -199,6 +205,11 @@ class EditorPanel extends JPanel {
         noisePanel.setBitmap(newBitmap); // Add this method to NoisePanel
     }
 
+    /**
+     * Export the current project in this editor to a PNG image on the local hard drive. 
+     * Opens a file explorer so the user can choose the location and name of their image.
+     * @author Ryan Shipp
+     */
     public void writeImage() {
 
         JFileChooser fileChooser = new JFileChooser();
@@ -219,6 +230,10 @@ class EditorPanel extends JPanel {
         
     }
 
+    /**
+     * @author Ryan Shipp
+     * @return the project object that is being edited by this EditorPanel
+     */
     public Project getProject() {
         return project;
     }

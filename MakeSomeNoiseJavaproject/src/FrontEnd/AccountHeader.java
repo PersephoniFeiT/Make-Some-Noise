@@ -13,8 +13,9 @@ import javax.swing.*;
 
 import BackEnd.Accounts.CurrentSession;
 
-/* 
- * Class to represent the header of an account panel, showing a user's basic account information
+/**
+ * @author Ryan Shipp
+ * AccountHeader is the graphical object that sits at the top of an {@link AccountPanel} to show and change a user's account data
  */
 public class AccountHeader extends JPanel {
 
@@ -22,6 +23,11 @@ public class AccountHeader extends JPanel {
 	private JTextField email;
 	private JPasswordField passwordField;
 
+	/**
+	 * Create a new header for an account, containing email, password, and username labels and the buttons to change them
+	 * @param accountInfo map containing the user's username, email, and password should be gotten from BackEnd.Accounts.CurrentSession.GetAccountInfo(), or should be null if the user is not signed in.
+	 * @param session is the current user session for the application
+	 */
 	public AccountHeader(Map<String, String> accountInfo, CurrentSession session) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setMaximumSize(new Dimension(10000, 400));

@@ -22,8 +22,16 @@ import Exceptions.IncorrectPasswordException;
 import Exceptions.InvalidInputException;
 import Exceptions.NoSuchAccountException;
 
+/**
+ * A window to that allows a user to sign into an existing account. It is normally launched by a {@link MakeSomeNoiseWindow}, and may launch a {@link CreateAccountWindow}
+ * @author Ryan Shipp
+ */
 public class SignInWindow extends JFrame {
 
+	/**
+	 * Creates and shows a new sign-in window
+	 * @param hostWindow
+	 */
 	public SignInWindow(MakeSomeNoiseWindow hostWindow) {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));  	       // using BoxLayout layout managers
 		setSize(300, 400);        				                               // width and height

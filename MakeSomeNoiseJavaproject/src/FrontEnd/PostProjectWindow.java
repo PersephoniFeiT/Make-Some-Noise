@@ -17,12 +17,21 @@ import BackEnd.Accounts.CurrentSession;
 import BackEnd.Accounts.Project;
 import Exceptions.NotSignedInException;
 
+/**
+ * A graphical window that allows a user to post a {@link BackEnd.Accounts.Project} after choosing a title, tags, and sharing settings. <P> Usually spawned by a {@link MakeSomeNoiseWindow}
+ * @author Ryan Shipp
+ */
 public class PostProjectWindow extends JFrame {
 	
 	private JTextField titleField;
 	private JTextField tagsField;
 	private JCheckBox postPubliclyBox;
 	
+	/**
+	 * Creates a new PostProjectWindow
+	 * @param session the user session that the project will be posted to
+	 * @param proj the project to be posted
+	 */
 	public PostProjectWindow(CurrentSession session, Project proj) {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		setSize(300, 400);
@@ -54,7 +63,9 @@ public class PostProjectWindow extends JFrame {
 
 	}
 
-	// Method to submit the form, publishing the project to the server with the given title and tags
+	/**
+	 * Submits the form, publishing the project to the server with the given title and tags
+	 */
 	public void submitForm(CurrentSession cs, Project p) {
 		try {
 			cs.SaveProject(p);
@@ -67,7 +78,9 @@ public class PostProjectWindow extends JFrame {
 		cs.ChangeStatus(p, postPubliclyBox.isSelected() ? "public" : "private");
 	}
 
-	// Method to parse the given tags, seperating them by semicolons and trimming leading and trailing whitespace
+	/*
+	 * Parse the given tags, seperating them by semicolons and trimming leading and trailing whitespace
+	 */
 	public List<String> parseTags() {
 		String tags = tagsField.getText();
 
