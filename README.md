@@ -68,7 +68,8 @@ The color gradient lies at the bottom of the Editor. By choosing the two endpoin
 There are three ways to save a project. You can save the project into the database so that it can be retreived and edited more later, either by you or another user. If you don't have an account or database connection, you can save projects as a file on your own computer. Finally, you can save the project as a png image on your own computer to use the pattern in other softwares. 
 
 ## Account Panel
-{Add image}
+![image](https://github.com/user-attachments/assets/aeb89159-a491-4437-b70f-fe20e9bc46f4)
+
 
 To create an account, use the drop-down menu at the top of the window to select Account -> Sign In. At the bottom of the pop-up window, select "Make an account", then fill in each field. 
 
@@ -79,7 +80,7 @@ The top section of the Account Panel shows your username, email, and password, a
 The bottom section shows the your projects that are saved in the database. By clicking one, you can open the project to edit it or delete it. 
 
 ## Sharing and Finding Panel
-{Add image}
+![image](https://github.com/user-attachments/assets/16c41723-bf8b-47fb-9683-7d649c5ba6fe)
 
 You can search the database for other user's projects. Navigate to the search panel by going to the drop-down menu and selecting Find -> Pattern Search. You can look at patterns saved to the database by searching for matching tags, or titles. After searching, select a project to open a copy of it in an editor window. 
 
