@@ -3,6 +3,21 @@
 
 Create, customize, share, and find 2d noise texture patterns. Choose between multiple noise algorithms, customize the parameters, layer them over each other, and choose a color scheme. 
 
+# Folder Structure
+
+The workspace contains two folders by default, where:
+
+- `src`: the folder to maintain sources
+- `lib`: the folder to maintain dependencies
+
+Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+
+> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+
+# Dependency Management
+
+The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+
 # Architecture
 ![image](https://github.com/user-attachments/assets/8e3c835d-9d73-4195-bb84-0a7d0f895aa4)
 
@@ -47,21 +62,6 @@ Set up `projects` like this:
 
 
 Save all changes, and ensure that the server is running while you use the software. You are now ready to create your noise patterns!
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
 
 
 # Usage
