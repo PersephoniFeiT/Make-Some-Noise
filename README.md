@@ -28,24 +28,23 @@ Select this scheme and create a user called `appUser` with password `make some n
 
 In the schema and add two tables: one named `accounts` and one named `projects`
 
-
-`accounts:`
+Set up `accounts` like this: 
 
 | ID  | username    | password    | email       | projectList | admin      |
 |-----|-------------|-------------|-------------|-------------|------------|
 | int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | JSON        | TINYINT(1) |
 
-`projects:`
+![accountsTableSetup](https://github.com/user-attachments/assets/c0652894-5fd1-4622-94c2-adb005bcfd4a)
+
+
+Set up `projects` like this: 
 
 | ID  | title       | username    | dateCreated | status     | projectInfoStruct | thumbnail   | tags | accountID |
 |-----|-------------|-------------|-------------|------------|-------------------|-------------|------|-----------|
 | int | VARCHAR(45) | VARCHAR(45) | VARCHAR(45) | VARCHAR(7) | VARCHAR(9999)     | VARCHAR(45) | JSON | INT       |
 
+![projectsTableSetup](https://github.com/user-attachments/assets/5fafbbd9-09b1-42e1-916d-7ddb3a7e7c92)
 
-
-Set up `accounts` like this: ![image](https://github.com/user-attachments/assets/4bc89455-d91d-4572-9432-8162c7e7a8c0)
-
-Set up `projects` like this: ![image](https://github.com/user-attachments/assets/f4a52105-5b21-4056-a21a-c499fb810947)
 
 Save all changes, and ensure that the server is running while you use the software. You are now ready to create your noise patterns!
 
