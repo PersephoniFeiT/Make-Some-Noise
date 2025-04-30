@@ -25,7 +25,9 @@ The software architecture is divided into a front-end, a back-end, and a server-
 
 # Getting Started
 ## Application
-{Download jar file?}
+Download the jar file from jar_Files/
+
+Ensure you have Java 24 JDK installed. If you don't have it, it can be installed here: https://www.oracle.com/java/technologies/downloads/?er=221886#jdk24-windows.
 
 ## Database
 This program uses MySQL to save projects and user settings. 
@@ -83,16 +85,18 @@ Each layer has 6 parameters: Seed, Freq (frequency), Amp (amplitude), Gain, Floo
 - Frequency: controls the rate of change between areas of high and low intensity
 - Amplitude: determines the amount of contrast between the areas of high and low intensity
 - Gain: controls the brightness of the layer
-- Floor: Cut-off value for areas of low intesity; set all pixels below this value to this value
-- Ceiling: Cut-off value for areas of high intesity; set all pixels above this value to this value
+- Floor: Cut-off value for areas of low intensity; set all pixels below this value to this value
+- Ceiling: Cut-off value for areas of high intensity; set all pixels above this value to this value
 
 ### Layer Mixing
 Each layer can mix with the main canvas in 4 different ways: multiplication, division, addition, and subtraction. 
 
-- Multiplication:
-- Division:
-- Addition:
-- Subtraction: 
+- Multiplication: Multiplies the value of each point on a layer with that point on the canvas. Bright parts pf the layer have less effect on the canvas, bright parts of the canvas are more effected by the layer. Results tend towards the middle.
+- Division: Divides the value of each point on a layer with that point on the canvas. Bright parts of the layer have less effect on the canvas, middle parts of the canvas are more effected by the layer. Results tend towards the maximum
+- Addition: Adds the value of each point on a layer to that point on the canvas. The layer affects the pattern consistently across all values. Results tend towards the maximum.
+- Subtraction: Subtracts the value of each point in the layer by that value on the layer. The layer affects the pattern consistently across all values. Results tend towards the minimum.
+
+For best effects, the first layer should be Multiplication or Subtraction.
 
 ### Color Gradient
 The color gradient lies at the bottom of the Editor. By choosing the two endpoints, you can decide what color scale is used to render the pattern. 
